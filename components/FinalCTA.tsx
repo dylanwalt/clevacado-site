@@ -47,7 +47,7 @@ export default function FinalCTA() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.7 }}
-            className="relative flex min-h-[360px] items-center justify-center rounded-[32px] border"
+            className="relative flex min-h-[360px] items-center justify-center overflow-hidden rounded-[32px] border px-4 py-6"
             style={{
               borderColor: "rgba(34,197,94,0.14)",
               background:
@@ -64,7 +64,11 @@ export default function FinalCTA() {
               }
               transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             >
-              <ClevaCadoLogo size={220} />
+              <motion.img
+                src="assets/clevacado-hero-3d.png"
+                alt="ClevaCado device render"
+                className="mx-auto w-full max-w-[420px] object-contain drop-shadow-[0_26px_60px_rgba(22,101,52,0.18)]"
+              />
             </motion.div>
             <div className="absolute bottom-6 left-6 right-6 flex flex-wrap gap-2">
               {CTA_CHIPS.map((chip) => (

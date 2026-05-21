@@ -3,9 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import {
   LineChart,
-  Radar,
   RotateCcw,
-  ShieldCheck,
   Vibrate,
   Zap,
 } from "lucide-react";
@@ -21,49 +19,36 @@ const FEATURE_ICONS = {
 
 function ExplodedSensorVisual() {
   const shouldReduceMotion = useReducedMotion();
-
   const layers = [
     {
       label: "Outer shell",
-      detail: "Bright green shell that travels with the fruit",
-      bg: "#ECFDF3",
-      border: "rgba(34,197,94,0.16)",
-      top: "8%",
-      left: "16%",
-      width: "68%",
+      detail: "Protective avocado shell built to move through handling flows",
+      top: "11%",
+      left: "3%",
     },
     {
-      label: "Sensor module",
-      detail: "Embedded accelerometer and gyroscope package",
-      bg: "#FFFFFF",
-      border: "rgba(34,197,94,0.16)",
-      top: "30%",
-      left: "20%",
-      width: "60%",
+      label: "Sensor core",
+      detail: "Accelerometer and gyroscope package measuring shocks and motion",
+      top: "29%",
+      right: "2%",
     },
     {
-      label: "Battery",
-      detail: "Compact power layer for handling runs",
-      bg: "#F7FFF8",
-      border: "rgba(34,197,94,0.16)",
-      top: "52%",
-      left: "25%",
-      width: "50%",
+      label: "Power layer",
+      detail: "Compact battery stack sized for full supply-chain diagnostic runs",
+      bottom: "22%",
+      left: "6%",
     },
     {
       label: "Data layer",
-      detail: "Motion signals converted into handling intelligence",
-      bg: "#FFFFFF",
-      border: "rgba(34,197,94,0.16)",
-      top: "72%",
-      left: "18%",
-      width: "64%",
+      detail: "Motion signals translated into stage-by-stage risk intelligence",
+      bottom: "8%",
+      right: "4%",
     },
   ] as const;
 
   return (
     <div
-      className="relative min-h-[540px] overflow-hidden rounded-[36px] border p-6"
+      className="relative overflow-hidden rounded-[36px] border px-5 py-6 sm:px-6 sm:py-8"
       style={{
         borderColor: "rgba(34,197,94,0.15)",
         background:
@@ -79,74 +64,102 @@ function ExplodedSensorVisual() {
         }}
         aria-hidden="true"
       />
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 520 540"
-        fill="none"
-        aria-hidden="true"
-      >
-        <path
-          d="M260 30C333 30 395 86 415 171C438 266 423 394 340 466C320 483 200 483 180 466C97 394 82 266 105 171C125 86 187 30 260 30Z"
-          stroke="#A7F3D0"
-          strokeWidth="2"
-          strokeDasharray="8 10"
-        />
-        <line x1="260" y1="118" x2="260" y2="410" stroke="#DCFCE7" strokeWidth="2" strokeDasharray="6 10" />
-      </svg>
+      <div className="relative">
+        <div className="relative mx-auto max-w-[660px]">
+          <div
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[250px] w-[250px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(57,211,83,0.24) 0%, rgba(255,255,255,0) 72%)",
+            }}
+            aria-hidden="true"
+          />
+          <motion.img
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : {
+                    y: [0, -8, 0],
+                  }
+            }
+            transition={{
+              duration: 5.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            src="assets/clevacado-exploded-3d.png"
+            alt="Exploded ClevaCado product render showing shell, power, and sensing layers"
+            className="relative z-[1] mx-auto w-full object-contain drop-shadow-[0_30px_70px_rgba(22,101,52,0.16)]"
+          />
 
-      {layers.map((layer, index) => (
-        <motion.div
-          key={layer.label}
-          animate={
-            shouldReduceMotion
-              ? undefined
-              : {
-                  y: [0, index % 2 === 0 ? -6 : 6, 0],
-                }
-          }
-          transition={{
-            duration: 5 + index * 0.45,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute rounded-[28px] border px-5 py-4"
-          style={{
-            top: layer.top,
-            left: layer.left,
-            width: layer.width,
-            background: layer.bg,
-            borderColor: layer.border,
-            boxShadow: "0 16px 40px rgba(22,101,52,0.06)",
-          }}
-        >
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">
-            {layer.label}
-          </p>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            {layer.detail}
-          </p>
-          {layer.label === "Sensor module" && (
-            <div className="mt-4 grid grid-cols-3 gap-2">
-              {["Impact", "Vibration", "Rotation"].map((item) => (
-                <span
-                  key={item}
-                  className="rounded-full border px-3 py-2 text-center text-xs font-semibold text-slate-700"
-                  style={{ borderColor: "rgba(34,197,94,0.12)" }}
-                >
-                  {item}
-                </span>
-              ))}
+          {layers.map((layer, index) => (
+            <motion.div
+              key={layer.label}
+              animate={
+                shouldReduceMotion
+                  ? undefined
+                  : {
+                      y: [0, index % 2 === 0 ? -6 : 6, 0],
+                    }
+              }
+              transition={{
+                duration: 5 + index * 0.45,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute z-10 hidden max-w-[220px] rounded-[24px] border px-4 py-3 xl:block"
+              style={{
+                ...layer,
+                borderColor: "rgba(34,197,94,0.16)",
+                background: "rgba(255,255,255,0.9)",
+                boxShadow: "0 16px 40px rgba(22,101,52,0.08)",
+              }}
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">
+                {layer.label}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                {layer.detail}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:hidden">
+          {layers.map((layer) => (
+            <div
+              key={layer.label}
+              className="rounded-[22px] border px-4 py-4"
+              style={{
+                borderColor: "rgba(34,197,94,0.14)",
+                background: "rgba(255,255,255,0.92)",
+              }}
+            >
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">
+                {layer.label}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                {layer.detail}
+              </p>
             </div>
-          )}
-          {layer.label === "Data layer" && (
-            <div className="mt-4 flex items-center gap-3">
-              <Radar size={18} color="#15803D" />
-              <ShieldCheck size={18} color="#15803D" />
-              <LineChart size={18} color="#15803D" />
-            </div>
-          )}
-        </motion.div>
-      ))}
+          ))}
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          {["Impact", "Vibration", "Rotation", "Risk profile"].map((item) => (
+            <span
+              key={item}
+              className="rounded-full border px-4 py-2 text-sm font-semibold text-slate-700"
+              style={{
+                borderColor: "rgba(34,197,94,0.12)",
+                background: "rgba(255,255,255,0.92)",
+              }}
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

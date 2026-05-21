@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { CircleAlert } from "lucide-react";
-import ClevaCadoLogo from "./ClevaCadoLogo";
 import SectionLabel from "./SectionLabel";
 
 function HiddenBruiseVisual() {
@@ -25,22 +24,40 @@ function HiddenBruiseVisual() {
         aria-hidden="true"
       />
 
-      <svg
-        className="absolute inset-0 h-full w-full"
-        viewBox="0 0 520 420"
-        fill="none"
-        aria-hidden="true"
-      >
-        <circle cx="265" cy="214" r="112" stroke="#86EFAC" strokeWidth="2" strokeDasharray="8 10" opacity="0.55" />
-        <circle cx="265" cy="214" r="78" stroke="#FACC15" strokeWidth="2" strokeDasharray="4 8" opacity="0.45" />
-        <circle cx="265" cy="214" r="48" stroke="#FB923C" strokeWidth="2" strokeDasharray="3 8" opacity="0.38" />
-        <circle cx="222" cy="192" r="8" fill="#FACC15" opacity="0.9" />
-        <circle cx="302" cy="242" r="9" fill="#FB923C" opacity="0.9" />
-        <circle cx="270" cy="164" r="7" fill="#EF4444" opacity="0.9" />
-      </svg>
-
       <div className="relative flex flex-col items-center">
-        <ClevaCadoLogo size={250} />
+        <div className="relative w-full max-w-[420px]">
+          <div
+            className="pointer-events-none absolute left-1/2 top-1/2 h-[220px] w-[220px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle, rgba(57,211,83,0.22) 0%, rgba(255,255,255,0) 72%)",
+            }}
+            aria-hidden="true"
+          />
+          <motion.img
+            src="assets/clevacado-problem-xray.png"
+            alt="ClevaCado diagnostic render showing hidden internal stress zones"
+            className="relative z-[1] mx-auto w-full object-contain drop-shadow-[0_26px_55px_rgba(22,101,52,0.16)]"
+          />
+          <div
+            className="absolute left-4 top-4 rounded-full border px-3 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700 backdrop-blur-sm sm:left-6 sm:top-6"
+            style={{
+              borderColor: "rgba(34,197,94,0.18)",
+              background: "rgba(255,255,255,0.88)",
+            }}
+          >
+            External view
+          </div>
+          <div
+            className="absolute bottom-6 right-2 rounded-full border px-3 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-orange-600 backdrop-blur-sm sm:right-6"
+            style={{
+              borderColor: "rgba(251,146,60,0.22)",
+              background: "rgba(255,255,255,0.9)",
+            }}
+          >
+            Subsurface stress
+          </div>
+        </div>
         <div className="mt-8 grid w-full gap-3 sm:grid-cols-2">
           <div
             className="rounded-2xl border px-4 py-3"
