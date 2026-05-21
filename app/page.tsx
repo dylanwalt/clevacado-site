@@ -1,10 +1,10 @@
-import AppleHero from "@/components/AppleHero";
-import AppleStorySection from "@/components/AppleStorySection";
 import AudienceSection from "@/components/AudienceSection";
 import DashboardSection from "@/components/DashboardSection";
 import FinalCTA from "@/components/FinalCTA";
+import HeroProductReveal from "@/components/HeroProductReveal";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import ImpactSection from "@/components/ImpactSection";
+import JourneyScrollytelling from "@/components/JourneyScrollytelling";
 import Navigation from "@/components/Navigation";
 import ProblemSection from "@/components/ProblemSection";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -15,10 +15,10 @@ export default function Home() {
     <main>
       <ScrollProgress />
       <Navigation />
-      <AppleHero />
+      <HeroProductReveal />
       <HowItWorksSection />
       <ProblemSection />
-      <AppleStorySection />
+      <JourneyScrollytelling />
       <SensorSection />
       <DashboardSection />
       <AudienceSection />
