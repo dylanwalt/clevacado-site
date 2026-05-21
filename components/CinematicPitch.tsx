@@ -25,6 +25,7 @@ import {
 import { gsap, useGSAP } from "@/lib/gsap";
 import heroDevice from "@/public/assets/clevacado-hero-3d.png";
 import explodedDevice from "@/public/assets/clevacado-exploded-3d.png";
+import homeSceneLogo from "@/public/branding/home-scene-mark.png";
 import BrandLogo from "./BrandLogo";
 import TensorField from "./TensorField";
 
@@ -51,9 +52,9 @@ type PipelineFrame = {
 type AnalyticsPhase = "impact" | "vibration" | "rotation";
 
 const HERO_CHIPS = [
-  { label: "Impact detected", className: "left-[5%] top-[22%]" },
-  { label: "Vibration mapped", className: "right-[10%] top-[18%]" },
-  { label: "Hotspot found", className: "right-[14%] bottom-[18%]" },
+  { label: "Impact detected", value: "2.1 g", className: "left-[4%] top-[22%]" },
+  { label: "Vibration mapped", value: "22 min", className: "right-[8%] top-[20%]" },
+  { label: "Hotspot found", value: "Sorting", className: "right-[12%] bottom-[18%]" },
 ] as const;
 
 const TECH_LAYERS: TechLayer[] = [
@@ -231,21 +232,6 @@ function ScenePanel({ frame, index }: { frame: PipelineFrame; index: number }) {
           strokeWidth={1.15}
           className="pipeline-ambient h-[44vh] w-[44vh] text-white/[0.05]"
         />
-      </div>
-
-      <div className="absolute left-[7%] top-[16%] max-w-[360px]">
-        <p
-          className="text-[10px] font-semibold uppercase tracking-[0.32em]"
-          style={{ color: frame.accent }}
-        >
-          {frame.eyebrow}
-        </p>
-        <p
-          data-display="true"
-          className="mt-4 max-w-[320px] text-4xl font-semibold tracking-[-0.06em] text-white/94"
-        >
-          {frame.label}
-        </p>
       </div>
 
       <div className="absolute bottom-[12%] right-[7%]">
@@ -934,7 +920,7 @@ export default function CinematicPitch() {
           ref={hookStageRef}
           className="relative flex min-h-screen items-center overflow-hidden px-6 py-24 lg:h-screen lg:py-28"
         >
-          <div className="mx-auto grid w-full max-w-7xl items-center gap-14 lg:grid-cols-[0.88fr_1.12fr]">
+          <div className="mx-auto grid w-full max-w-7xl items-center gap-14 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="mobile-reveal max-w-[620px]">
               <p className="hook-copy text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
                 Problem
@@ -948,22 +934,38 @@ export default function CinematicPitch() {
               <p className="hook-copy mt-6 max-w-[520px] text-lg leading-relaxed text-white/58 sm:text-xl">
                 By the time the bruise shows, the handling data is gone.
               </p>
+
+              <div className="hook-copy mt-10 grid max-w-[440px] gap-3 border-l border-white/10 pl-5">
+                {[
+                  ["Invisible event", "Impact happens before the bruise appears."],
+                  ["Delayed signal", "The fruit looks fine while the damage accumulates."],
+                  ["Missing evidence", "Handlers are left without the moment that caused it."],
+                ].map(([label, detail]) => (
+                  <div key={label}>
+                    <p className="telemetry-mono text-[11px] uppercase text-[#B7FF5A]/88">
+                      {label}
+                    </p>
+                    <p className="mt-1 text-sm leading-relaxed text-white/50">
+                      {detail}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="mobile-reveal relative flex items-center justify-center">
+            <div className="mobile-reveal relative flex min-h-[520px] items-center justify-center lg:justify-end">
               <div
-                className="hook-silhouette relative h-[420px] w-[290px] rounded-[48%_48%_42%_42%/56%_56%_36%_36%] border border-white/10 bg-white/[0.03] shadow-[0_40px_120px_rgba(0,0,0,0.32)] backdrop-blur-sm sm:h-[520px] sm:w-[360px]"
+                className="hook-silhouette relative flex w-full max-w-[760px] items-center justify-center"
                 style={{
-                  boxShadow:
-                    "inset 0 1px 0 rgba(255,255,255,0.05), 0 40px 120px rgba(0,0,0,0.42)",
+                  filter: "drop-shadow(0 54px 120px rgba(0,0,0,0.45))",
                 }}
               >
-                <div className="absolute left-1/2 top-[-14px] h-9 w-14 -translate-x-1/2 rounded-full border border-white/10 bg-white/[0.04]" />
-                <div className="hook-ring absolute inset-[12%] rounded-[48%_48%_42%_42%/56%_56%_36%_36%] border border-white/8" />
-                <div className="hook-ring absolute inset-[20%] rounded-[48%_48%_42%_42%/56%_56%_36%_36%] border border-white/7" />
-                <div className="hook-ring absolute inset-[28%] rounded-[48%_48%_42%_42%/56%_56%_36%_36%] border border-white/6" />
+                <div className="absolute right-[2%] top-1/2 h-[420px] w-[420px] -translate-y-1/2 rounded-full bg-[#B7FF5A]/10 blur-3xl sm:h-[520px] sm:w-[520px]" />
+                <div className="hook-ring absolute right-[6%] top-1/2 h-[520px] w-[520px] -translate-y-1/2 rounded-full border border-white/8 sm:h-[620px] sm:w-[620px]" />
+                <div className="hook-ring absolute right-[12%] top-1/2 h-[420px] w-[420px] -translate-y-1/2 rounded-full border border-white/6 sm:h-[520px] sm:w-[520px]" />
+                <div className="hook-ring absolute right-[18%] top-1/2 h-[320px] w-[320px] -translate-y-1/2 rounded-full border border-white/5 sm:h-[410px] sm:w-[410px]" />
                 <div
-                  className="hook-beam absolute left-[8%] right-[8%] top-[14%] h-[2px]"
+                  className="hook-beam absolute left-[26%] right-[8%] top-1/2 h-[2px] -translate-y-1/2"
                   style={{
                     background:
                       "linear-gradient(90deg, rgba(183,255,90,0) 0%, rgba(183,255,90,0.9) 20%, rgba(183,255,90,1) 50%, rgba(183,255,90,0.9) 80%, rgba(183,255,90,0) 100%)",
@@ -971,10 +973,10 @@ export default function CinematicPitch() {
                   }}
                 />
                 {[
-                  "left-[34%] top-[34%]",
-                  "left-[60%] top-[44%]",
-                  "left-[44%] top-[58%]",
-                  "left-[52%] top-[68%]",
+                  "right-[35%] top-[28%]",
+                  "right-[16%] top-[40%]",
+                  "right-[30%] top-[60%]",
+                  "right-[44%] top-[72%]",
                 ].map((position) => (
                   <span
                     key={position}
@@ -986,12 +988,32 @@ export default function CinematicPitch() {
                   />
                 ))}
                 <div
-                  className="absolute inset-0 rounded-[inherit]"
+                  className="absolute right-[6%] top-1/2 h-[520px] w-[520px] -translate-y-1/2 rounded-full"
                   style={{
                     background:
-                      "radial-gradient(circle at 50% 36%, rgba(183,255,90,0.06), transparent 26%), radial-gradient(circle at 48% 64%, rgba(249,115,22,0.08), transparent 22%)",
+                      "radial-gradient(circle at 50% 36%, rgba(183,255,90,0.08), transparent 28%), radial-gradient(circle at 48% 64%, rgba(249,115,22,0.08), transparent 24%)",
                   }}
                 />
+                <div className="relative z-10 ml-auto flex w-full max-w-[620px] flex-col items-end justify-center sm:max-w-[680px]">
+                  <Image
+                    src={homeSceneLogo}
+                    alt="ClevaCado logo mark"
+                    priority
+                    sizes="(min-width: 1024px) 32vw, 70vw"
+                    className="w-full max-w-[500px] object-contain"
+                  />
+                  <div className="mt-3 pr-6 text-right">
+                    <p
+                      data-display="true"
+                      className="text-[clamp(2.8rem,5vw,5.6rem)] font-semibold tracking-[-0.08em] text-white"
+                    >
+                      ClevaCado
+                    </p>
+                    <p className="telemetry-mono mt-2 text-[11px] uppercase tracking-[0.28em] text-white/36">
+                      Post-harvest diagnostics
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1056,20 +1078,53 @@ export default function CinematicPitch() {
               {HERO_CHIPS.map((chip) => (
                 <div
                   key={chip.label}
-                  className={`hero-chip hero-parallax-fast absolute hidden rounded-full border border-white/10 bg-black/40 px-4 py-2 text-sm font-medium text-white/78 shadow-[0_18px_48px_rgba(0,0,0,0.24)] backdrop-blur-md md:block ${chip.className}`}
+                  className={`hero-chip hero-parallax-fast absolute hidden min-w-[164px] rounded-[22px] border border-white/10 bg-black/48 px-4 py-3 shadow-[0_18px_48px_rgba(0,0,0,0.24)] backdrop-blur-md md:block ${chip.className}`}
                 >
-                  {chip.label}
+                  <p className="telemetry-mono text-[11px] uppercase text-white/46">
+                    {chip.label}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-white/84">
+                    {chip.value}
+                  </p>
                 </div>
               ))}
 
               <div className="hero-device relative z-10 w-full max-w-[620px]">
-                <Image
-                  src={heroDevice}
-                  alt="ClevaCado device emerging into view"
-                  priority
-                  sizes="(min-width: 1024px) 44vw, 88vw"
-                  className="mx-auto w-full object-contain drop-shadow-[0_50px_120px_rgba(0,0,0,0.42)]"
-                />
+                <div
+                  className="overflow-hidden rounded-[44px] border border-white/8 p-4 shadow-[0_50px_120px_rgba(0,0,0,0.34)]"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 50% 22%, rgba(183,255,90,0.26) 0%, rgba(246,247,242,0.98) 34%, rgba(221,230,214,0.92) 100%)",
+                  }}
+                >
+                  <Image
+                    src={heroDevice}
+                    alt="ClevaCado device emerging into view"
+                    priority
+                    sizes="(min-width: 1024px) 44vw, 88vw"
+                    className="mx-auto w-full object-contain drop-shadow-[0_50px_120px_rgba(0,0,0,0.42)]"
+                  />
+                </div>
+              </div>
+
+              <div className="hero-parallax-fast absolute bottom-[12%] left-[8%] hidden w-[220px] rounded-[28px] border border-white/10 bg-black/46 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.34)] backdrop-blur-md lg:block">
+                <p className="telemetry-mono text-[11px] uppercase text-[#B7FF5A]/80">
+                  Diagnostic payload
+                </p>
+                <div className="mt-4 grid gap-3 text-sm text-white/74">
+                  <div className="flex items-center justify-between gap-4">
+                    <span>Shock sensing</span>
+                    <span className="telemetry-mono text-white/52">3-axis</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <span>Sampling run</span>
+                    <span className="telemetry-mono text-white/52">farm → market</span>
+                  </div>
+                  <div className="flex items-center justify-between gap-4">
+                    <span>Output</span>
+                    <span className="telemetry-mono text-white/52">hotspot map</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1275,13 +1330,13 @@ export default function CinematicPitch() {
             }}
           />
 
-          <div className="journey-copy absolute left-8 top-8 z-30 max-w-[340px]">
+          <div className="journey-copy absolute left-8 top-8 z-30 max-w-[460px]">
             <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
               Journey pipeline
             </p>
             <h2
               data-display="true"
-              className="mt-6 text-balance text-[clamp(3.2rem,5vw,5.6rem)] font-semibold leading-[0.92] tracking-[-0.06em]"
+              className="mt-6 max-w-[420px] text-balance text-[clamp(2.8rem,4.4vw,4.8rem)] font-semibold leading-[0.94] tracking-[-0.06em]"
             >
               One device. Five moments. One answer.
             </h2>
@@ -1301,15 +1356,23 @@ export default function CinematicPitch() {
                   "radial-gradient(circle, rgba(183,255,90,0.18) 0%, rgba(94,209,67,0.08) 38%, rgba(94,209,67,0.01) 72%)",
               }}
             />
-            <Image
-              src={heroDevice}
-              alt="ClevaCado fixed at the center of the journey pipeline"
-              sizes="360px"
-              className="relative z-10 w-full object-contain drop-shadow-[0_60px_140px_rgba(0,0,0,0.52)]"
-            />
+            <div
+              className="relative z-10 overflow-hidden rounded-[38px] border border-white/8 p-4 shadow-[0_40px_120px_rgba(0,0,0,0.42)]"
+              style={{
+                background:
+                  "radial-gradient(circle at 50% 18%, rgba(183,255,90,0.24) 0%, rgba(246,247,242,0.98) 34%, rgba(223,232,216,0.9) 100%)",
+              }}
+            >
+              <Image
+                src={heroDevice}
+                alt="ClevaCado fixed at the center of the journey pipeline"
+                sizes="360px"
+                className="w-full object-contain drop-shadow-[0_60px_140px_rgba(0,0,0,0.52)]"
+              />
+            </div>
           </div>
 
-          <div className="pipeline-overlay-card absolute bottom-8 left-8 z-30 w-[420px] max-w-[calc(100vw-4rem)] rounded-[34px] border border-white/8 bg-black/44 p-7 shadow-[0_30px_90px_rgba(0,0,0,0.24)] backdrop-blur-md">
+          <div className="pipeline-overlay-card absolute bottom-8 left-8 z-30 w-[440px] max-w-[calc(100vw-4rem)] rounded-[34px] border border-white/8 bg-black/52 p-7 shadow-[0_30px_90px_rgba(0,0,0,0.24)] backdrop-blur-md">
             <div className="live-copy" key={activeFrame.id}>
               <p
                 className="text-[10px] font-semibold uppercase tracking-[0.3em]"
