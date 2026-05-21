@@ -13,9 +13,9 @@ const displayFont = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "ClevaCado | Post-harvest diagnostics for avocado supply chains",
+  title: "ClevaCado | Cinematic diagnostics pitch",
   description:
-    "ClevaCado helps avocado producers find and reduce bruising-risk hotspots from farm to market with motion sensing and stage-by-stage diagnostics.",
+    "A scroll-driven ClevaCado product pitch showing how the device tracks invisible bruising risk from harvest to analytics.",
   keywords: [
     "agri-tech",
     "avocado",
