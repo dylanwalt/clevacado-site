@@ -11,6 +11,7 @@ import {
 import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion";
 import { JOURNEY_STAGES, RISK_META } from "@/lib/constants";
 import { gsap, useGSAP } from "@/lib/gsap";
+import BrandLogo from "./BrandLogo";
 
 const DashboardSignalChart = dynamic(
   () => import("./DashboardSignalChart"),
@@ -24,23 +25,23 @@ const INSIGHTS = [
     value: "Packhouse transfer point",
     detail: "Sorting line stage",
     color: "#EF4444",
-    surface: "#FEE2E2",
+    surface: "#FEEAE7",
   },
   {
     icon: CircleAlert,
     title: "Detected event",
     value: "High-impact shock at 10:45",
     detail: "Peak drop event during transfer",
-    color: "#FB923C",
-    surface: "#FFEDD5",
+    color: "#F97316",
+    surface: "#FFF0DF",
   },
   {
     icon: TrendingUp,
     title: "Recommended action",
     value: "Reduce transfer drop height",
     detail: "Review bin tipping and conveyor handoff",
-    color: "#15803D",
-    surface: "#DCFCE7",
+    color: "#2F8F46",
+    surface: "#EAF5E5",
   },
 ] as const;
 
@@ -135,10 +136,10 @@ export default function AnalyticsDashboardMockup() {
           .fromTo(
             ".dashboard-hotspot",
             {
-              boxShadow: "0 0 0 0 rgba(239,68,68,0.18)",
+              boxShadow: "0 0 0 0 rgba(249,115,22,0.18)",
             },
             {
-              boxShadow: "0 0 0 14px rgba(239,68,68,0)",
+              boxShadow: "0 0 0 14px rgba(249,115,22,0)",
               duration: 0.9,
               ease: "power2.out",
             },
@@ -147,7 +148,7 @@ export default function AnalyticsDashboardMockup() {
 
         gsap.to(".dashboard-live-badge", {
           scale: 1.03,
-          boxShadow: "0 0 0 10px rgba(57,211,83,0)",
+          boxShadow: "0 0 0 10px rgba(94,209,67,0)",
           duration: 1.8,
           repeat: -1,
           yoyo: true,
@@ -163,28 +164,31 @@ export default function AnalyticsDashboardMockup() {
       ref={rootRef}
       className="dashboard-shell overflow-hidden rounded-[36px] border"
       style={{
-        borderColor: "rgba(34,197,94,0.15)",
-        background: "#FFFFFF",
-        boxShadow: "0 28px 90px rgba(22,101,52,0.12)",
+        borderColor: "rgba(47,143,70,0.15)",
+        background: "#FFFDF7",
+        boxShadow: "0 28px 90px rgba(23,77,42,0.10)",
       }}
     >
       <div
         className="dashboard-topbar flex flex-wrap items-center justify-between gap-4 border-b px-6 py-4"
-        style={{ borderColor: "rgba(34,197,94,0.10)" }}
+        style={{ borderColor: "rgba(47,143,70,0.10)" }}
       >
         <div className="flex items-center gap-3">
           <span className="h-3 w-3 rounded-full bg-emerald-400" />
-          <span className="h-3 w-3 rounded-full bg-yellow-300" />
+          <span className="h-3 w-3 rounded-full bg-amber-300" />
           <span className="h-3 w-3 rounded-full bg-orange-400" />
-          <p className="ml-2 text-sm font-semibold text-slate-600">
-            ClevaCado Analytics - Run #1042
-          </p>
+          <div className="ml-2 flex items-center gap-3">
+            <BrandLogo variant="mark" markSize={28} />
+            <p className="text-sm font-semibold" style={{ color: "#5E6B61" }}>
+              ClevaCado Analytics - Run #1042
+            </p>
+          </div>
         </div>
         <span
           className="dashboard-live-badge rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em]"
           style={{
-            background: "#ECFDF3",
-            color: "#166534",
+            background: "#EAF5E5",
+            color: "#2F8F46",
           }}
         >
           Live data
@@ -195,11 +199,11 @@ export default function AnalyticsDashboardMockup() {
         <div
           className="dashboard-card rounded-[28px] border p-6"
           style={{
-            borderColor: "rgba(34,197,94,0.14)",
-            background: "#F7FFF8",
+            borderColor: "rgba(47,143,70,0.14)",
+            background: "#F8F5EC",
           }}
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: "#2F8F46" }}>
             Supply-chain map
           </p>
           <div className="mt-6 space-y-3">
@@ -213,9 +217,9 @@ export default function AnalyticsDashboardMockup() {
                   className={`dashboard-row rounded-2xl border px-4 py-4 ${isHotspot ? "dashboard-hotspot" : ""}`}
                   style={{
                     borderColor: isHotspot
-                      ? "rgba(239,68,68,0.16)"
-                      : "rgba(34,197,94,0.10)",
-                    background: isHotspot ? "#FFF7F7" : "#FFFFFF",
+                      ? "rgba(249,115,22,0.18)"
+                      : "rgba(47,143,70,0.10)",
+                    background: isHotspot ? "#FFF4ED" : "#FFFDF7",
                   }}
                 >
                   <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
@@ -224,10 +228,10 @@ export default function AnalyticsDashboardMockup() {
                       style={{ background: risk.color }}
                     />
                     <div>
-                      <p className="text-sm font-semibold text-slate-900">
+                      <p className="text-sm font-semibold" style={{ color: "#174D2A" }}>
                         {stage.label}
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs" style={{ color: "#6B756B" }}>
                         {isHotspot
                           ? "Packhouse transfer line hotspot"
                           : stage.measurement}
@@ -253,35 +257,36 @@ export default function AnalyticsDashboardMockup() {
           <div
             className="dashboard-card rounded-[28px] border p-6"
             style={{
-              borderColor: "rgba(34,197,94,0.14)",
+              borderColor: "rgba(47,143,70,0.14)",
               background:
-                "linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(247,255,248,0.98) 100%)",
+                "linear-gradient(180deg, rgba(255,253,247,0.98) 0%, rgba(248,245,236,0.98) 100%)",
             }}
           >
             <div className="flex items-center gap-3">
               <span
                 className="inline-flex h-12 w-12 items-center justify-center rounded-2xl"
-                style={{ background: "#DCFCE7", color: "#166534" }}
+                style={{ background: "#EAF5E5", color: "#2F8F46" }}
               >
                 <CircleGauge size={22} />
               </span>
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-emerald-700">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: "#2F8F46" }}>
                   Overall handling risk
                 </p>
                 <p
                   ref={scoreRef}
                   data-display="true"
-                  className="mt-2 text-5xl font-semibold tracking-[-0.05em] text-slate-950"
+                  className="mt-2 text-5xl font-semibold tracking-[-0.05em]"
+                  style={{ color: "#162118" }}
                 >
                   72
                 </p>
               </div>
             </div>
-            <p className="mt-4 text-sm font-semibold text-slate-700">
+            <p className="mt-4 text-sm font-semibold" style={{ color: "#314238" }}>
               Moderate-high risk profile
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-slate-500">
+            <p className="mt-2 text-sm leading-relaxed" style={{ color: "#5E6B61" }}>
               Highest-risk point: Packhouse transfer line inside the sorting
               stage.
             </p>
@@ -290,17 +295,17 @@ export default function AnalyticsDashboardMockup() {
           <div
             className="dashboard-card rounded-[28px] border p-6"
             style={{
-              borderColor: "rgba(34,197,94,0.14)",
-              background: "#FFFFFF",
+              borderColor: "rgba(47,143,70,0.14)",
+              background: "#FFFDF7",
             }}
           >
-            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: "#6B756B" }}>
               Recommended next move
             </p>
-            <p className="mt-3 text-xl font-semibold text-slate-950">
+            <p className="mt-3 text-xl font-semibold" style={{ color: "#174D2A" }}>
               Reduce transfer drop height and review bin tipping.
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-slate-500">
+            <p className="mt-3 text-sm leading-relaxed" style={{ color: "#5E6B61" }}>
               The signal pattern suggests bruising risk is being amplified
               during conveyor handoff at the packhouse.
             </p>
@@ -310,16 +315,16 @@ export default function AnalyticsDashboardMockup() {
 
       <div
         className="grid gap-6 border-t p-6 lg:grid-cols-[1.15fr_0.85fr]"
-        style={{ borderColor: "rgba(34,197,94,0.10)" }}
+        style={{ borderColor: "rgba(47,143,70,0.10)" }}
       >
         <div
           className="dashboard-card rounded-[28px] border p-6"
           style={{
-            borderColor: "rgba(34,197,94,0.14)",
-            background: "#FFFFFF",
+            borderColor: "rgba(47,143,70,0.14)",
+            background: "#FFFDF7",
           }}
         >
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-500">
+          <p className="text-xs font-semibold uppercase tracking-[0.22em]" style={{ color: "#6B756B" }}>
             Impact and vibration over time
           </p>
           <div className="mt-5 h-[280px]">
@@ -357,10 +362,10 @@ export default function AnalyticsDashboardMockup() {
                     >
                       {card.title}
                     </p>
-                    <p className="mt-2 text-lg font-semibold text-slate-950">
+                    <p className="mt-2 text-lg font-semibold" style={{ color: "#174D2A" }}>
                       {card.value}
                     </p>
-                    <p className="mt-2 text-sm text-slate-600">
+                    <p className="mt-2 text-sm" style={{ color: "#5E6B61" }}>
                       {card.detail}
                     </p>
                   </div>

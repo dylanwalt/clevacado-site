@@ -25,6 +25,10 @@ export const metadata: Metadata = {
     "food quality",
     "smart sensor",
   ],
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({

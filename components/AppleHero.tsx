@@ -8,8 +8,6 @@ const VISUAL_CHIPS = [
   { label: HERO_CHIPS[0], top: "12%", left: "8%" },
   { label: HERO_CHIPS[1], top: "18%", right: "7%" },
   { label: HERO_CHIPS[2], top: "54%", left: "1%" },
-  { label: HERO_CHIPS[3], bottom: "16%", left: "12%" },
-  { label: HERO_CHIPS[4], bottom: "20%", right: "4%" },
 ] as const;
 
 const HERO_DETAILS = [

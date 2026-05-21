@@ -47,7 +47,7 @@ export default function DashboardSection() {
       id="dashboard"
       ref={rootRef}
       className="px-6 py-24 sm:py-28"
-      style={{ background: "#F7FFF8" }}
+      style={{ background: "#FAF8EF" }}
     >
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
@@ -56,13 +56,14 @@ export default function DashboardSection() {
           </SectionLabel>
           <h2
             data-display="true"
-            className="dashboard-copy text-balance text-4xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-5xl"
+            className="dashboard-copy text-balance text-4xl font-semibold tracking-[-0.05em] sm:text-5xl"
+            style={{ color: "#162118" }}
           >
-            ClevaCado Analytics makes the sorting hotspot obvious.
+            The hotspot becomes obvious.
           </h2>
-          <p className="dashboard-copy mt-5 text-lg leading-relaxed text-slate-600">
-            The dashboard is built to tell one clear story: where handling risk
-            peaks, what happened there, and what the team should change next.
+          <p className="dashboard-copy mt-5 text-lg leading-relaxed" style={{ color: "#5E6B61" }}>
+            ClevaCado turns one diagnostic run into a clear answer: where the
+            risk peaked, what happened, and what to fix next.
           </p>
         </div>
 

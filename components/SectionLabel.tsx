@@ -13,13 +13,13 @@ export default function SectionLabel({
     >
       <span
         className="text-xs font-bold tracking-widest uppercase"
-        style={{ color: "#39D353" }}
+        style={{ color: "#2F8F46" }}
       >
         {children}
       </span>
       <span
         className="inline-block h-px w-8"
-        style={{ backgroundColor: "#39D353" }}
+        style={{ backgroundColor: "#2F8F46" }}
         aria-hidden="true"
       />
     </div>
