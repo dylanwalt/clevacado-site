@@ -1,29 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Leaf,
-  LineChart,
-  PackageCheck,
-  ShieldCheck,
-  TrendingUp,
-  Workflow,
-} from "lucide-react";
-import { IMPACT_CARDS, IMPACT_STRIP } from "@/lib/constants";
+import { Factory, Leaf, Package, Truck } from "lucide-react";
+import { AUDIENCE_CARDS } from "@/lib/constants";
 import SectionLabel from "./SectionLabel";
 
-const IMPACT_ICONS = [
-  TrendingUp,
-  PackageCheck,
-  ShieldCheck,
-  LineChart,
-  Leaf,
-  Workflow,
-];
+const ICONS = [Leaf, Factory, Package, Truck];
 
-export default function ImpactSection() {
+export default function AudienceSection() {
   return (
-    <section id="impact" className="px-6 py-24 sm:py-28">
+    <section
+      id="audience"
+      className="px-6 py-24 sm:py-28"
+      style={{ background: "#FFFFFF" }}
+    >
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -32,35 +22,33 @@ export default function ImpactSection() {
           transition={{ duration: 0.6 }}
           className="mx-auto max-w-3xl text-center"
         >
-          <SectionLabel className="justify-center">The impact</SectionLabel>
+          <SectionLabel className="justify-center">Who it is for</SectionLabel>
           <h2
             data-display="true"
             className="text-balance text-4xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-5xl"
           >
-            Less damage. Better quality. More value from every harvest.
+            Built for every team protecting avocado quality.
           </h2>
           <p className="mt-5 text-lg leading-relaxed text-slate-600">
-            Post-harvest quality losses can be difficult to trace without
-            handling data. ClevaCado helps teams see where quality is being
-            pressured so they can improve the right part of the process.
+            ClevaCado is designed to support the people making post-harvest
+            handling decisions across the full avocado journey.
           </p>
         </motion.div>
 
-        <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {IMPACT_CARDS.map((card, index) => {
-            const Icon = IMPACT_ICONS[index];
-
+        <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {AUDIENCE_CARDS.map((card, index) => {
+            const Icon = ICONS[index];
             return (
               <motion.article
                 key={card.id}
-                initial={{ opacity: 0, y: 24 }}
+                initial={{ opacity: 0, y: 26 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 0.55, delay: index * 0.05 }}
+                transition={{ duration: 0.55, delay: index * 0.06 }}
                 className="rounded-[28px] border p-7"
                 style={{
+                  background: "#F7FFF8",
                   borderColor: "rgba(34,197,94,0.15)",
-                  background: "#FFFFFF",
                   boxShadow: "0 20px 60px rgba(22,101,52,0.08)",
                 }}
               >
@@ -83,27 +71,6 @@ export default function ImpactSection() {
             );
           })}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.55, delay: 0.1 }}
-          className="mt-12 grid gap-4 md:grid-cols-3"
-        >
-          {IMPACT_STRIP.map((item) => (
-            <div
-              key={item}
-              className="rounded-[24px] border px-5 py-5 text-center"
-              style={{
-                borderColor: "rgba(34,197,94,0.14)",
-                background: "#F7FFF8",
-              }}
-            >
-              <p className="text-sm font-semibold text-slate-700">{item}</p>
-            </div>
-          ))}
-        </motion.div>
       </div>
     </section>
   );

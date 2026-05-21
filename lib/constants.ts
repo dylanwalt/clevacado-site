@@ -13,217 +13,319 @@ export const COLORS = {
   riskRed: "#EF4444",
 } as const;
 
-export type RiskLevel = "low" | "moderate" | "high" | "critical";
+export const CONTACT_EMAIL = "hello@clevacado.com";
 
-export const JOURNEY_STAGES = [
+export const RISK_META = {
+  low: {
+    label: "Low",
+    color: COLORS.primaryGreen,
+    soft: "#ECFDF3",
+  },
+  moderate: {
+    label: "Moderate",
+    color: COLORS.warningYellow,
+    soft: "#FEF9C3",
+  },
+  high: {
+    label: "High",
+    color: COLORS.riskOrange,
+    soft: "#FFEDD5",
+  },
+  critical: {
+    label: "Critical",
+    color: COLORS.riskRed,
+    soft: "#FEE2E2",
+  },
+} as const;
+
+export type RiskLevel = keyof typeof RISK_META;
+
+export type JourneyStage = {
+  id: string;
+  number: string;
+  label: string;
+  short: string;
+  description: string;
+  measurement: string;
+  insight: string;
+  event: string;
+  riskLevel: RiskLevel;
+  score: number;
+  position: {
+    x: number;
+    y: number;
+  };
+};
+
+export const HERO_CHIPS = [
+  "Impact detected",
+  "Vibration mapped",
+  "Bruising risk identified",
+  "3-axis motion sensing",
+  "Farm-to-market tracking",
+] as const;
+
+export const HOW_IT_WORKS_STEPS = [
   {
-    id: 0,
+    id: "flow",
     number: "01",
-    label: "Harvesting",
-    short: "Harvest",
-    icon: "🌿",
+    title: "Place ClevaCado into the handling flow",
     description:
-      "Drops, knocks, and rough picking can create early bruising risk before fruit even reaches the packhouse.",
-    measurement:
-      "ClevaCado records impact events and handling shocks at the source.",
-    insight:
-      "High-impact picking moments are logged with timestamps and severity.",
-    riskLevel: "moderate" as RiskLevel,
-    riskColor: "#FACC15",
-    event: "Impact: 2.1 g at point of pick",
+      "The device moves through the same journey as real avocados, from harvesting to market arrival.",
   },
   {
-    id: 1,
+    id: "measure",
     number: "02",
-    label: "Bin Handling",
-    short: "Bins",
-    icon: "📦",
+    title: "Measure motion and stress events",
     description:
-      "Stacking, tipping, and transfer points can introduce repeated mechanical stress before sorting begins.",
-    measurement:
-      "ClevaCado identifies high-impact handling moments before they become quality losses.",
-    insight:
-      "Bin tipping events cause repeated moderate shocks — a known bruising risk.",
-    riskLevel: "high" as RiskLevel,
-    riskColor: "#FB923C",
-    event: "Shock: 3.1 g on bin tip",
+      "Embedded sensors capture impact, vibration, rotation, drops, and handling stress in real time.",
   },
   {
-    id: 2,
+    id: "find",
     number: "03",
-    label: "Sorting Line",
-    short: "Sorting",
-    icon: "⚙️",
+    title: "Find the damage hotspots",
     description:
-      "Conveyors and transfer points can expose fruit to vibration, rotation, and sudden drops.",
-    measurement:
-      "ClevaCado maps motion patterns and vibration exposure across the packhouse line.",
-    insight:
-      "Transfer-point drops of 4–8 cm are a leading cause of sub-surface bruising.",
-    riskLevel: "critical" as RiskLevel,
-    riskColor: "#EF4444",
-    event: "Drop: 4.8 cm at transfer point",
-  },
-  {
-    id: 3,
-    number: "04",
-    label: "Packing",
-    short: "Packing",
-    icon: "🗃️",
-    description:
-      "Small handling changes at the packing stage can affect whether fruit arrives in premium condition.",
-    measurement:
-      "ClevaCado helps teams identify where process improvements will matter most.",
-    insight:
-      "Gentle packing technique significantly reduces cumulative bruising score.",
-    riskLevel: "low" as RiskLevel,
-    riskColor: "#39D353",
-    event: "Low impact — good handling",
-  },
-  {
-    id: 4,
-    number: "05",
-    label: "Cold Storage",
-    short: "Storage",
-    icon: "❄️",
-    description:
-      "Movement during storage loading and pallet rearrangement can still create damage risk.",
-    measurement:
-      "ClevaCado tracks handling stress and vibration during storage transitions.",
-    insight:
-      "Pallet-stacking vibration during refrigerated loading is measurable and reducible.",
-    riskLevel: "moderate" as RiskLevel,
-    riskColor: "#FACC15",
-    event: "Vibration: 12 min above threshold",
-  },
-  {
-    id: 5,
-    number: "06",
-    label: "Transport",
-    short: "Transport",
-    icon: "🚛",
-    description:
-      "Long-duration vibration and repeated road shocks can reduce fruit quality before arrival.",
-    measurement:
-      "ClevaCado records vibration exposure and route-level handling risk over time.",
-    insight:
-      "22 minutes of above-threshold vibration detected during highway transit.",
-    riskLevel: "high" as RiskLevel,
-    riskColor: "#FB923C",
-    event: "Vibration: 22 min above threshold",
-  },
-  {
-    id: 6,
-    number: "07",
-    label: "Market Arrival",
-    short: "Market",
-    icon: "🏪",
-    description:
-      "Instead of guessing where bruising happened, producers receive a clear damage-risk profile.",
-    measurement:
-      "ClevaCado helps protect quality and enables targeted improvements from farm to market.",
-    insight:
-      "Full supply-chain damage profile delivered — hotspots identified, actions recommended.",
-    riskLevel: "low" as RiskLevel,
-    riskColor: "#39D353",
-    event: "Report ready — 3 hotspots found",
+      "Producers receive a clear risk profile showing where fruit quality is most likely being lost.",
   },
 ] as const;
 
-export const SENSOR_FEATURES = [
+export const JOURNEY_STAGES: JourneyStage[] = [
   {
-    id: 0,
-    title: "Impact-Event Detection",
+    id: "harvesting",
+    number: "01",
+    label: "Harvesting",
+    short: "Harvest",
     description:
-      "Detects sudden shocks and drops that can contribute to bruising, logging the time, magnitude, and duration of each event.",
-    icon: "⚡",
-    metric: "Up to 16 g range",
-    color: "#39D353",
+      "Drops, knocks, and rough picking can create bruising risk before the fruit even reaches the packhouse.",
+    measurement:
+      "ClevaCado records early impact events at the source.",
+    insight:
+      "The first handling moments already shape downstream fruit quality.",
+    event: "Impact detected: 2.1 g at point of pick",
+    riskLevel: "moderate",
+    score: 24,
+    position: { x: 14, y: 84 },
   },
   {
-    id: 1,
-    title: "Vibration Exposure Tracking",
+    id: "bin-handling",
+    number: "02",
+    label: "Bin handling",
+    short: "Bins",
     description:
-      "Measures repeated movement during conveyors, loading, cold storage, and transport to quantify cumulative mechanical stress.",
-    icon: "〰️",
+      "Tipping, stacking, and transfer points can introduce repeated mechanical stress before sorting begins.",
+    measurement:
+      "ClevaCado identifies high-impact handling moments before they become hidden quality losses.",
+    insight:
+      "Repeated shocks accumulate long before bruising becomes visible.",
+    event: "Shock detected: 3.1 g during bin tipping",
+    riskLevel: "high",
+    score: 46,
+    position: { x: 21, y: 68 },
+  },
+  {
+    id: "sorting-line",
+    number: "03",
+    label: "Sorting line",
+    short: "Sorting",
+    description:
+      "Conveyors and transfer points can expose avocados to vibration, tumbling, and sudden drops.",
+    measurement:
+      "ClevaCado maps motion patterns across the packhouse line.",
+    insight:
+      "The packhouse transfer line is the clearest bruising-risk hotspot in this run.",
+    event: "High-impact transfer shock at 10:45",
+    riskLevel: "critical",
+    score: 72,
+    position: { x: 38, y: 53 },
+  },
+  {
+    id: "packing",
+    number: "04",
+    label: "Packing",
+    short: "Packing",
+    description:
+      "Small handling changes can affect whether fruit arrives in premium condition.",
+    measurement:
+      "ClevaCado helps teams identify where process improvements matter most.",
+    insight:
+      "Gentler transitions here reduce cumulative damage after sorting.",
+    event: "Moderate rotation pattern through carton loading",
+    riskLevel: "moderate",
+    score: 41,
+    position: { x: 53, y: 39 },
+  },
+  {
+    id: "cold-storage",
+    number: "05",
+    label: "Cold storage",
+    short: "Storage",
+    description:
+      "Loading, movement, and storage transitions can still create damage risk inside the cold chain.",
+    measurement:
+      "ClevaCado records stress events during cold-chain handling.",
+    insight:
+      "Storage is relatively controlled, but loading transitions still matter.",
+    event: "Storage transition vibration above threshold for 12 minutes",
+    riskLevel: "moderate",
+    score: 29,
+    position: { x: 68, y: 28 },
+  },
+  {
+    id: "transport",
+    number: "06",
+    label: "Transport",
+    short: "Transport",
+    description:
+      "Long-duration vibration and repeated shocks can reduce quality before arrival.",
+    measurement:
+      "ClevaCado tracks vibration exposure and route-level handling risk.",
+    insight:
+      "Transport is stable overall, but sustained vibration still adds pressure to fruit quality.",
+    event: "Route vibration exposure above target for 22 minutes",
+    riskLevel: "high",
+    score: 53,
+    position: { x: 82, y: 17 },
+  },
+  {
+    id: "market-arrival",
+    number: "07",
+    label: "Market arrival",
+    short: "Market",
+    description:
+      "Instead of guessing where bruising happened, producers receive a clear damage-risk profile from farm to market.",
+    measurement:
+      "ClevaCado turns the full handling journey into decision-ready diagnostics.",
+    insight:
+      "The run closes with one clear instruction: fix the sorting transfer line first.",
+    event: "Farm-to-market report generated",
+    riskLevel: "low",
+    score: 18,
+    position: { x: 90, y: 8 },
+  },
+];
+
+export const TECHNOLOGY_FEATURES = [
+  {
+    id: "impact",
+    title: "Impact-event detection",
+    description:
+      "Detects sudden shocks and drops that may contribute to bruising risk.",
+    metric: "Shock threshold logging",
+  },
+  {
+    id: "vibration",
+    title: "Vibration exposure tracking",
+    description:
+      "Measures repeated movement during conveyors, loading, cold storage, and transport.",
     metric: "3-axis sensing",
-    color: "#22C55E",
   },
   {
-    id: 2,
-    title: "Rotational Motion Sensing",
+    id: "rotation",
+    title: "Rotational motion sensing",
     description:
-      "Uses gyroscopic data to understand tumbling, rolling, and orientation changes that affect how bruising forces are distributed.",
-    icon: "🔄",
-    metric: "360° rotation",
-    color: "#15803D",
+      "Uses gyroscopic data to understand tumbling, rolling, and orientation changes.",
+    metric: "Orientation changes",
   },
   {
-    id: 3,
-    title: "Damage-Risk Profiling",
+    id: "profiling",
+    title: "Damage-risk profiling",
     description:
-      "Converts raw inertial measurement data into clear, stage-by-stage supply-chain handling insights and risk scores.",
-    icon: "📊",
-    metric: "Per-stage scoring",
-    color: "#39D353",
+      "Converts raw motion data into stage-by-stage handling insights.",
+    metric: "Decision-ready outputs",
+  },
+] as const;
+
+export const TRUST_POINTS = [
+  "impact events",
+  "vibration exposure",
+  "orientation changes",
+  "handling shocks",
+  "stage-by-stage risk profiles",
+  "farm-to-market diagnostics",
+] as const;
+
+export const AUDIENCE_CARDS = [
+  {
+    id: "farmers",
+    title: "Farmers",
+    description:
+      "Improve harvesting and early handling practices before hidden bruising compounds.",
+  },
+  {
+    id: "packhouses",
+    title: "Packhouses",
+    description:
+      "Identify risky transfer points, conveyors, and sorting processes inside the facility.",
+  },
+  {
+    id: "exporters",
+    title: "Exporters",
+    description:
+      "Improve quality consistency before long-distance transport and market arrival.",
+  },
+  {
+    id: "logistics",
+    title: "Logistics teams",
+    description:
+      "Understand vibration and shock exposure during storage movements and transport.",
   },
 ] as const;
 
 export const IMPACT_CARDS = [
   {
-    id: 0,
-    title: "Reduce Post-Harvest Losses",
+    id: "losses",
+    title: "Reduce post-harvest losses",
     description:
-      "Identify damage hotspots before they become repeated, invisible quality losses.",
-    icon: "📉",
+      "Find the handling moments that quietly erode fruit quality across the chain.",
   },
   {
-    id: 1,
-    title: "Improve Marketable Yield",
+    id: "yield",
+    title: "Improve marketable yield",
     description:
-      "Help more avocados reach customers in premium condition by fixing the right problems.",
-    icon: "🥑",
+      "Protect more fruit so more of every harvest reaches buyers in premium condition.",
   },
   {
-    id: 2,
-    title: "Support Food Quality",
+    id: "quality",
+    title: "Support food quality",
     description:
-      "Give teams better evidence to protect freshness, consistency, and shelf life.",
-    icon: "✅",
+      "Give teams better evidence to protect consistency, freshness, and shelf-life outcomes.",
   },
   {
-    id: 3,
-    title: "Empower Farmers with Data",
+    id: "data",
+    title: "Empower farmers with data",
     description:
-      "Replace guesswork with measurable supply-chain diagnostics that point to real solutions.",
-    icon: "📱",
+      "Replace guesswork with measurable diagnostics that point to practical handling fixes.",
   },
   {
-    id: 4,
-    title: "Reduce Food Waste",
+    id: "waste",
+    title: "Reduce food waste",
     description:
-      "Protect more produce from farm to market — less bruising means less waste.",
-    icon: "♻️",
+      "Even small handling improvements can protect more fruit across large harvest volumes.",
   },
   {
-    id: 5,
-    title: "Enable Better Processes",
+    id: "process",
+    title: "Enable better processes",
     description:
-      "Give workers and managers clearer tools to improve handling quality at every stage.",
-    icon: "🔧",
+      "Make it easier for teams to improve transfer points, handling methods, and operating routines.",
   },
 ] as const;
 
+export const IMPACT_STRIP = [
+  "Stage-by-stage visibility",
+  "Faster process fixes",
+  "Clearer post-harvest decisions",
+] as const;
+
 export const DASHBOARD_CHART_DATA = [
-  { time: "09:00", impact: 0.2, vibration: 0.1, stage: "Harvest" },
-  { time: "09:30", impact: 2.1, vibration: 0.3, stage: "Harvest" },
-  { time: "10:15", impact: 3.1, vibration: 0.5, stage: "Bins" },
-  { time: "10:45", impact: 4.8, vibration: 0.8, stage: "Sorting" },
-  { time: "11:30", impact: 1.2, vibration: 1.4, stage: "Sorting" },
-  { time: "12:00", impact: 0.4, vibration: 0.6, stage: "Packing" },
-  { time: "13:00", impact: 0.3, vibration: 0.4, stage: "Packing" },
-  { time: "14:00", impact: 0.8, vibration: 1.8, stage: "Storage" },
-  { time: "15:30", impact: 1.1, vibration: 2.4, stage: "Transport" },
-  { time: "17:00", impact: 0.5, vibration: 1.6, stage: "Transport" },
-  { time: "18:30", impact: 0.3, vibration: 0.2, stage: "Market" },
+  { time: "09:00", impact: 0.4, vibration: 0.2 },
+  { time: "09:40", impact: 1.9, vibration: 0.3 },
+  { time: "10:10", impact: 2.8, vibration: 0.6 },
+  { time: "10:45", impact: 4.7, vibration: 0.9 },
+  { time: "11:20", impact: 3.9, vibration: 1.5 },
+  { time: "12:10", impact: 1.6, vibration: 0.8 },
+  { time: "13:00", impact: 0.9, vibration: 0.6 },
+  { time: "14:20", impact: 1.1, vibration: 1.3 },
+  { time: "15:30", impact: 1.4, vibration: 2.1 },
+  { time: "17:00", impact: 1.0, vibration: 1.7 },
+  { time: "18:30", impact: 0.5, vibration: 0.4 },
 ] as const;
