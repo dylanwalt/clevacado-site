@@ -63,6 +63,20 @@ h4,
   font-family: var(--font-display), var(--font-body), sans-serif;
 }
 
+.telemetry-mono {
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    "Courier New",
+    monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
 ::selection {
   background: rgba(183, 255, 90, 0.22);
   color: #f6f7f2;

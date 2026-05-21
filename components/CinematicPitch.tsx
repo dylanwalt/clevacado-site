@@ -33,7 +33,7 @@ type TechLayer = {
   label: string;
   title: string;
   detail: string;
-  mask: string;
+  clipPath: string;
   y: number;
 };
 
@@ -44,7 +44,6 @@ type PipelineFrame = {
   title: string;
   signal: string;
   action: string;
-  ambient: string;
   accent: string;
   Icon: typeof Leaf;
 };
@@ -63,8 +62,7 @@ const TECH_LAYERS: TechLayer[] = [
     label: "Layer 01",
     title: "Shell",
     detail: "Impact housing built to stay in the handling flow.",
-    mask:
-      "linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 28%, rgba(0,0,0,0) 40%)",
+    clipPath: "inset(0% 0% 61% 0%)",
     y: -120,
   },
   {
@@ -72,17 +70,15 @@ const TECH_LAYERS: TechLayer[] = [
     label: "Layer 02",
     title: "Sensor core",
     detail: "Inertial capture records shock, vibration, and orientation.",
-    mask:
-      "linear-gradient(180deg, rgba(0,0,0,0) 16%, rgba(0,0,0,1) 28%, rgba(0,0,0,1) 60%, rgba(0,0,0,0) 72%)",
-    y: -34,
+    clipPath: "inset(24% 0% 33% 0%)",
+    y: -38,
   },
   {
     id: "power",
     label: "Layer 03",
     title: "Power",
     detail: "Energy reserve sustains diagnostic runs through the chain.",
-    mask:
-      "linear-gradient(180deg, rgba(0,0,0,0) 52%, rgba(0,0,0,1) 60%, rgba(0,0,0,1) 74%, rgba(0,0,0,0) 82%)",
+    clipPath: "inset(56% 0% 18% 0%)",
     y: 52,
   },
   {
@@ -90,9 +86,8 @@ const TECH_LAYERS: TechLayer[] = [
     label: "Layer 04",
     title: "Data layer",
     detail: "Telemetry resolves into stage-level handling intelligence.",
-    mask:
-      "linear-gradient(180deg, rgba(0,0,0,0) 70%, rgba(0,0,0,1) 80%, rgba(0,0,0,1) 100%)",
-    y: 136,
+    clipPath: "inset(70% 0% 0% 0%)",
+    y: 142,
   },
 ] as const;
 
@@ -104,7 +99,6 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     title: "Early knocks start the hidden loss.",
     signal: "Detected: 2.1g picking impact.",
     action: "Action: tighten first-touch handling.",
-    ambient: "Field / stems / pick bins",
     accent: "#B7FF5A",
     Icon: Leaf,
   },
@@ -112,10 +106,10 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     id: "bins",
     label: "Bins",
     eyebrow: "Transfer telemetry",
-    title: "Tipping amplifies mechanical stress.",
+    title:
+      "Tipping and transfer events expose fruit to severe rotational stress and vibration from tractor PTOs and combine transfers.",
     signal: "Detected: 3.1g bin shock.",
     action: "Action: soften drop interfaces.",
-    ambient: "Bins / stacking / transfer",
     accent: "#F6B73C",
     Icon: Package,
   },
@@ -126,7 +120,6 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     title: "The transfer line becomes the hotspot.",
     signal: "Detected: shock spike at 10:45.",
     action: "Action: reduce conveyor handoff height.",
-    ambient: "Sorting / conveyors / transfer line",
     accent: "#F97316",
     Icon: Factory,
   },
@@ -137,7 +130,6 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     title: "Long vibration keeps loading the fruit.",
     signal: "Detected: 22 minutes above target.",
     action: "Action: review route isolation points.",
-    ambient: "Cold chain / truck / route vibration",
     accent: "#7DD3FC",
     Icon: Truck,
   },
@@ -148,7 +140,6 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     title: "The fix becomes obvious.",
     signal: "Hotspot: packhouse transfer line.",
     action: "Action: adjust process and rerun.",
-    ambient: "Signal / dashboard / retest loop",
     accent: "#5ED143",
     Icon: BarChart3,
   },
@@ -159,6 +150,8 @@ const ANALYTICS_PHASE_LABELS: Record<AnalyticsPhase, string> = {
   vibration: "Vibration field",
   rotation: "Gyro tensor",
 };
+
+const TELEMETRY_CLASS = "telemetry-mono text-white/72";
 
 function buildPlot(points: ReadonlyArray<{ time: string; impact: number; vibration: number }>, key: "impact" | "vibration") {
   const width = 460;
@@ -255,20 +248,11 @@ function ScenePanel({ frame, index }: { frame: PipelineFrame; index: number }) {
         </p>
       </div>
 
-      <div className="absolute bottom-[10%] left-[7%]">
-        <p className="text-xs uppercase tracking-[0.28em] text-white/32">
-          {frame.ambient}
-        </p>
-      </div>
-
-      <div className="absolute bottom-[12%] right-[7%] flex items-center gap-4">
+      <div className="absolute bottom-[12%] right-[7%]">
         <span
           className="h-2.5 w-2.5 rounded-full"
           style={{ background: frame.accent, boxShadow: `0 0 20px ${frame.accent}` }}
         />
-        <span className="text-[11px] uppercase tracking-[0.28em] text-white/44">
-          scene {index + 1}
-        </span>
       </div>
 
       {index === 0 && (
@@ -359,6 +343,91 @@ export default function CinematicPitch() {
 
       const mm = gsap.matchMedia();
 
+      if (!prefersReducedMotion) {
+        gsap
+          .timeline({
+            defaults: { ease: "power2.out" },
+          })
+          .fromTo(
+            ".hook-copy",
+            {
+              autoAlpha: 0,
+              y: 24,
+            },
+            {
+              autoAlpha: 1,
+              y: 0,
+              stagger: 0.08,
+              duration: 0.72,
+            },
+          )
+          .fromTo(
+            ".hook-silhouette",
+            {
+              autoAlpha: 0,
+              scale: 0.94,
+            },
+            {
+              autoAlpha: 1,
+              scale: 1,
+              duration: 0.96,
+              ease: "power3.out",
+            },
+            0.04,
+          )
+          .fromTo(
+            ".hook-ring",
+            {
+              autoAlpha: 0,
+              scale: 0.9,
+            },
+            {
+              autoAlpha: 1,
+              scale: 1,
+              stagger: 0.05,
+              duration: 0.48,
+            },
+            0.14,
+          )
+          .fromTo(
+            ".hook-dot",
+            {
+              autoAlpha: 0,
+              scale: 0.4,
+            },
+            {
+              autoAlpha: 1,
+              scale: 1,
+              stagger: 0.04,
+              duration: 0.34,
+            },
+            0.2,
+          )
+          .fromTo(
+            ".hook-scroll-indicator",
+            {
+              autoAlpha: 0,
+              y: 10,
+            },
+            {
+              autoAlpha: 0.82,
+              y: 0,
+              duration: 0.42,
+            },
+            0.42,
+          );
+
+        gsap.to(".hook-scroll-line", {
+          scaleY: 1.16,
+          opacity: 1,
+          duration: 1.5,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          transformOrigin: "center top",
+        });
+      }
+
       mm.add("(max-width: 1023px)", () => {
         gsap.utils.toArray<HTMLElement>(".mobile-reveal").forEach((element) => {
           gsap.from(element, {
@@ -394,43 +463,6 @@ export default function CinematicPitch() {
         });
 
         hookTimeline
-          .from(".hook-copy", {
-            autoAlpha: 0,
-            y: 34,
-            stagger: 0.08,
-            duration: 0.8,
-            ease: "power2.out",
-          })
-          .from(
-            ".hook-silhouette",
-            {
-              autoAlpha: 0,
-              scale: 0.84,
-              duration: 1,
-              ease: "power3.out",
-            },
-            0.04,
-          )
-          .from(
-            ".hook-ring",
-            {
-              autoAlpha: 0,
-              scale: 0.82,
-              stagger: 0.06,
-              duration: 0.6,
-            },
-            0.12,
-          )
-          .from(
-            ".hook-dot",
-            {
-              autoAlpha: 0,
-              scale: 0.2,
-              stagger: 0.05,
-              duration: 0.45,
-            },
-            0.18,
-          )
           .to(
             ".hook-beam",
             {
@@ -441,23 +473,56 @@ export default function CinematicPitch() {
             0,
           )
           .to(
+            ".hook-scroll-indicator",
+            {
+              autoAlpha: 0,
+              y: 18,
+              duration: 0.28,
+              ease: "none",
+            },
+            0.04,
+          )
+          .to(
             ".hook-copy",
             {
               yPercent: -26,
-              autoAlpha: 0.12,
+              autoAlpha: 0.08,
               duration: 1,
               ease: "none",
             },
-            0.34,
+            0.28,
           )
           .to(
             ".hook-silhouette",
             {
               scale: 1.08,
+              autoAlpha: 0.24,
               duration: 1,
               ease: "none",
             },
             0.24,
+          )
+          .to(
+            ".hook-ring",
+            {
+              scale: 1.06,
+              autoAlpha: 0.18,
+              stagger: 0.04,
+              duration: 0.8,
+              ease: "none",
+            },
+            0.16,
+          )
+          .to(
+            ".hook-dot",
+            {
+              autoAlpha: 0.24,
+              y: 18,
+              stagger: 0.03,
+              duration: 0.74,
+              ease: "none",
+            },
+            0.22,
           );
 
         const heroTimeline = gsap.timeline({
@@ -605,6 +670,16 @@ export default function CinematicPitch() {
               duration: 0.46,
             },
             0.28,
+          )
+          .to(
+            ".tech-copy",
+            {
+              autoAlpha: 0.18,
+              yPercent: -8,
+              duration: 1,
+              ease: "none",
+            },
+            0.56,
           );
 
         const journeyTimeline = gsap.timeline({
@@ -682,6 +757,16 @@ export default function CinematicPitch() {
               ease: "none",
             },
             0.12,
+          )
+          .to(
+            ".journey-copy",
+            {
+              autoAlpha: 0.14,
+              yPercent: -10,
+              duration: 1,
+              ease: "none",
+            },
+            0.3,
           );
 
         const analyticsTimeline = gsap.timeline({
@@ -758,6 +843,16 @@ export default function CinematicPitch() {
               duration: 0.4,
             },
             0.42,
+          )
+          .to(
+            ".analytics-copy",
+            {
+              autoAlpha: 0.18,
+              yPercent: -6,
+              duration: 1,
+              ease: "none",
+            },
+            0.52,
           );
 
         return () => {
@@ -777,6 +872,26 @@ export default function CinematicPitch() {
   useGSAP(
     () => {
       if (prefersReducedMotion) return;
+
+      gsap.to(".tech-layer", {
+        opacity: 0.44,
+        duration: 0.28,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+
+      gsap.to(`.tech-layer-${activeTech.id}`, {
+        opacity: 1,
+        duration: 0.36,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+
+      TECH_LAYERS.forEach((layer, index) => {
+        gsap.set(`.tech-layer-${layer.id}`, {
+          zIndex: activeTech.id === layer.id ? 12 : TECH_LAYERS.length - index,
+        });
+      });
 
       gsap.fromTo(
         ".live-copy",
@@ -813,16 +928,16 @@ export default function CinematicPitch() {
 
       <section
         ref={hookSceneRef}
-        className="relative lg:h-[170vh]"
+        className="relative lg:h-[190vh]"
       >
         <div
           ref={hookStageRef}
-          className="relative flex min-h-screen items-center overflow-hidden px-6 py-20 lg:h-screen"
+          className="relative flex min-h-screen items-center overflow-hidden px-6 py-24 lg:h-screen lg:py-28"
         >
           <div className="mx-auto grid w-full max-w-7xl items-center gap-14 lg:grid-cols-[0.88fr_1.12fr]">
             <div className="mobile-reveal max-w-[620px]">
               <p className="hook-copy text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
-                Scene 1 / The hook
+                Problem
               </p>
               <h1
                 data-display="true"
@@ -880,16 +995,24 @@ export default function CinematicPitch() {
               </div>
             </div>
           </div>
+          <div className="hook-scroll-indicator pointer-events-none absolute bottom-8 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center gap-3">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.32em] text-white/34">
+              Scroll
+            </span>
+            <span className="relative h-16 w-px overflow-hidden rounded-full bg-white/10">
+              <span className="hook-scroll-line absolute inset-x-0 top-0 h-8 rounded-full bg-[#B7FF5A] opacity-80 shadow-[0_0_14px_rgba(183,255,90,0.6)]" />
+            </span>
+          </div>
         </div>
       </section>
 
       <section
         ref={heroSceneRef}
-        className="relative lg:h-[240vh]"
+        className="relative lg:h-[250vh]"
       >
         <div
           ref={heroStageRef}
-          className="relative flex min-h-screen items-center overflow-hidden px-6 py-20 lg:h-screen"
+          className="relative flex min-h-screen items-center overflow-hidden px-6 py-24 lg:h-screen lg:py-28"
         >
           <div className="mx-auto grid w-full max-w-7xl items-center gap-14 lg:grid-cols-[0.84fr_1.16fr]">
             <div className="mobile-reveal max-w-[520px]">
@@ -905,7 +1028,7 @@ export default function CinematicPitch() {
                 </div>
               </div>
               <p className="hero-copy mt-8 text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
-                Scene 2 / Hero reveal
+                Device reveal
               </p>
               <h2
                 data-display="true"
@@ -955,16 +1078,16 @@ export default function CinematicPitch() {
 
       <section
         ref={techSceneRef}
-        className="relative lg:h-[340vh]"
+        className="relative lg:h-[380vh]"
       >
         <div
           ref={techStageRef}
-          className="relative flex min-h-screen items-center overflow-hidden px-6 py-20 lg:h-screen"
+          className="relative flex min-h-screen items-center overflow-hidden px-6 py-24 lg:h-screen lg:py-28"
         >
           <div className="mx-auto grid w-full max-w-7xl items-center gap-14 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="mobile-reveal max-w-[420px]">
               <p className="tech-copy text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
-                Scene 3 / Exploded tech view
+                Exploded architecture
               </p>
               <h2
                 data-display="true"
@@ -1013,22 +1136,30 @@ export default function CinematicPitch() {
 
               <div className="absolute inset-[8%]">
                 <div className="tech-shell-base absolute inset-0">
+                  <div className="absolute inset-0 opacity-[0.14]">
+                    <Image
+                      src={explodedDevice}
+                      alt="ClevaCado exploded engineering view"
+                      sizes="(min-width: 1024px) 50vw, 92vw"
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
                   {TECH_LAYERS.map((layer, index) => (
                     <div
                       key={layer.id}
-                      className={`tech-layer-${layer.id} absolute inset-0`}
+                      className={`tech-layer tech-layer-${layer.id} absolute inset-0 bg-contain bg-center bg-no-repeat transition-opacity duration-500`}
                       style={{
-                        WebkitMaskImage: layer.mask,
-                        maskImage: layer.mask,
-                        filter: index === activeTechLayer ? "drop-shadow(0 0 26px rgba(183,255,90,0.18))" : "none",
+                        backgroundImage: `url(${explodedDevice.src})`,
+                        backgroundSize: "contain",
+                        clipPath: layer.clipPath,
+                        opacity: index === activeTechLayer ? 1 : 0.48,
+                        zIndex: TECH_LAYERS.length - index,
+                        filter:
+                          index === activeTechLayer
+                            ? "drop-shadow(0 0 26px rgba(183,255,90,0.18))"
+                            : "none",
                       }}
                     >
-                      <Image
-                        src={explodedDevice}
-                        alt="ClevaCado exploded engineering view"
-                        sizes="(min-width: 1024px) 50vw, 92vw"
-                        className="h-full w-full object-contain"
-                      />
                     </div>
                   ))}
                 </div>
@@ -1051,7 +1182,7 @@ export default function CinematicPitch() {
                             : "linear-gradient(90deg, rgba(255,255,255,0.28), rgba(255,255,255,0.04))",
                       }}
                     />
-                    <div className="rounded-full border border-white/8 bg-black/44 px-4 py-2 backdrop-blur-md">
+                    <div className="tech-label-chip rounded-full border border-white/8 bg-black/44 px-4 py-2 backdrop-blur-md">
                       <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
                         {layer.label}
                       </p>
@@ -1074,12 +1205,12 @@ export default function CinematicPitch() {
 
       <section
         ref={journeySceneRef}
-        className="relative lg:h-[430vh]"
+        className="relative lg:h-[500vh]"
       >
         <div className="lg:hidden px-6 py-24">
           <div className="mx-auto max-w-4xl">
             <p className="mobile-reveal text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
-              Scene 4 / Journey pipeline
+              Journey pipeline
             </p>
             <h2
               data-display="true"
@@ -1112,8 +1243,8 @@ export default function CinematicPitch() {
                   <p className="mt-4 text-lg font-medium text-white/84">
                     {frame.title}
                   </p>
-                  <p className="mt-3 text-sm text-white/56">{frame.signal}</p>
-                  <p className="mt-2 text-sm font-semibold text-white/76">
+                  <p className={`mt-3 text-sm ${TELEMETRY_CLASS}`}>{frame.signal}</p>
+                  <p className={`mt-2 text-sm font-semibold ${TELEMETRY_CLASS}`}>
                     {frame.action}
                   </p>
                 </article>
@@ -1146,13 +1277,13 @@ export default function CinematicPitch() {
 
           <div className="journey-copy absolute left-8 top-8 z-30 max-w-[340px]">
             <p className="text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
-              Scene 4 / Journey pipeline
+              Journey pipeline
             </p>
             <h2
               data-display="true"
               className="mt-6 text-balance text-[clamp(3.2rem,5vw,5.6rem)] font-semibold leading-[0.92] tracking-[-0.06em]"
             >
-              The device stays still. The supply chain moves past it.
+              One device. Five moments. One answer.
             </h2>
           </div>
 
@@ -1178,7 +1309,7 @@ export default function CinematicPitch() {
             />
           </div>
 
-          <div className="pipeline-overlay-card absolute bottom-8 left-8 z-30 w-[360px] rounded-[34px] border border-white/8 bg-black/44 p-7 shadow-[0_30px_90px_rgba(0,0,0,0.24)] backdrop-blur-md">
+          <div className="pipeline-overlay-card absolute bottom-8 left-8 z-30 w-[420px] max-w-[calc(100vw-4rem)] rounded-[34px] border border-white/8 bg-black/44 p-7 shadow-[0_30px_90px_rgba(0,0,0,0.24)] backdrop-blur-md">
             <div className="live-copy" key={activeFrame.id}>
               <p
                 className="text-[10px] font-semibold uppercase tracking-[0.3em]"
@@ -1195,8 +1326,8 @@ export default function CinematicPitch() {
               <p className="mt-5 text-xl font-medium leading-[1.3] text-white/86">
                 {activeFrame.title}
               </p>
-              <p className="mt-4 text-sm text-white/58">{activeFrame.signal}</p>
-              <p className="mt-2 text-sm font-semibold text-white/78">
+              <p className={`mt-4 text-sm ${TELEMETRY_CLASS}`}>{activeFrame.signal}</p>
+              <p className={`mt-2 text-sm font-semibold ${TELEMETRY_CLASS}`}>
                 {activeFrame.action}
               </p>
             </div>
@@ -1225,16 +1356,16 @@ export default function CinematicPitch() {
 
       <section
         ref={analyticsSceneRef}
-        className="relative lg:h-[280vh]"
+        className="relative lg:h-[320vh]"
       >
         <div
           ref={analyticsStageRef}
-          className="relative flex min-h-screen items-center overflow-hidden px-6 py-20 lg:h-screen"
+          className="relative flex min-h-screen items-center overflow-hidden px-6 py-24 lg:h-screen lg:py-28"
         >
           <div className="mx-auto grid w-full max-w-7xl items-center gap-12 lg:grid-cols-[0.72fr_1.28fr]">
             <div className="mobile-reveal max-w-[420px]">
               <p className="analytics-copy text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
-                Scene 5 / Deep analytics
+                Deep analytics
               </p>
               <h2
                 data-display="true"
@@ -1265,7 +1396,7 @@ export default function CinematicPitch() {
                   </p>
                   <p
                     data-display="true"
-                    className="live-copy mt-3 text-2xl font-semibold tracking-[-0.04em]"
+                    className={`live-copy mt-3 text-2xl font-semibold tracking-[-0.04em] ${TELEMETRY_CLASS}`}
                   >
                     {ANALYTICS_PHASE_LABELS[analyticsPhase]}
                   </p>
@@ -1282,12 +1413,12 @@ export default function CinematicPitch() {
                       <p className="text-sm font-semibold text-white/78">
                         ClevaCado Analytics
                       </p>
-                      <p className="text-xs uppercase tracking-[0.22em] text-white/34">
+                      <p className="telemetry-mono text-xs uppercase text-white/34">
                         Run #1042
                       </p>
                     </div>
                   </div>
-                  <span className="rounded-full border border-[#B7FF5A]/25 bg-[#B7FF5A]/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.28em] text-[#B7FF5A]">
+                  <span className="telemetry-mono rounded-full border border-[#B7FF5A]/25 bg-[#B7FF5A]/10 px-4 py-2 text-[10px] font-semibold uppercase text-[#B7FF5A]">
                     Live data
                   </span>
                 </div>
@@ -1346,7 +1477,7 @@ export default function CinematicPitch() {
                                 </p>
                               </div>
                               <span
-                                className="rounded-full px-3 py-1 text-xs font-semibold"
+                                className="telemetry-mono rounded-full px-3 py-1 text-xs font-semibold"
                                 style={{
                                   background: `${risk.color}20`,
                                   color: risk.color,
@@ -1375,7 +1506,7 @@ export default function CinematicPitch() {
                             <p
                               ref={scoreRef}
                               data-display="true"
-                              className="mt-2 text-5xl font-semibold tracking-[-0.06em]"
+                              className="telemetry-mono mt-2 text-5xl font-semibold tracking-[-0.06em]"
                             >
                               72
                             </p>
@@ -1469,7 +1600,7 @@ export default function CinematicPitch() {
                               <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
                                 Detected event
                               </p>
-                              <p className="mt-3 text-lg font-semibold text-white/86">
+                              <p className={`mt-3 text-lg font-semibold ${TELEMETRY_CLASS}`}>
                                 High-impact transfer shock at 10:45
                               </p>
                               <p className="mt-2 text-sm text-white/52">
@@ -1488,7 +1619,7 @@ export default function CinematicPitch() {
                               <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
                                 Recommendation
                               </p>
-                              <p className="mt-3 text-lg font-semibold text-white/86">
+                              <p className={`mt-3 text-lg font-semibold ${TELEMETRY_CLASS}`}>
                                 Reduce transfer drop height and retest.
                               </p>
                               <p className="mt-2 text-sm text-white/52">

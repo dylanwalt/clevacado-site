@@ -310,9 +310,23 @@ export default function TensorField({ phase }: TensorFieldProps) {
           </div>
         </div>
 
-        <div className="relative z-10 flex items-center justify-between text-[11px] uppercase tracking-[0.24em] text-white/48">
-          <span className="tensor-label">3 x 3 x 3 tensor field</span>
-          <span className="tensor-label">gyro precision map</span>
+        <div className="relative z-10 grid gap-3 border-t border-white/8 pt-4 sm:grid-cols-2">
+          <div className="tensor-label rounded-[18px] border border-white/8 bg-white/[0.03] px-3 py-3">
+            <p className="text-[10px] uppercase tracking-[0.24em] text-white/34">
+              Spatial Orientation
+            </p>
+            <p className="telemetry-mono mt-2 text-[11px] text-white/68">
+              3x3x3 Rank-3 Tensor Field
+            </p>
+          </div>
+          <div className="tensor-label rounded-[18px] border border-white/8 bg-white/[0.03] px-3 py-3">
+            <p className="text-[10px] uppercase tracking-[0.24em] text-white/34">
+              Telemetry
+            </p>
+            <p className="telemetry-mono mt-2 text-[11px] text-white/68">
+              Gyroscopic Precision Map
+            </p>
+          </div>
         </div>
       </div>
     </div>
