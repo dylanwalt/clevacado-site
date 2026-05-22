@@ -12,7 +12,6 @@ import {
   Factory,
   Leaf,
   Package,
-  Radar,
   ScanLine,
   Truck,
 } from "lucide-react";
@@ -26,9 +25,9 @@ import {
 import { gsap, useGSAP } from "@/lib/gsap";
 import heroDevice from "@/public/assets/clevacado-hero-3d.png";
 import explodedDevice from "@/public/assets/clevacado-exploded-3d.png";
+import blueprintImage from "@/public/assets/blueprint-image.png";
 import homeSceneLogo from "@/public/branding/home-scene-mark.png";
 import BrandLogo from "./BrandLogo";
-import TensorField from "./TensorField";
 
 type TechLayer = {
   id: string;
@@ -49,8 +48,6 @@ type PipelineFrame = {
   accent: string;
   Icon: typeof Leaf;
 };
-
-type AnalyticsPhase = "impact" | "vibration" | "rotation";
 
 const HERO_CHIPS = [
   { label: "Impact detected", value: "2.1 g", className: "left-[4%] top-[22%]" },
@@ -146,12 +143,6 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     Icon: BarChart3,
   },
 ] as const;
-
-const ANALYTICS_PHASE_LABELS: Record<AnalyticsPhase, string> = {
-  impact: "Impact field",
-  vibration: "Vibration field",
-  rotation: "Gyro tensor",
-};
 
 const TELEMETRY_CLASS = "telemetry-mono text-white/72";
 
@@ -307,17 +298,12 @@ export default function CinematicPitch() {
   const scoreRef = useRef<HTMLParagraphElement>(null);
   const [activeTechLayer, setActiveTechLayer] = useState(0);
   const [activeFrameIndex, setActiveFrameIndex] = useState(0);
-  const [analyticsPhase, setAnalyticsPhase] = useState<AnalyticsPhase>("impact");
   const prefersReducedMotion = usePrefersReducedMotion();
 
   const activeTech = TECH_LAYERS[activeTechLayer];
   const activeFrame = PIPELINE_FRAMES[activeFrameIndex];
   const impactPolyline = useMemo(
     () => buildPlot(DASHBOARD_CHART_DATA, "impact"),
-    [],
-  );
-  const vibrationPolyline = useMemo(
-    () => buildPlot(DASHBOARD_CHART_DATA, "vibration"),
     [],
   );
   const impactArea = useMemo(() => buildArea(impactPolyline), [impactPolyline]);
@@ -591,6 +577,24 @@ export default function CinematicPitch() {
               ease: "none",
             },
             0.42,
+          )
+          .to(
+            ".hero-assembled",
+            {
+              autoAlpha: 0,
+              duration: 0.5,
+              ease: "power2.inOut",
+            },
+            0.66,
+          )
+          .to(
+            ".hero-exploded",
+            {
+              autoAlpha: 1,
+              duration: 0.5,
+              ease: "power2.inOut",
+            },
+            0.66,
           );
 
         const techTimeline = gsap.timeline({
@@ -767,17 +771,6 @@ export default function CinematicPitch() {
             anticipatePin: 1,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
-              const nextPhase: AnalyticsPhase =
-                self.progress < 0.34
-                  ? "impact"
-                  : self.progress < 0.68
-                    ? "vibration"
-                    : "rotation";
-
-              setAnalyticsPhase((current) =>
-                current === nextPhase ? current : nextPhase,
-              );
-
               if (scoreRef.current) {
                 const nextValue = Math.round(Math.min(72, self.progress * 92));
                 scoreRef.current.textContent = String(nextValue);
@@ -888,7 +881,7 @@ export default function CinematicPitch() {
     },
     {
       scope: rootRef,
-      dependencies: [activeTechLayer, activeFrameIndex, analyticsPhase, prefersReducedMotion],
+      dependencies: [activeTechLayer, activeFrameIndex, prefersReducedMotion],
       revertOnUpdate: true,
     },
   );
@@ -936,23 +929,6 @@ export default function CinematicPitch() {
               <p className="hook-copy mt-6 max-w-[520px] text-lg leading-relaxed text-white/58 sm:text-xl">
                 By the time the bruise shows, the handling data is gone.
               </p>
-
-              <div className="hook-copy mt-10 grid max-w-[440px] gap-3 border-l border-white/10 pl-5">
-                {[
-                  ["Invisible event", "Impact happens before the bruise appears."],
-                  ["Delayed signal", "The fruit looks fine while the damage accumulates."],
-                  ["Missing evidence", "Handlers are left without the moment that caused it."],
-                ].map(([label, detail]) => (
-                  <div key={label}>
-                    <p className="telemetry-mono text-[11px] uppercase text-[#B7FF5A]/88">
-                      {label}
-                    </p>
-                    <p className="mt-1 text-sm leading-relaxed text-white/50">
-                      {detail}
-                    </p>
-                  </div>
-                ))}
-              </div>
             </div>
 
             <div className="mobile-reveal relative flex min-h-[520px] items-center justify-center lg:justify-end">
@@ -1041,18 +1017,7 @@ export default function CinematicPitch() {
         >
           <div className="mx-auto grid w-full max-w-7xl items-center gap-14 lg:grid-cols-[0.84fr_1.16fr]">
             <div className="mobile-reveal max-w-[520px]">
-              <div className="hero-copy inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.04] px-4 py-3 backdrop-blur-sm">
-                <BrandLogo variant="mark" markSize={34} priority />
-                <div>
-                  <p className="text-sm font-semibold tracking-[-0.03em] text-white">
-                    ClevaCado
-                  </p>
-                  <p className="text-[10px] uppercase tracking-[0.24em] text-white/46">
-                    Post-harvest diagnostics
-                  </p>
-                </div>
-              </div>
-              <p className="hero-copy mt-8 text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
+              <p className="hero-copy text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
                 The device
               </p>
               <h2
@@ -1094,19 +1059,36 @@ export default function CinematicPitch() {
 
               <div className="hero-device relative z-10 w-full max-w-[620px]">
                 <div
-                  className="overflow-hidden rounded-[44px] border border-white/8 p-4 shadow-[0_50px_120px_rgba(0,0,0,0.34)]"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 50% 22%, rgba(183,255,90,0.26) 0%, rgba(246,247,242,0.98) 34%, rgba(221,230,214,0.92) 100%)",
-                  }}
+                  className="relative overflow-hidden rounded-[44px] border border-white/8 shadow-[0_50px_120px_rgba(0,0,0,0.34)]"
                 >
-                  <Image
-                    src={heroDevice}
-                    alt="ClevaCado device emerging into view"
-                    priority
-                    sizes="(min-width: 1024px) 44vw, 88vw"
-                    className="mx-auto w-full object-contain drop-shadow-[0_50px_120px_rgba(0,0,0,0.42)]"
-                  />
+                  {/* Assembled — light card, fades out mid-scroll */}
+                  <div
+                    className="hero-assembled p-4"
+                    style={{
+                      background:
+                        "radial-gradient(circle at 50% 22%, rgba(183,255,90,0.26) 0%, rgba(246,247,242,0.98) 34%, rgba(221,230,214,0.92) 100%)",
+                    }}
+                  >
+                    <Image
+                      src={heroDevice}
+                      alt="ClevaCado device"
+                      priority
+                      sizes="(min-width: 1024px) 44vw, 88vw"
+                      className="mx-auto w-full object-contain drop-shadow-[0_50px_120px_rgba(0,0,0,0.42)]"
+                    />
+                  </div>
+                  {/* Exploded — fades in mid-scroll */}
+                  <div
+                    className="hero-exploded absolute inset-0"
+                    style={{ opacity: 0, visibility: "hidden" }}
+                  >
+                    <Image
+                      src={blueprintImage}
+                      alt="ClevaCado device exploded view"
+                      sizes="(min-width: 1024px) 44vw, 88vw"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -1449,256 +1431,120 @@ export default function CinematicPitch() {
                 what happened there, and what to fix next.
               </p>
 
-              <div className="analytics-stat-cards mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-                <div className="rounded-[28px] border border-white/8 bg-white/[0.03] p-5 backdrop-blur-sm">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
-                    Highest-risk point
-                  </p>
-                  <p
-                    data-display="true"
-                    className="mt-3 text-2xl font-semibold tracking-[-0.04em]"
-                  >
-                    Packhouse transfer line
-                  </p>
-                </div>
-                <div className="rounded-[28px] border border-white/8 bg-white/[0.03] p-5 backdrop-blur-sm">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
-                    Active mode
-                  </p>
-                  <p
-                    data-display="true"
-                    className={`live-copy mt-3 text-2xl font-semibold tracking-[-0.04em] ${TELEMETRY_CLASS}`}
-                  >
-                    {ANALYTICS_PHASE_LABELS[analyticsPhase]}
-                  </p>
-                </div>
+              <div className="analytics-stat-cards mt-10 rounded-[28px] border border-white/8 bg-white/[0.03] p-5 backdrop-blur-sm">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
+                  Hotspot
+                </p>
+                <p
+                  data-display="true"
+                  className="mt-3 text-2xl font-semibold tracking-[-0.04em]"
+                >
+                  Packhouse transfer line
+                </p>
+                <p className="mt-2 text-sm text-white/48">Sorting stage · Risk score 72</p>
               </div>
             </div>
 
-            <div className="space-y-5">
+            <div className="space-y-4">
               <div className="analytics-panel overflow-hidden rounded-[34px] border border-white/8 bg-[#090c0b]/88 shadow-[0_34px_110px_rgba(0,0,0,0.28)] backdrop-blur-md">
+                {/* Header */}
                 <div className="flex items-center justify-between border-b border-white/8 px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <BrandLogo variant="mark" markSize={28} />
-                    <div>
-                      <p className="text-sm font-semibold text-white/78">
-                        ClevaCado Analytics
-                      </p>
-                      <p className="telemetry-mono text-xs uppercase text-white/34">
-                        Run #1042
-                      </p>
-                    </div>
+                    <BrandLogo variant="mark" markSize={26} />
+                    <p className="text-sm font-semibold text-white/78">ClevaCado Analytics</p>
                   </div>
-                  <span className="telemetry-mono rounded-full border border-[#B7FF5A]/25 bg-[#B7FF5A]/10 px-4 py-2 text-[10px] font-semibold uppercase text-[#B7FF5A]">
+                  <span className="telemetry-mono rounded-full border border-[#B7FF5A]/25 bg-[#B7FF5A]/10 px-3 py-1.5 text-[10px] font-semibold uppercase text-[#B7FF5A]">
                     Demo run
                   </span>
                 </div>
 
-                <div className="grid gap-5 p-5 lg:grid-cols-[0.94fr_1.06fr]">
-                  <div className="analytics-panel rounded-[28px] border border-white/8 bg-white/[0.03] p-5">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
-                          Stage risk profile
-                        </p>
-                        <p className="mt-2 text-sm text-white/52">
-                          7-stage post-harvest diagnostics
-                        </p>
-                      </div>
-                      <Radar size={18} className="text-[#B7FF5A]" />
-                    </div>
-
-                    <div className="mt-5 space-y-3">
+                <div className="grid gap-4 p-4 lg:grid-cols-2">
+                  {/* Stage risk table */}
+                  <div className="analytics-panel rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
+                      Stage risk profile
+                    </p>
+                    <div className="mt-4 space-y-2">
                       {JOURNEY_STAGES.map((stage) => {
                         const risk = RISK_META[stage.riskLevel];
                         const isHotspot = stage.id === "sorting-line";
-
                         return (
                           <div
                             key={stage.id}
-                            className="analytics-row rounded-[20px] border px-4 py-4"
+                            className="analytics-row flex items-center gap-3 rounded-[14px] border px-3 py-2.5"
                             style={{
-                              borderColor: isHotspot
-                                ? "rgba(249,115,22,0.26)"
-                                : "rgba(255,255,255,0.08)",
-                              background: isHotspot
-                                ? "rgba(249,115,22,0.12)"
-                                : "rgba(255,255,255,0.02)",
-                              boxShadow: isHotspot
-                                ? "0 0 0 1px rgba(249,115,22,0.04) inset"
-                                : "none",
+                              borderColor: isHotspot ? "rgba(249,115,22,0.28)" : "rgba(255,255,255,0.06)",
+                              background: isHotspot ? "rgba(249,115,22,0.10)" : "rgba(255,255,255,0.02)",
                             }}
                           >
-                            <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-                              <span
-                                className="h-3.5 w-3.5 rounded-full"
-                                style={{
-                                  background: risk.color,
-                                  boxShadow: `0 0 18px ${risk.color}66`,
-                                }}
-                              />
-                              <div>
-                                <p className="text-sm font-semibold text-white/82">
-                                  {stage.label}
-                                </p>
-                                <p className="text-xs text-white/42">
-                                  {isHotspot
-                                    ? "Highest-energy transfer event"
-                                    : stage.measurement}
-                                </p>
-                              </div>
-                              <span
-                                className="telemetry-mono rounded-full px-3 py-1 text-xs font-semibold"
-                                style={{
-                                  background: `${risk.color}20`,
-                                  color: risk.color,
-                                }}
-                              >
-                                {stage.score}
-                              </span>
-                            </div>
+                            <span
+                              className="h-2 w-2 flex-shrink-0 rounded-full"
+                              style={{ background: risk.color, boxShadow: `0 0 10px ${risk.color}55` }}
+                            />
+                            <p className="flex-1 text-sm font-medium text-white/80">{stage.label}</p>
+                            <span
+                              className="telemetry-mono text-xs font-semibold"
+                              style={{ color: risk.color }}
+                            >
+                              {stage.score}
+                            </span>
                           </div>
                         );
                       })}
                     </div>
                   </div>
 
-                  <div className="grid gap-5">
-                    <div className="grid gap-5 lg:grid-cols-[0.72fr_1.28fr]">
-                      <div className="analytics-panel rounded-[28px] border border-white/8 bg-white/[0.03] p-5">
-                        <div className="flex items-center gap-4">
-                          <div className="rounded-2xl bg-white/[0.06] p-3 text-[#B7FF5A]">
-                            <CircleGauge size={20} />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
-                              Risk score
-                            </p>
-                            <p
-                              ref={scoreRef}
-                              data-display="true"
-                              className="telemetry-mono mt-2 text-5xl font-semibold tracking-[-0.06em]"
-                            >
-                              72
-                            </p>
-                          </div>
-                        </div>
-                        <p className="mt-4 text-sm font-semibold text-white/78">
-                          Moderate-high handling risk
+                  {/* Right: chart + 3 summary cards */}
+                  <div className="flex flex-col gap-4">
+                    <div className="analytics-panel rounded-[24px] border border-white/8 bg-white/[0.03] p-4">
+                      <div className="flex items-center justify-between">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
+                          Impact across the run
                         </p>
-                        <p className="mt-2 text-sm leading-relaxed text-white/52">
-                          Highest-risk point: packhouse transfer line inside the
-                          sorting stage.
-                        </p>
+                        <Activity size={15} className="text-[#B7FF5A]" />
                       </div>
-
-                      <TensorField phase={analyticsPhase} />
+                      <svg viewBox="0 0 460 140" className="mt-3 h-[130px] w-full" fill="none" aria-hidden="true">
+                        {[0, 1, 2].map((l) => (
+                          <line key={l} x1="12" x2="448" y1={22 + l * 40} y2={22 + l * 40} stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+                        ))}
+                        <path className="analytics-plot-fill" d={impactArea} fill="url(#impact-fill)" opacity="0.8" />
+                        <polyline
+                          className="analytics-plot-line"
+                          points={impactPolyline}
+                          stroke="#B7FF5A" strokeWidth="2.5"
+                          strokeLinecap="round" strokeLinejoin="round"
+                          strokeDasharray="1200" strokeDashoffset="1200"
+                        />
+                        <defs>
+                          <linearGradient id="impact-fill" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0%" stopColor="rgba(183,255,90,0.28)" />
+                            <stop offset="100%" stopColor="rgba(183,255,90,0)" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
                     </div>
 
-                    <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr]">
-                      <div className="analytics-panel rounded-[28px] border border-white/8 bg-white/[0.03] p-5">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
-                              Impact vs vibration
-                            </p>
-                            <p className="mt-2 text-sm text-white/52">
-                              Shock and motion across the run
-                            </p>
-                          </div>
-                          <Activity size={18} className="text-[#B7FF5A]" />
-                        </div>
-
-                        <svg
-                          viewBox="0 0 460 180"
-                          className="mt-5 h-[220px] w-full"
-                          fill="none"
-                          aria-hidden="true"
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="analytics-panel rounded-[20px] border border-white/8 bg-white/[0.03] p-3">
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-white/36">Risk</p>
+                        <p
+                          ref={scoreRef}
+                          data-display="true"
+                          className="telemetry-mono mt-1.5 text-3xl font-semibold tracking-[-0.05em]"
                         >
-                          {[0, 1, 2, 3].map((line) => (
-                            <line
-                              key={line}
-                              x1="12"
-                              x2="448"
-                              y1={20 + line * 40}
-                              y2={20 + line * 40}
-                              stroke="rgba(255,255,255,0.08)"
-                              strokeWidth="1"
-                            />
-                          ))}
-                          <path
-                            className="analytics-plot-fill"
-                            d={impactArea}
-                            fill="url(#impact-fill)"
-                            opacity="0.9"
-                          />
-                          <polyline
-                            className="analytics-plot-line"
-                            points={impactPolyline}
-                            stroke="#B7FF5A"
-                            strokeWidth="3"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeDasharray="1200"
-                            strokeDashoffset="1200"
-                          />
-                          <polyline
-                            className="analytics-plot-line"
-                            points={vibrationPolyline}
-                            stroke="#7DD3FC"
-                            strokeWidth="2.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeDasharray="1200"
-                            strokeDashoffset="1200"
-                          />
-                          <defs>
-                            <linearGradient id="impact-fill" x1="0" x2="0" y1="0" y2="1">
-                              <stop offset="0%" stopColor="rgba(183,255,90,0.34)" />
-                              <stop offset="100%" stopColor="rgba(183,255,90,0)" />
-                            </linearGradient>
-                          </defs>
-                        </svg>
+                          72
+                        </p>
+                        <p className="mt-1 text-[11px] text-white/44">Mod-high</p>
                       </div>
-
-                      <div className="grid gap-5">
-                        <div className="analytics-panel rounded-[28px] border border-white/8 bg-white/[0.03] p-5">
-                          <div className="flex items-start gap-4">
-                            <div className="rounded-2xl bg-white/[0.06] p-3 text-[#F97316]">
-                              <ScanLine size={20} />
-                            </div>
-                            <div>
-                              <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
-                                Detected event
-                              </p>
-                              <p className={`mt-3 text-lg font-semibold ${TELEMETRY_CLASS}`}>
-                                High-impact transfer shock at 10:45
-                              </p>
-                              <p className="mt-2 text-sm text-white/52">
-                                The signature spike aligns with the sorting handoff.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="analytics-panel rounded-[28px] border border-white/8 bg-white/[0.03] p-5">
-                          <div className="flex items-start gap-4">
-                            <div className="rounded-2xl bg-white/[0.06] p-3 text-[#B7FF5A]">
-                              <Database size={20} />
-                            </div>
-                            <div>
-                              <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
-                                Recommendation
-                              </p>
-                              <p className={`mt-3 text-lg font-semibold ${TELEMETRY_CLASS}`}>
-                                Reduce transfer drop height and retest.
-                              </p>
-                              <p className="mt-2 text-sm text-white/52">
-                                One process change. One diagnostic rerun. Clearer fruit quality.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
+                      <div className="analytics-panel rounded-[20px] border border-white/8 bg-white/[0.03] p-3">
+                        <div className="text-[#F97316]"><ScanLine size={15} /></div>
+                        <p className="mt-2 text-xs font-semibold leading-snug text-white/80">Shock at 10:45</p>
+                        <p className="mt-1 text-[11px] text-white/40">Sorting transfer</p>
+                      </div>
+                      <div className="analytics-panel rounded-[20px] border border-white/8 bg-white/[0.03] p-3">
+                        <div className="text-[#B7FF5A]"><Database size={15} /></div>
+                        <p className="mt-2 text-xs font-semibold leading-snug text-white/80">Reduce drop height</p>
+                        <p className="mt-1 text-[11px] text-white/40">And retest</p>
                       </div>
                     </div>
                   </div>
