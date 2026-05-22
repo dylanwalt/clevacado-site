@@ -4,6 +4,7 @@ import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import {
   Activity,
+  ArrowRight,
   BarChart3,
   CircleGauge,
   Cpu,
@@ -108,7 +109,7 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     label: "Bins",
     eyebrow: "Transfer telemetry",
     title:
-      "Tipping and transfer events expose fruit to severe rotational stress and vibration from tractor PTOs and combine transfers.",
+      "Bin transfers stack up the damage. Tipping and stacking introduce repeated mechanical stress before sorting even begins.",
     signal: "Detected: 3.1g bin shock.",
     action: "Action: soften drop interfaces.",
     accent: "#F6B73C",
@@ -786,7 +787,7 @@ export default function CinematicPitch() {
         });
 
         analyticsTimeline
-          .from(".analytics-copy", {
+          .from(".analytics-copy, .analytics-stat-cards", {
             autoAlpha: 0,
             y: 22,
             stagger: 0.08,
@@ -913,6 +914,7 @@ export default function CinematicPitch() {
       />
 
       <section
+        id="problem"
         ref={hookSceneRef}
         className="relative lg:h-[190vh]"
       >
@@ -1029,6 +1031,7 @@ export default function CinematicPitch() {
       </section>
 
       <section
+        id="device"
         ref={heroSceneRef}
         className="relative lg:h-[250vh]"
       >
@@ -1050,7 +1053,7 @@ export default function CinematicPitch() {
                 </div>
               </div>
               <p className="hero-copy mt-8 text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
-                Device reveal
+                The device
               </p>
               <h2
                 data-display="true"
@@ -1132,6 +1135,7 @@ export default function CinematicPitch() {
       </section>
 
       <section
+        id="architecture"
         ref={techSceneRef}
         className="relative lg:h-[380vh]"
       >
@@ -1142,7 +1146,7 @@ export default function CinematicPitch() {
           <div className="mx-auto grid w-full max-w-7xl items-center gap-14 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="mobile-reveal max-w-[420px]">
               <p className="tech-copy text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
-                Exploded architecture
+                Device architecture
               </p>
               <h2
                 data-display="true"
@@ -1250,7 +1254,7 @@ export default function CinematicPitch() {
 
                 <div className="absolute bottom-[8%] left-[8%] flex items-center gap-4 rounded-full border border-white/8 bg-black/40 px-5 py-3 text-sm text-white/58 backdrop-blur-md">
                   <Cpu size={16} className="text-[#B7FF5A]" />
-                  Inertial sensing bound to the scroll
+                  3-axis shock, vibration and rotation sensing
                 </div>
               </div>
             </div>
@@ -1259,6 +1263,7 @@ export default function CinematicPitch() {
       </section>
 
       <section
+        id="journey"
         ref={journeySceneRef}
         className="relative lg:h-[500vh]"
       >
@@ -1396,10 +1401,12 @@ export default function CinematicPitch() {
             </div>
           </div>
 
-          <div className="absolute right-8 top-1/2 z-30 flex -translate-y-1/2 flex-col gap-3">
+          <div className="absolute right-8 top-1/2 z-30 flex -translate-y-1/2 flex-col gap-3" role="list" aria-label="Journey stages">
             {PIPELINE_FRAMES.map((frame, index) => (
               <div
                 key={frame.id}
+                role="listitem"
+                aria-label={`${frame.label}${index === activeFrameIndex ? " — current stage" : ""}`}
                 className="h-14 w-[3px] rounded-full transition-all duration-300"
                 style={{
                   background:
@@ -1418,6 +1425,7 @@ export default function CinematicPitch() {
       </section>
 
       <section
+        id="analytics"
         ref={analyticsSceneRef}
         className="relative lg:h-[320vh]"
       >
@@ -1441,7 +1449,7 @@ export default function CinematicPitch() {
                 what happened there, and what to fix next.
               </p>
 
-              <div className="analytics-copy mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+              <div className="analytics-stat-cards mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
                 <div className="rounded-[28px] border border-white/8 bg-white/[0.03] p-5 backdrop-blur-sm">
                   <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-white/42">
                     Highest-risk point
@@ -1482,7 +1490,7 @@ export default function CinematicPitch() {
                     </div>
                   </div>
                   <span className="telemetry-mono rounded-full border border-[#B7FF5A]/25 bg-[#B7FF5A]/10 px-4 py-2 text-[10px] font-semibold uppercase text-[#B7FF5A]">
-                    Live data
+                    Demo run
                   </span>
                 </div>
 
@@ -1701,17 +1709,77 @@ export default function CinematicPitch() {
         </div>
       </section>
 
-      <section className="relative flex min-h-screen items-center justify-center px-6 py-24">
-        <div className="mx-auto max-w-5xl text-center">
+      <section id="cta" className="relative overflow-hidden px-6 pb-0 pt-28 sm:pt-36">
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 0%, rgba(183,255,90,0.09), transparent 44%)",
+          }}
+          aria-hidden="true"
+        />
+
+        <div className="mx-auto max-w-4xl text-center">
           <p className="mobile-reveal text-[10px] font-semibold uppercase tracking-[0.34em] text-[#B7FF5A]">
-            Contact
+            Get in touch
           </p>
-          <p
+          <h2
             data-display="true"
-            className="mobile-reveal mt-10 text-balance text-[clamp(2.8rem,7vw,7rem)] font-semibold leading-[0.94] tracking-[-0.07em]"
+            className="mobile-reveal mt-8 text-balance text-[clamp(2.8rem,6vw,6.4rem)] font-semibold leading-[0.92] tracking-[-0.07em]"
           >
-            {CONTACT_EMAIL}
+            See where your fruit takes damage.
+          </h2>
+          <p className="mobile-reveal mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/58">
+            ClevaCado is in active development. Join our pilot program and get
+            early diagnostic insight into your handling chain.
           </p>
+
+          <div className="mobile-reveal mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <a
+              href={`mailto:${CONTACT_EMAIL}?subject=Pilot%20Request`}
+              className="inline-flex items-center gap-2.5 rounded-full px-8 py-4 text-base font-bold transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#B7FF5A]/40"
+              style={{
+                background: "#B7FF5A",
+                color: "#040606",
+                boxShadow: "0 14px 40px rgba(183,255,90,0.26)",
+              }}
+            >
+              Request a pilot
+              <ArrowRight size={18} />
+            </a>
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="inline-flex items-center rounded-full border border-white/12 px-8 py-4 text-base font-medium text-white/64 backdrop-blur-sm transition-colors hover:border-white/24 hover:text-white/88"
+            >
+              {CONTACT_EMAIL}
+            </a>
+          </div>
+
+          <div className="mobile-reveal mt-10 flex flex-wrap items-center justify-center gap-3">
+            {[
+              "Farm-to-market diagnostics",
+              "Real handling environments",
+              "Stage-by-stage hotspot maps",
+            ].map((chip) => (
+              <span
+                key={chip}
+                className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/48"
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="mx-auto mt-24 max-w-7xl border-t border-white/8 px-6 py-8">
+          <div className="flex flex-col items-center justify-between gap-4 text-sm text-white/28 sm:flex-row">
+            <div className="flex items-center gap-3">
+              <BrandLogo variant="mark" markSize={24} />
+              <span className="font-semibold tracking-[-0.02em] text-white/42">ClevaCado</span>
+            </div>
+            <p>Post-harvest diagnostics for avocado supply chains.</p>
+            <p>© 2025 ClevaCado</p>
+          </div>
         </div>
       </section>
     </div>
