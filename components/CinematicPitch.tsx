@@ -472,7 +472,6 @@ export default function CinematicPitch() {
             ".hook-copy",
             {
               yPercent: -26,
-              autoAlpha: 0.08,
               duration: 1,
               ease: "none",
             },
@@ -482,7 +481,6 @@ export default function CinematicPitch() {
             ".hook-silhouette",
             {
               scale: 1.08,
-              autoAlpha: 0.24,
               duration: 1,
               ease: "none",
             },
@@ -492,7 +490,6 @@ export default function CinematicPitch() {
             ".hook-ring",
             {
               scale: 1.06,
-              autoAlpha: 0.18,
               stagger: 0.04,
               duration: 0.8,
               ease: "none",
@@ -502,7 +499,6 @@ export default function CinematicPitch() {
           .to(
             ".hook-dot",
             {
-              autoAlpha: 0.24,
               y: 18,
               stagger: 0.03,
               duration: 0.74,
