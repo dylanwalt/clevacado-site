@@ -14,7 +14,8 @@ export const COLORS = {
   riskRed: "#EF4444",
 } as const;
 
-export const CONTACT_EMAIL = "hello@clevacado.com";
+export const CONTACT_EMAIL = "dylanwalt10@gmail.com";
+export const CONTACT_PHONE = "+27 71 929 0175";
 
 export const RISK_META = {
   low: {

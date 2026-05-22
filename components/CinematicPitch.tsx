@@ -18,6 +18,7 @@ import {
 import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion";
 import {
   CONTACT_EMAIL,
+  CONTACT_PHONE,
   DASHBOARD_CHART_DATA,
   JOURNEY_STAGES,
   RISK_META,
@@ -1492,10 +1493,10 @@ export default function CinematicPitch() {
               <ArrowRight size={18} />
             </a>
             <a
-              href={`mailto:${CONTACT_EMAIL}`}
+              href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}
               className="inline-flex items-center rounded-full border border-white/12 px-8 py-4 text-base font-medium text-white/64 backdrop-blur-sm transition-colors hover:border-white/24 hover:text-white/88"
             >
-              {CONTACT_EMAIL}
+              {CONTACT_PHONE}
             </a>
           </div>
 
