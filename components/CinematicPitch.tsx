@@ -45,6 +45,7 @@ type PipelineFrame = {
   action: string;
   accent: string;
   Icon: typeof Leaf;
+  photo: string;
 };
 
 const HERO_CHIPS = [
@@ -98,6 +99,7 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     action: "Action: tighten first-touch handling.",
     accent: "#B7FF5A",
     Icon: Leaf,
+    photo: "https://images.unsplash.com/photo-zmbzKaJ3C1w?auto=format&fit=crop&w=1920&q=80",
   },
   {
     id: "bins",
@@ -109,6 +111,7 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     action: "Action: soften drop interfaces.",
     accent: "#F6B73C",
     Icon: Package,
+    photo: "https://images.unsplash.com/photo-HSyu8kcvg8s?auto=format&fit=crop&w=1920&q=80",
   },
   {
     id: "sorting",
@@ -119,6 +122,7 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     action: "Action: reduce conveyor handoff height.",
     accent: "#F97316",
     Icon: Factory,
+    photo: "https://images.unsplash.com/photo-ATfX4E8Rz_E?auto=format&fit=crop&w=1920&q=80",
   },
   {
     id: "transport",
@@ -129,6 +133,7 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     action: "Action: review route isolation points.",
     accent: "#7DD3FC",
     Icon: Truck,
+    photo: "https://images.unsplash.com/photo-Rhwj3CPwc6o?auto=format&fit=crop&w=1920&q=80",
   },
   {
     id: "report",
@@ -139,6 +144,7 @@ const PIPELINE_FRAMES: PipelineFrame[] = [
     action: "Action: adjust process and rerun.",
     accent: "#5ED143",
     Icon: BarChart3,
+    photo: "https://images.unsplash.com/photo-TIizLjvjqbg?auto=format&fit=crop&w=1920&q=80",
   },
 ] as const;
 
@@ -181,19 +187,28 @@ function ScenePanel({ frame, index }: { frame: PipelineFrame; index: number }) {
 
   return (
     <div className="relative h-full w-screen shrink-0 overflow-hidden px-6 py-14">
+      {/* Photo background */}
+      <img
+        src={frame.photo}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 h-full w-full object-cover"
+        style={{ opacity: 0.28 }}
+      />
+      {/* Colour-tinted gradient overlay */}
       <div
         className="absolute inset-0"
         style={{
           background:
             index === 0
-              ? "radial-gradient(circle at 24% 30%, rgba(183,255,90,0.14), transparent 28%), linear-gradient(135deg, #081109 0%, #101c10 52%, #060907 100%)"
+              ? "radial-gradient(circle at 24% 30%, rgba(183,255,90,0.14), transparent 28%), linear-gradient(135deg, rgba(8,17,9,0.88) 0%, rgba(16,28,16,0.82) 52%, rgba(6,9,7,0.90) 100%)"
               : index === 1
-                ? "radial-gradient(circle at 64% 26%, rgba(246,183,60,0.18), transparent 24%), linear-gradient(135deg, #07100a 0%, #16140c 52%, #060907 100%)"
+                ? "radial-gradient(circle at 64% 26%, rgba(246,183,60,0.18), transparent 24%), linear-gradient(135deg, rgba(7,16,10,0.88) 0%, rgba(22,20,12,0.82) 52%, rgba(6,9,7,0.90) 100%)"
                 : index === 2
-                  ? "radial-gradient(circle at 74% 40%, rgba(249,115,22,0.2), transparent 26%), linear-gradient(135deg, #05070a 0%, #17110c 52%, #050607 100%)"
+                  ? "radial-gradient(circle at 74% 40%, rgba(249,115,22,0.2), transparent 26%), linear-gradient(135deg, rgba(5,7,10,0.88) 0%, rgba(23,17,12,0.82) 52%, rgba(5,6,7,0.90) 100%)"
                   : index === 3
-                    ? "radial-gradient(circle at 30% 20%, rgba(125,211,252,0.16), transparent 24%), linear-gradient(135deg, #04080b 0%, #0a1318 48%, #050607 100%)"
-                    : "radial-gradient(circle at 50% 24%, rgba(94,209,67,0.16), transparent 24%), linear-gradient(135deg, #05070a 0%, #0f1510 42%, #040506 100%)",
+                    ? "radial-gradient(circle at 30% 20%, rgba(125,211,252,0.16), transparent 24%), linear-gradient(135deg, rgba(4,8,11,0.88) 0%, rgba(10,19,24,0.82) 48%, rgba(5,6,7,0.90) 100%)"
+                    : "radial-gradient(circle at 50% 24%, rgba(94,209,67,0.16), transparent 24%), linear-gradient(135deg, rgba(5,7,10,0.88) 0%, rgba(15,21,16,0.82) 42%, rgba(4,5,6,0.90) 100%)",
         }}
         aria-hidden="true"
       />
@@ -774,10 +789,10 @@ export default function CinematicPitch() {
             },
             0.28,
           )
-          .from(
+          .to(
             ".analytics-plot-line",
             {
-              strokeDashoffset: 1200,
+              strokeDashoffset: 0,
               duration: 0.95,
             },
             0.34,
