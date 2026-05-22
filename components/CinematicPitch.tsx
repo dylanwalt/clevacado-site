@@ -23,9 +23,6 @@ import {
   RISK_META,
 } from "@/lib/constants";
 import { gsap, useGSAP } from "@/lib/gsap";
-import heroDevice from "@/public/assets/clevacado-hero-3d.png";
-import explodedDevice from "@/public/assets/clevacado-exploded-3d.png";
-import blueprintImage from "@/public/assets/blueprint-image.png";
 import homeSceneLogo from "@/public/branding/home-scene-mark.png";
 import BrandLogo from "./BrandLogo";
 
@@ -577,24 +574,6 @@ export default function CinematicPitch() {
               ease: "none",
             },
             0.42,
-          )
-          .to(
-            ".hero-assembled",
-            {
-              autoAlpha: 0,
-              duration: 0.5,
-              ease: "power2.inOut",
-            },
-            0.66,
-          )
-          .to(
-            ".hero-exploded",
-            {
-              autoAlpha: 1,
-              duration: 0.5,
-              ease: "power2.inOut",
-            },
-            0.66,
           );
 
         const techTimeline = gsap.timeline({
@@ -628,16 +607,6 @@ export default function CinematicPitch() {
             ease: "power2.out",
           })
           .from(
-            ".tech-shell-base",
-            {
-              autoAlpha: 0,
-              scale: 0.9,
-              duration: 1,
-              ease: "power2.out",
-            },
-            0.08,
-          )
-          .from(
             ".tech-label",
             {
               autoAlpha: 0,
@@ -647,10 +616,6 @@ export default function CinematicPitch() {
             },
             0.2,
           )
-          .to(".tech-layer-shell", { y: TECH_LAYERS[0].y, duration: 1 }, 0.3)
-          .to(".tech-layer-sensor-core", { y: TECH_LAYERS[1].y, duration: 1 }, 0.42)
-          .to(".tech-layer-power", { y: TECH_LAYERS[2].y, duration: 1 }, 0.54)
-          .to(".tech-layer-data", { y: TECH_LAYERS[3].y, duration: 1 }, 0.66)
           .to(
             ".tech-connector",
             {
@@ -853,26 +818,6 @@ export default function CinematicPitch() {
     () => {
       if (prefersReducedMotion) return;
 
-      gsap.to(".tech-layer", {
-        opacity: 0.44,
-        duration: 0.28,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-
-      gsap.to(`.tech-layer-${activeTech.id}`, {
-        opacity: 1,
-        duration: 0.36,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
-
-      TECH_LAYERS.forEach((layer, index) => {
-        gsap.set(`.tech-layer-${layer.id}`, {
-          zIndex: activeTech.id === layer.id ? 12 : TECH_LAYERS.length - index,
-        });
-      });
-
       gsap.fromTo(
         ".live-copy",
         { autoAlpha: 0.16, y: 12 },
@@ -1058,37 +1003,13 @@ export default function CinematicPitch() {
               ))}
 
               <div className="hero-device relative z-10 w-full max-w-[620px]">
-                <div
-                  className="relative overflow-hidden rounded-[44px] border border-white/8 shadow-[0_50px_120px_rgba(0,0,0,0.34)]"
-                >
-                  {/* Assembled — light card, fades out mid-scroll */}
-                  <div
-                    className="hero-assembled p-4"
-                    style={{
-                      background:
-                        "radial-gradient(circle at 50% 22%, rgba(183,255,90,0.26) 0%, rgba(246,247,242,0.98) 34%, rgba(221,230,214,0.92) 100%)",
-                    }}
-                  >
-                    <Image
-                      src={heroDevice}
-                      alt="ClevaCado device"
-                      priority
-                      sizes="(min-width: 1024px) 44vw, 88vw"
-                      className="mx-auto w-full object-contain drop-shadow-[0_50px_120px_rgba(0,0,0,0.42)]"
-                    />
-                  </div>
-                  {/* Exploded — fades in mid-scroll */}
-                  <div
-                    className="hero-exploded absolute inset-0"
-                    style={{ opacity: 0, visibility: "hidden" }}
-                  >
-                    <Image
-                      src={blueprintImage}
-                      alt="ClevaCado device exploded view"
-                      sizes="(min-width: 1024px) 44vw, 88vw"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
+                <div className="relative overflow-hidden rounded-[44px] border border-white/8 shadow-[0_50px_120px_rgba(0,0,0,0.34)]">
+                  <img
+                    src="https://images.unsplash.com/photo-1597724662864-bab5530adbe5?auto=format&fit=crop&w=1200&q=85"
+                    alt="Avocados growing on tree"
+                    className="w-full object-cover"
+                    style={{ aspectRatio: "4/3" }}
+                  />
                 </div>
               </div>
 
@@ -1176,33 +1097,16 @@ export default function CinematicPitch() {
               />
 
               <div className="absolute inset-[8%]">
-                <div className="tech-shell-base absolute inset-0">
-                  <div className="absolute inset-0 opacity-[0.14]">
-                    <Image
-                      src={explodedDevice}
-                      alt="ClevaCado exploded engineering view"
-                      sizes="(min-width: 1024px) 50vw, 92vw"
-                      className="h-full w-full object-contain"
-                    />
-                  </div>
-                  {TECH_LAYERS.map((layer, index) => (
-                    <div
-                      key={layer.id}
-                      className={`tech-layer tech-layer-${layer.id} absolute inset-0 bg-contain bg-center bg-no-repeat transition-opacity duration-500`}
-                      style={{
-                        backgroundImage: `url(${explodedDevice.src})`,
-                        backgroundSize: "contain",
-                        clipPath: layer.clipPath,
-                        opacity: index === activeTechLayer ? 1 : 0.48,
-                        zIndex: TECH_LAYERS.length - index,
-                        filter:
-                          index === activeTechLayer
-                            ? "drop-shadow(0 0 26px rgba(183,255,90,0.18))"
-                            : "none",
-                      }}
-                    >
-                    </div>
-                  ))}
+                <div className="tech-shell-base absolute inset-0 overflow-hidden rounded-[32px]">
+                  <img
+                    src="https://images.unsplash.com/photo-1691657915865-d7b9a6a54e6f?auto=format&fit=crop&w=1200&q=85"
+                    alt="Avocados in harvesting crate"
+                    className="h-full w-full object-cover opacity-60"
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{ background: "linear-gradient(180deg, rgba(5,8,6,0.2) 0%, rgba(5,8,6,0.65) 100%)" }}
+                  />
                 </div>
 
                 {TECH_LAYERS.map((layer, index) => (
@@ -1343,18 +1247,12 @@ export default function CinematicPitch() {
                   "radial-gradient(circle, rgba(183,255,90,0.18) 0%, rgba(94,209,67,0.08) 38%, rgba(94,209,67,0.01) 72%)",
               }}
             />
-            <div
-              className="relative z-10 overflow-hidden rounded-[38px] border border-white/8 p-4 shadow-[0_40px_120px_rgba(0,0,0,0.42)]"
-              style={{
-                background:
-                  "radial-gradient(circle at 50% 18%, rgba(183,255,90,0.24) 0%, rgba(246,247,242,0.98) 34%, rgba(223,232,216,0.9) 100%)",
-              }}
-            >
-              <Image
-                src={heroDevice}
-                alt="ClevaCado fixed at the center of the journey pipeline"
-                sizes="360px"
-                className="w-full object-contain drop-shadow-[0_60px_140px_rgba(0,0,0,0.52)]"
+            <div className="relative z-10 overflow-hidden rounded-[38px] border border-white/10 shadow-[0_40px_120px_rgba(0,0,0,0.52)]">
+              <img
+                src="https://images.unsplash.com/photo-1726177551991-270f9e79b65e?auto=format&fit=crop&w=800&q=85"
+                alt="Avocados on tree"
+                className="w-full object-cover"
+                style={{ aspectRatio: "1/1" }}
               />
             </div>
           </div>
