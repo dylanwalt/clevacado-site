@@ -4,34 +4,29 @@ Live site: https://clevacado.co.za
 Source repository: https://github.com/dylanwalt/clevacado-site
 
 ## Local development
-Install dependencies and run the dev server:
+The current production site is the evidence-led Vite/React release in
+[`website-v3/`](./website-v3/). Install its dependencies and run it locally:
 
 ```bash
-npm install
+cd website-v3
+npm ci
 npm run dev
 ```
 
-Then open http://localhost:3000
+Then open the Local URL Vite prints (usually `http://localhost:5173`).
+The root `npm run dev`, `npm run build`, and `npm run lint` scripts also target
+`website-v3/` after its dependencies are installed.
 
 ## Netlify build
 
 Netlify is connected to this repository. Pull requests receive Deploy Previews;
-updates merged into `main` publish the production site. Build settings:
+updates merged into `main` publish the production site. The root
+[`netlify.toml`](./netlify.toml) selects `website-v3/` as the build base, and
+uses the Vite build output and the app walkthrough redirect.
 
-- Build command: `npm run build`
-- Publish directory: `out`
-- Base directory: repository root
+The former Next.js implementation remains in the repository as preserved
+source, but is no longer the production build target.
 
-The site is a Next.js static export (`output: "export"`). Keep routes and forms
-compatible with static hosting. Netlify Forms detection must be enabled in the
-site dashboard; the pilot form uses `public/__forms.html` as its static form
-definition and submits to that file.
-
-## Static export
-This project is configured to run as a static export (GitHub Pages friendly).
-
-```bash
-npm run build
-```
-
-The export output is generated into `out/`.
+The enquiry form requires only an email address. Netlify Forms stores its
+submissions; the notification to `hello@clevacado.co.za` must be configured in
+Netlify Forms settings. Localhost does not transmit form values.

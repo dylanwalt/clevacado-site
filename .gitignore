@@ -19,6 +19,9 @@
 
 # production
 /build
+/website-v3/node_modules/
+/website-v3/dist/
+/website-v3/.netlify/
 
 # misc
 .DS_Store

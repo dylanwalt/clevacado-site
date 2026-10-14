@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "npm --prefix website-v3 run dev -- --host 0.0.0.0",
+    "build": "npm --prefix website-v3 run build",
+    "start": "npm --prefix website-v3 run preview -- --host 0.0.0.0",
+    "lint": "npm --prefix website-v3 run lint"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
