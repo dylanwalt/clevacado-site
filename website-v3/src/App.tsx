@@ -273,6 +273,10 @@ export default function App() {
               <a href="https://za.linkedin.com/in/dylanwalt" target="_blank" rel="noreferrer"><span>EDHE · Inter-varsity regionals</span><small>Representing Wits with ClevaCado <ArrowUpRight size={14} /></small></a>
               <a href="https://za.linkedin.com/in/dylanwalt" target="_blank" rel="noreferrer"><span>AfreTec 2026 · Wits</span><small>Read Dylan’s AfreTec update <ArrowUpRight size={14} /></small></a>
             </div>
+            <a className="dsl-project-link" href="https://dsllab.app/projects/group-03/" target="_blank" rel="noreferrer">
+              <span><strong>Digital Smart Lab · Group 03</strong><small>Read the public project page and investigation overview.</small></span>
+              <ArrowUpRight size={17} />
+            </a>
           </section>
         </section>
 
