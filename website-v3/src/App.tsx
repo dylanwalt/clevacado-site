@@ -29,16 +29,18 @@ function JourneyFilm() {
     <figure className="journey-film">
       <video
         className="journey-film-player"
+        autoPlay
+        muted
         controls
         playsInline
         preload="metadata"
-        aria-label="Illustrative animation of avocados moving through handling"
+        aria-label="40-second illustrative animation of avocados moving through handling"
         onPlay={() => track('video_play', { name: 'journey-film' })}
       >
         <source src="/media/clevacado-journey-film.mp4" type="video/mp4" />
         Your browser does not support HTML video.
       </video>
-      <figcaption>Illustrative animation, not footage of an operating trial.</figcaption>
+      <figcaption>40-second illustrative animation. Autoplay is muted; use the controls for sound or replay. Not footage of an operating trial.</figcaption>
     </figure>
   );
 }
@@ -168,11 +170,9 @@ export default function App() {
             </div>
             <p className="hero-note"><Check size={15} /> Prototype development and controlled testing underway</p>
           </div>
-          <figure className="hero-product">
-            <div className="product-image-wrap"><img src="/images/clevacado-r4-shell-cad.jpg" alt="CAD render of the closed avocado-shaped ClevaCado shell with its joining seam" fetchPriority="high" /></div>
-            <figcaption><span>R4 shell CAD</span><span>Design illustration</span></figcaption>
-            <p>Current enclosure design shown; prototype assembly and field use remain under development.</p>
-          </figure>
+          <div className="hero-visual" aria-label="ClevaCado journey video">
+            <JourneyFilm />
+          </div>
           <a className="hero-scroll" href="#problem" onClick={navTo('problem')} aria-label="Scroll to the problem"><span>01 / 06</span><ArrowDown size={15} /></a>
         </section>
 
@@ -222,7 +222,6 @@ export default function App() {
             <div><p className="section-kicker">One connected route</p><h2 id="journey-heading">Follow the fruit. <em>Review the motion.</em></h2></div>
             <p>Each transfer is part of the story. A trial can help us ask where motion events occurred and what was happening at the time.</p>
           </div>
-          <JourneyFilm />
           <ol className="journey-stages">
             {journeyStages.map(({ number, title, detail, Icon }) => <li key={number}><span className="stage-icon"><Icon size={19} strokeWidth={1.8} /></span><span className="stage-number">{number}</span><strong>{title}</strong><small>{detail}</small></li>)}
           </ol>
@@ -264,6 +263,21 @@ export default function App() {
               <p>Dylan is an Electrical and Information Engineering student at the University of the Witwatersrand. His ClevaCado work focuses on prototype logging, data handling and supporting repeatable test work.</p>
             </article>
           </div>
+          <section className="social-proof" aria-labelledby="social-proof-heading">
+            <div className="social-proof-heading">
+              <p className="section-kicker">From our LinkedIn</p>
+              <h3 id="social-proof-heading">A few moments from the journey.</h3>
+            </div>
+            <div className="social-links">
+              <a href="https://www.linkedin.com/posts/dylanwalt_entrepreneurship-agtech-machinelearning-activity-7477315277190447104-nZjI" target="_blank" rel="noreferrer"><span>EDHE · ClevaCado launch</span><small>Our first EDHE Absa InnoVarsity milestone <ArrowUpRight size={14} /></small></a>
+              <a href="https://za.linkedin.com/in/dylanwalt" target="_blank" rel="noreferrer"><span>EDHE · Inter-varsity regionals</span><small>Representing Wits with ClevaCado <ArrowUpRight size={14} /></small></a>
+              <a href="https://za.linkedin.com/in/dylanwalt" target="_blank" rel="noreferrer"><span>AfreTec 2026 · Wits</span><small>Read Dylan’s AfreTec update <ArrowUpRight size={14} /></small></a>
+            </div>
+            <a className="dsl-project-link" href="https://dsllab.app/projects/group-03/" target="_blank" rel="noreferrer">
+              <span><strong>Digital Smart Lab · Group 03</strong><small>Read the public project page and investigation overview.</small></span>
+              <ArrowUpRight size={17} />
+            </a>
+          </section>
         </section>
 
         <section className="pilot-section section-pad" id="pilot" aria-labelledby="pilot-heading">
