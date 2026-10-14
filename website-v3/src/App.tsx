@@ -40,7 +40,6 @@ function JourneyFilm() {
         <source src="/media/clevacado-journey-film.mp4" type="video/mp4" />
         Your browser does not support HTML video.
       </video>
-      <figcaption>40-second illustrative animation. Autoplay is muted; use the controls for sound or replay. Not footage of an operating trial.</figcaption>
     </figure>
   );
 }
