@@ -4,7 +4,6 @@ import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import {
   Activity,
-  ArrowRight,
   BarChart3,
   CircleGauge,
   Cpu,
@@ -17,8 +16,6 @@ import {
 } from "lucide-react";
 import usePrefersReducedMotion from "@/hooks/usePrefersReducedMotion";
 import {
-  CONTACT_EMAIL,
-  CONTACT_PHONE,
   DASHBOARD_CHART_DATA,
   JOURNEY_STAGES,
   RISK_META,
@@ -26,6 +23,9 @@ import {
 import { gsap, useGSAP } from "@/lib/gsap";
 import homeSceneLogo from "@/public/branding/home-scene-mark.png";
 import BrandLogo from "./BrandLogo";
+import AboutSection from "./AboutSection";
+import JourneyFilm from "./JourneyFilm";
+import PilotRequestForm from "./PilotRequestForm";
 
 type TechLayer = {
   id: string;
@@ -1465,6 +1465,9 @@ export default function CinematicPitch() {
         </div>
       </section>
 
+      <JourneyFilm />
+      <AboutSection />
+
       <section id="cta" className="relative overflow-hidden px-6 pb-0 pt-28 sm:pt-36">
         <div
           className="pointer-events-none absolute inset-0"
@@ -1490,25 +1493,9 @@ export default function CinematicPitch() {
             early diagnostic insight into your handling chain.
           </p>
 
-          <div className="mobile-reveal mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a
-              href={`mailto:${CONTACT_EMAIL}?subject=Pilot%20Request`}
-              className="inline-flex items-center gap-2.5 rounded-full px-8 py-4 text-base font-bold transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#B7FF5A]/40"
-              style={{
-                background: "#B7FF5A",
-                color: "#040606",
-                boxShadow: "0 14px 40px rgba(183,255,90,0.26)",
-              }}
-            >
-              Request a pilot
-              <ArrowRight size={18} />
-            </a>
-            <a
-              href={`tel:${CONTACT_PHONE.replace(/\s/g, "")}`}
-              className="inline-flex items-center rounded-full border border-white/12 px-8 py-4 text-base font-medium text-white/64 backdrop-blur-sm transition-colors hover:border-white/24 hover:text-white/88"
-            >
-              {CONTACT_PHONE}
-            </a>
+          <div className="mobile-reveal mx-auto max-w-2xl">
+            <PilotRequestForm />
+            <p className="mt-2 text-sm text-white/42">Prefer email? <a className="text-[#B7FF5A] underline underline-offset-4" href="mailto:hello@clevacado.co.za">hello@clevacado.co.za</a></p>
           </div>
 
           <div className="mobile-reveal mt-10 flex flex-wrap items-center justify-center gap-3">
