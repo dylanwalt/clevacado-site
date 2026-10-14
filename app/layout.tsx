@@ -15,7 +15,7 @@ const displayFont = Sora({
 export const metadata: Metadata = {
   title: "ClevaCado | Post-Harvest Diagnostics",
   description:
-    "ClevaCado is a diagnostic device that travels the avocado supply chain to detect invisible handling damage and pinpoint bruising hotspots — from harvest to market.",
+    "ClevaCado is developing a diagnostic device to record motion events across the avocado supply chain and help teams investigate handling conditions from harvest to market.",
   keywords: [
     "agri-tech",
     "avocado",

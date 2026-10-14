@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { label: "Architecture", href: "#architecture" },
   { label: "Journey", href: "#journey" },
   { label: "Analytics", href: "#analytics" },
+  { label: "About", href: "#about" },
 ];
 
 export default function Navigation() {

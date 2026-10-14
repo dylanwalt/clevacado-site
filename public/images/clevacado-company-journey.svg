@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">ClevaCado — From grower calls to first pilot</title>
+  <desc id="desc">A one-screen winding company journey beginning in January 2026: grower calls and international interest from Australia and New Zealand, Wits EDHE university rounds, Arthur's mentorship between the rounds, the regional round, strategic conversations, prototype validation, EIE Open Day, and the goal of an initial pilot. A tiny truck carrying an avocado rides the trail at the current milestone.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#102C1C"/><stop offset=".55" stop-color="#142F1F"/><stop offset="1" stop-color="#0E2418"/></linearGradient>
+    <linearGradient id="goal" x1="0" x2="1"><stop stop-color="#D8FF71"/><stop offset="1" stop-color="#B7FF5A"/></linearGradient>
+    <linearGradient id="truckCab" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#F3F8EF"/><stop offset="1" stop-color="#B9CBB7"/></linearGradient>
+    <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="#B9CBB7" opacity=".16"/></pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#07140C" flood-opacity=".38"/></filter>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="trailArrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M0 1L11 6L0 11" fill="none" stroke="#D8FF71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#dots)" opacity=".7"/>
+  <circle cx="1465" cy="140" r="265" fill="#5ED143" opacity=".045"/>
+  <circle cx="1465" cy="140" r="205" fill="none" stroke="#B7FF5A" opacity=".10"/>
+  <g font-family="Manrope,Arial,sans-serif">
+    <text x="62" y="49" fill="#D8FF71" font-family="'DM Mono',monospace" font-size="14" font-weight="700" letter-spacing="2.3">CLEVACADO  /  OUR COMPANY JOURNEY</text>
+    <text x="60" y="112" fill="#F3F8EF" font-size="45" font-weight="800" letter-spacing="-1.3">From grower calls to first pilot</text>
+    <text x="64" y="148" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="17">A business story shaped by listening, learning, and building with growers.</text>
+    <g transform="translate(1260 34)"><rect width="278" height="38" rx="19" fill="#1B4426" stroke="#52765A"/><circle cx="20" cy="19" r="6" fill="#D8FF71"/><text x="37" y="24" fill="#F3F8EF" font-family="'DM Mono',monospace" font-size="11" font-weight="700" letter-spacing="1">JOURNEY STARTS · JAN 2026</text></g>
+    <g transform="translate(1122 119)"><rect width="416" height="38" rx="19" fill="#173C27" stroke="#52765A"/><path d="M20 28c-8-8-7-17 1-22 7 6 8 15 1 22Z" fill="#5ED143"/><ellipse cx="21" cy="22" rx="2.2" ry="3.2" fill="#8A5B37"/><text x="39" y="24" fill="#D8FF71" font-family="'DM Mono',monospace" font-size="11" font-weight="700" letter-spacing=".35">RELATED · AFRETEC · 31 AUG–2 SEP 2026</text></g>
+  </g>
+
+  <!-- A winding trail: left-to-right across the top, then back toward the goal. -->
+  <path d="M82 365H1498Q1540 365 1540 407V578Q1540 620 1498 620H82" fill="none" stroke="#07180E" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" opacity=".66"/>
+  <path d="M82 365H1498Q1540 365 1540 407V578Q1540 620 1498 620H82" fill="none" stroke="#385E40" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M82 365H1498Q1540 365 1540 407V578Q1540 620 1498 620H82" fill="none" stroke="#D8FF71" stroke-width="2.5" stroke-dasharray="3 15" stroke-linecap="round" marker-end="url(#trailArrow)" opacity=".92"/>
+  <g fill="none" stroke="#5ED143" stroke-width="2" stroke-dasharray="4 7" opacity=".68"><path d="M210 338V350"/><path d="M590 338V350"/><path d="M970 338V350"/><path d="M1350 338V350"/><path d="M1350 638V672"/><path d="M970 638V672"/><path d="M590 638V672"/><path d="M210 638V668"/></g>
+
+  <!-- Milestone cards sit clear of the path, leaving the road visible between them. -->
+  <g font-family="Manrope,Arial,sans-serif" filter="url(#shadow)">
+    <rect x="50" y="194" width="320" height="144" rx="18" fill="#1B4426" stroke="#52765A"/>
+    <rect x="430" y="194" width="320" height="144" rx="18" fill="#1B4426" stroke="#52765A"/>
+    <rect x="810" y="194" width="320" height="144" rx="18" fill="#1B4426" stroke="#52765A"/>
+    <rect x="1190" y="194" width="320" height="144" rx="18" fill="#1B4426" stroke="#52765A"/>
+    <rect x="1190" y="685" width="320" height="136" rx="18" fill="#1B4426" stroke="#52765A"/>
+    <rect x="810" y="685" width="320" height="136" rx="18" fill="#1B4426" stroke="#52765A"/>
+    <rect x="430" y="685" width="320" height="136" rx="18" fill="#173C27" stroke="#5ED143" stroke-width="2"/>
+  </g>
+  <!-- Start callout -->
+  <g font-family="Manrope,Arial,sans-serif">
+    <rect x="70" y="211" width="151" height="22" rx="11" fill="#D8FF71"/>
+    <text x="81" y="226" fill="#102C1C" font-family="'DM Mono',monospace" font-size="11" font-weight="800" letter-spacing=".5">JAN 2026 · THE START</text>
+    <text x="70" y="261" fill="#F3F8EF" font-size="22" font-weight="800">Company journey begins</text>
+    <text x="70" y="285" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">Early calls included Fremax Farms.</text>
+    <text x="70" y="304" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">International interest also came</text>
+    <text x="70" y="323" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">from Australia and New Zealand.</text>
+  </g>
+  <!-- EDHE university round -->
+  <g font-family="Manrope,Arial,sans-serif">
+    <text x="450" y="221" fill="#D8FF71" font-family="'DM Mono',monospace" font-size="11" font-weight="700" letter-spacing=".65">15 JUL 2026 · WITS EDHE BOOTCAMP</text>
+    <text x="450" y="258" fill="#F3F8EF" font-size="22" font-weight="800">Through university rounds</text>
+    <text x="450" y="287" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">Made it through the Wits stage</text>
+    <text x="450" y="308" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">and earned a regional place.</text>
+    <text x="450" y="328" fill="#8FC768" font-family="'DM Mono',monospace" font-size="10" font-weight="600" letter-spacing=".7">FIRST OF TWO COMPETITION ROUNDS</text>
+  </g>
+  <!-- Arthur's pitch mentorship falls between the university and regional rounds. -->
+  <g font-family="Manrope,Arial,sans-serif">
+    <text x="830" y="221" fill="#D8FF71" font-family="'DM Mono',monospace" font-size="11" font-weight="700" letter-spacing=".55">29–30 JUL 2026 · ARTHUR’S MENTORSHIP</text>
+    <text x="830" y="258" fill="#F3F8EF" font-size="22" font-weight="800">Pitch review + direction</text>
+    <text x="830" y="287" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">Mentor feedback sharpened</text>
+    <text x="830" y="308" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">our story between EDHE rounds.</text>
+    <text x="830" y="328" fill="#8FC768" font-family="'DM Mono',monospace" font-size="10" font-weight="600" letter-spacing=".7">WITS UNIVERSITY → REGIONAL</text>
+  </g>
+  <!-- EDHE regional round -->
+  <g font-family="Manrope,Arial,sans-serif">
+    <text x="1210" y="221" fill="#D8FF71" font-family="'DM Mono',monospace" font-size="10" font-weight="700" letter-spacing=".35">EDHE · REGIONAL ROUND · AFTER MENTORSHIP</text>
+    <text x="1210" y="258" fill="#F3F8EF" font-size="22" font-weight="800">Represented Wits</text>
+    <text x="1210" y="287" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">Knocked out at regionals;</text>
+    <text x="1210" y="308" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">the learning moved us forward.</text>
+    <g transform="translate(1210 316)"><path d="M0 10h42m-8-8 8 8-8 8" fill="none" stroke="#D8FF71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><text x="52" y="14" fill="#D8FF71" font-family="'DM Mono',monospace" font-size="10" font-weight="700" letter-spacing=".7">NEXT CHAPTER</text></g>
+  </g>
+
+  <!-- Return journey: strategy, prototype, now, then a clear goal. -->
+  <g font-family="Manrope,Arial,sans-serif">
+    <text x="1210" y="715" fill="#D8FF71" font-family="'DM Mono',monospace" font-size="11" font-weight="700" letter-spacing=".65">20 AUG 2026 · STRATEGIC INPUT</text>
+    <text x="1210" y="750" fill="#F3F8EF" font-size="22" font-weight="800">Strategic conversations</text>
+    <text x="1210" y="778" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">Sharper customer learning and</text>
+    <text x="1210" y="799" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">practical pilot questions.</text>
+    <text x="1210" y="816" fill="#8FC768" font-family="'DM Mono',monospace" font-size="10" font-weight="600" letter-spacing=".6">NAMES KEPT PRIVATE</text>
+  </g>
+  <g font-family="Manrope,Arial,sans-serif">
+    <text x="830" y="715" fill="#D8FF71" font-family="'DM Mono',monospace" font-size="11" font-weight="700" letter-spacing=".7">PROTOTYPE · BUILT + VALIDATED</text>
+    <text x="830" y="750" fill="#F3F8EF" font-size="22" font-weight="800">The idea is taking shape</text>
+    <text x="830" y="779" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">A working prototype, ready for</text>
+    <text x="830" y="800" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">its next step toward the field.</text>
+  </g>
+  <!-- Current milestone card -->
+  <g font-family="Manrope,Arial,sans-serif">
+    <rect x="450" y="700" width="165" height="22" rx="11" fill="#D8FF71"/>
+    <text x="461" y="715" fill="#102C1C" font-family="'DM Mono',monospace" font-size="11" font-weight="800" letter-spacing=".4">NOW · OCT 2026</text>
+    <text x="450" y="753" fill="#F3F8EF" font-size="22" font-weight="800">EIE Open Day</text>
+    <text x="450" y="780" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">Sharing the journey and meeting</text>
+    <text x="450" y="801" fill="#B9CBB7" font-family="'DM Sans',Arial,sans-serif" font-size="16">the next people in our story.</text>
+  </g>
+  <!-- The goal receives the strongest contrast and a target motif. -->
+  <g filter="url(#shadow)"><rect x="50" y="678" width="340" height="153" rx="20" fill="url(#goal)"/><rect x="50" y="678" width="8" height="153" rx="4" fill="#5ED143"/></g>
+  <g font-family="Manrope,Arial,sans-serif">
+    <rect x="72" y="694" width="132" height="22" rx="11" fill="#174D2A"/>
+    <text x="83" y="709" fill="#D8FF71" font-family="'DM Mono',monospace" font-size="10" font-weight="800" letter-spacing=".65">OUR NEXT GOAL</text>
+    <text x="72" y="747" fill="#102C1C" font-size="26" font-weight="800">Initial pilot</text>
+    <text x="72" y="778" fill="#102C1C" font-size="26" font-weight="800">deployment</text>
+    <text x="72" y="810" fill="#174D2A" font-family="'DM Sans',Arial,sans-serif" font-size="14" font-weight="700">Nearly ready · learn in the field</text>
+  </g>
+  <g transform="translate(330 754)" fill="none" stroke="#174D2A"><circle r="36" stroke-width="1.5" opacity=".30"/><circle r="26" stroke-width="1.7" opacity=".48"/><circle r="15" stroke-width="2" opacity=".72"/><circle r="4" fill="#174D2A" stroke="none"/><path d="M-17 14L-2 -1" stroke-width="3" stroke-linecap="round"/><path d="M-7 -2L-1 -2L-1 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></g>
+
+  <!-- Small delivery truck with an avocado in its cargo bed, riding the trail at NOW. -->
+  <g transform="translate(788 529) scale(-1.65 1.65)" filter="url(#shadow)">
+    <rect x="0" y="24" width="54" height="30" rx="5" fill="#5ED143" stroke="#102C1C" stroke-width="2"/>
+    <path d="M54 33h20l16 14v7H54Z" fill="url(#truckCab)" stroke="#102C1C" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M61 36h11l10 10H61Z" fill="#173C27" stroke="#52765A" stroke-width="1.2"/>
+    <rect x="4" y="28" width="45" height="22" rx="3" fill="#204E2C" opacity=".9"/>
+    <path d="M19 46c-8-9-5-19 4-22 9 3 12 13 4 22-3 3-5 3-8 0Z" fill="#B7FF5A" stroke="#102C1C" stroke-width="1.6"/>
+    <ellipse cx="25" cy="39" rx="3" ry="4" fill="#8A5B37"/>
+    <path d="M25 24c0-6 5-8 10-7-1 5-4 8-10 8Z" fill="#D8FF71" stroke="#102C1C" stroke-width="1"/>
+    <circle cx="19" cy="55" r="8" fill="#0A1710" stroke="#F3F8EF" stroke-width="2"/><circle cx="19" cy="55" r="3" fill="#8FA494"/>
+    <circle cx="72" cy="55" r="8" fill="#0A1710" stroke="#F3F8EF" stroke-width="2"/><circle cx="72" cy="55" r="3" fill="#8FA494"/>
+    <path d="M90 52h6" stroke="#D8FF71" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g font-family="Manrope,Arial,sans-serif"><rect x="664" y="532" width="100" height="21" rx="10.5" fill="#102C1C" stroke="#52765A"/><text x="676" y="547" fill="#D8FF71" font-family="'DM Mono',monospace" font-size="10" font-weight="700" letter-spacing=".7">ON OUR WAY</text></g>
+
+  <!-- Milestone markers: cards and road remain separate; only the truck rides over the route. -->
+  <g stroke="#102C1C" stroke-width="5"><circle cx="210" cy="365" r="14" fill="#D8FF71"/><circle cx="590" cy="365" r="14" fill="#5ED143"/><circle cx="970" cy="365" r="14" fill="#5ED143"/><circle cx="1350" cy="365" r="14" fill="#5ED143"/><circle cx="1350" cy="620" r="14" fill="#5ED143"/><circle cx="970" cy="620" r="14" fill="#5ED143"/><circle cx="590" cy="620" r="18" fill="#D8FF71" filter="url(#glow)"/><circle cx="210" cy="620" r="14" fill="#D8FF71"/></g>
+  <g font-family="Manrope,Arial,sans-serif"><text x="62" y="878" fill="#8FA494" font-family="'DM Mono',monospace" font-size="11" font-weight="600" letter-spacing="1.3">LISTEN  →  LEARN  →  BUILD  →  PILOT</text><text x="1538" y="878" fill="#8FA494" font-family="'DM Mono',monospace" font-size="11" font-weight="600" letter-spacing="1.1" text-anchor="end">CLEVACADO · 2026</text></g>
+</svg>
