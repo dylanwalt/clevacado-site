@@ -5,7 +5,6 @@ import Image from "next/image";
 import {
   Activity,
   BarChart3,
-  CircleGauge,
   Cpu,
   Database,
   Factory,
@@ -1521,7 +1520,7 @@ export default function CinematicPitch() {
               <span className="font-semibold tracking-[-0.02em] text-white/42">ClevaCado</span>
             </div>
             <p>Post-harvest diagnostics for avocado supply chains.</p>
-            <p>© 2025 ClevaCado</p>
+            <p>© 2026 ClevaCado</p>
           </div>
         </div>
       </section>
