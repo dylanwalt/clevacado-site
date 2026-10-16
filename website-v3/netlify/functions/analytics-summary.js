@@ -9,6 +9,11 @@ const SESSION_COOKIE = 'clevacado_analytics_session';
 const SESSION_MAX_AGE_SECONDS = 8 * 60 * 60;
 const VIEWER_ID_PATTERN = /^[a-f0-9]{16}$/;
 
+function getPasswordHash() {
+  const netlifyHash = typeof Netlify === 'undefined' ? '' : Netlify.env?.get?.(PASSWORD_HASH_ENV_KEY) || '';
+  return netlifyHash || process.env[PASSWORD_HASH_ENV_KEY] || '';
+}
+
 function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), {
     status,
@@ -24,7 +29,7 @@ function getCookie(request, name) {
 
 function passwordMatches(password) {
   if (typeof password !== 'string' || password.length < 1) return false;
-  const passwordHash = Netlify.env.get(PASSWORD_HASH_ENV_KEY) || '';
+  const passwordHash = getPasswordHash();
   if (!/^[a-f0-9]{64}$/i.test(passwordHash)) return false;
   const candidate = pbkdf2Sync(password, Buffer.from(PASSWORD_SALT_HEX, 'hex'), PASSWORD_ITERATIONS, 32, 'sha256');
   const expected = Buffer.from(passwordHash, 'hex');
@@ -32,7 +37,7 @@ function passwordMatches(password) {
 }
 
 function sessionSignature(payload) {
-  const passwordHash = Netlify.env.get(PASSWORD_HASH_ENV_KEY) || '';
+  const passwordHash = getPasswordHash();
   return createHmac('sha256', passwordHash).update(payload).digest('hex');
 }
 
