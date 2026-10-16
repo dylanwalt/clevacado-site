@@ -3,16 +3,11 @@ import { getStore } from '@netlify/blobs';
 
 const STORE_NAME = 'clevacado-analytics';
 const PASSWORD_SALT_HEX = '7888bc0220ecf3cbd6a692c040d4ec7d';
-const PASSWORD_HASH_ENV_KEY = 'ANALYTICS_PASSWORD_HASH';
+const PASSWORD_HASH_HEX = '3f42c978dd2462bc00ecb34dfa5a1ddff975aecdbd6e594ff9303fa8bc499608';
 const PASSWORD_ITERATIONS = 210000;
 const SESSION_COOKIE = 'clevacado_analytics_session';
 const SESSION_MAX_AGE_SECONDS = 8 * 60 * 60;
 const VIEWER_ID_PATTERN = /^[a-f0-9]{16}$/;
-
-function getPasswordHash() {
-  const netlifyHash = typeof Netlify === 'undefined' ? '' : Netlify.env?.get?.(PASSWORD_HASH_ENV_KEY) || '';
-  return netlifyHash || process.env[PASSWORD_HASH_ENV_KEY] || '';
-}
 
 function json(data, status = 200, headers = {}) {
   return new Response(JSON.stringify(data), {
@@ -29,16 +24,13 @@ function getCookie(request, name) {
 
 function passwordMatches(password) {
   if (typeof password !== 'string' || password.length < 1) return false;
-  const passwordHash = getPasswordHash();
-  if (!/^[a-f0-9]{64}$/i.test(passwordHash)) return false;
   const candidate = pbkdf2Sync(password, Buffer.from(PASSWORD_SALT_HEX, 'hex'), PASSWORD_ITERATIONS, 32, 'sha256');
-  const expected = Buffer.from(passwordHash, 'hex');
+  const expected = Buffer.from(PASSWORD_HASH_HEX, 'hex');
   return candidate.length === expected.length && timingSafeEqual(candidate, expected);
 }
 
 function sessionSignature(payload) {
-  const passwordHash = getPasswordHash();
-  return createHmac('sha256', passwordHash).update(payload).digest('hex');
+  return createHmac('sha256', PASSWORD_HASH_HEX).update(payload).digest('hex');
 }
 
 function createSessionCookie() {
