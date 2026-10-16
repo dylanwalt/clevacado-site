@@ -233,7 +233,7 @@ export default function App() {
             <ol className="progress-list">
               <li className="progress-done"><span className="progress-mark"><Check size={15} /></span><div><strong>Prototype sensing</strong><p>Motion sensors and data capture have been exercised in controlled tests.</p></div><small>Under development</small></li>
               <li className="progress-done"><span className="progress-mark"><Check size={15} /></span><div><strong>Controlled recordings</strong><p>Recorded motion is being reviewed and used in ongoing event-analysis work.</p></div><small>Research in progress</small></li>
-              <li className="progress-next"><span className="progress-mark"><ArrowRight size={15} /></span><div><strong>Field validation</strong><p>Work with growers and packhouses is needed to understand performance in real operations.</p></div><small>Next stage</small></li>
+              <li className="progress-next"><span className="progress-mark"><ArrowRight size={15} /></span><div><strong>Our next goal: run an initial field pilot</strong><p>Connect with a real avocado farm, packhouse and courier, then deploy the prototype on an initial pilot run.</p></div><small>Next goal</small></li>
             </ol>
             <aside className="observation-card" aria-label="Illustrative event review example">
               <div className="observation-top"><span className="observation-led" /> Example of an event review <span>Illustrative</span></div>
@@ -260,6 +260,20 @@ export default function App() {
               <p className="section-kicker">Co-founder · Prototype and data</p>
               <h3>Dylan Simpson</h3>
               <p>Dylan is an Electrical and Information Engineering student at the University of the Witwatersrand. His ClevaCado work focuses on prototype logging, data handling and supporting repeatable test work.</p>
+            </article>
+          </div>
+          <div className="contact-grid" aria-label="Contact the founders">
+            <article className="contact-card">
+              <span className="contact-label">Co-founder · Technical development</span>
+              <strong>Dylan Walt</strong>
+              <span className="contact-number">071 929 0175</span>
+              <span className="contact-actions"><a href="tel:+27719290175">Call</a><a href="https://wa.me/27719290175" target="_blank" rel="noreferrer">WhatsApp</a></span>
+            </article>
+            <article className="contact-card">
+              <span className="contact-label">Co-founder · Prototype and data</span>
+              <strong>Dylan Simpson</strong>
+              <span className="contact-number">076 542 2426</span>
+              <span className="contact-actions"><a href="tel:+27765422426">Call</a><a href="https://wa.me/27765422426" target="_blank" rel="noreferrer">WhatsApp</a></span>
             </article>
           </div>
           <section className="social-proof" aria-labelledby="social-proof-heading">

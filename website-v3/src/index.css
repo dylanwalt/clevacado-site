@@ -61,3 +61,17 @@
 .dsl-project-link>svg{flex:none;color:var(--lime)}
 @media(max-width:1000px){.hero{grid-template-columns:minmax(0,1fr) minmax(300px,.9fr)}.hero-visual{max-width:440px}}
 @media(max-width:760px){.hero{display:grid;grid-template-columns:minmax(0,1fr)}.hero-copy{display:contents}.hero-copy>.eyebrow{order:1}.hero-copy>h1{order:2}.hero-visual{order:3;align-self:center;justify-self:auto;width:100%;max-width:540px}.hero-copy>.hero-lede{order:4}.hero-copy>.hero-actions{order:5}.hero-copy>.hero-note{order:6}.hero-visual .journey-film{transform:none;box-shadow:7px 8px 0 #e5ebdf}.journey-film-player{max-height:none}.social-proof{margin-top:37px;padding-top:23px}.social-links{grid-template-columns:1fr;gap:9px}.social-links a{gap:10px;padding:15px 16px}.social-links a>span{font-size:15px}}
+
+.about-evidence .progress-next{margin:10px -14px 0;padding:20px 14px;background:#eaf5e5;border:1px solid #a9c69c;border-left:4px solid #2f8f46}
+.about-evidence .progress-next strong{color:#174d2a;font-size:16px}
+.about-evidence .progress-next p{color:#425b45}
+.contact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:18px}
+.contact-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px;padding:22px 25px;background:#fff;border:1px solid #b9cdae;border-left:4px solid #2f8f46}
+.contact-label{color:#65805f;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.contact-card>strong{color:var(--forest);font:700 22px var(--serif)}
+.contact-number{color:#286d3d;font-size:17px;font-weight:700;letter-spacing:.02em}
+.contact-actions{display:flex;gap:9px;margin-top:5px}
+.contact-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:9px 15px;border:1px solid #b9cdae;border-radius:999px;color:#174d2a;font-size:12px;font-weight:700}
+.contact-actions a:first-child{background:#174d2a;border-color:#174d2a;color:#fff}
+.contact-actions a:hover{background:#2f8f46;border-color:#2f8f46;color:#fff}
+@media(max-width:760px){.contact-grid{grid-template-columns:1fr;gap:12px;margin-top:14px}.contact-card{padding:19px 20px}.about-evidence .progress-next{margin:8px -8px 0;padding:17px 10px}}
