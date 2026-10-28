@@ -34,3 +34,8 @@ force = true
 from = "/*"
 to = "/index.html"
 status = 200
+
+[[headers]]
+for = "/presentation/assets/optimized/*"
+  [headers.values]
+  Cache-Control = "public, max-age=31536000, immutable"
