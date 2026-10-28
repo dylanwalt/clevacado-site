@@ -6,6 +6,14 @@ for(let i=0;i<slides.length;i++){
  const c=copy.getBoundingClientRect(),m=media.getBoundingClientRect();for(const el of copy.querySelectorAll('h1,.detail,.support-lines,.source-link')){const r=el.getBoundingClientRect();if(r.left<c.left-2||r.right>c.right+2||r.top<c.top-2||r.bottom>c.bottom+2)failures.push({step:i,error:'text outside copy area',text:el.textContent,box:[r.left-c.left,r.top-c.top,r.right-c.right,r.bottom-c.bottom].map(Math.round)});}
  if(c.left<m.right-1&&c.right>m.left+1&&c.top<m.bottom-1&&c.bottom>m.top+1)failures.push({step:i,error:'text and visual overlap'});
  for(const el of media.querySelectorAll('.graphic-tag,.graphic-item,.graphic-foot,.graphic-metric,.graphic-metric-label,.graphic-quote')){const r=el.getBoundingClientRect();if(r.left<m.left-2||r.right>m.right+2||r.top<m.top-2||r.bottom>m.bottom+2)failures.push({step:i,error:'graphic content outside visual',text:el.textContent});}
+ if(slides[i].media==='signal'){
+  await pause(100);const first=d.querySelector('#signal-label').textContent, firstColor=d.querySelector('#signal-trace').getAttribute('stroke'), firstPath=d.querySelector('#signal-trace').getAttribute('d');
+  await pause(3200);const second=d.querySelector('#signal-label').textContent, secondColor=d.querySelector('#signal-trace').getAttribute('stroke'), secondPath=d.querySelector('#signal-trace').getAttribute('d');
+  if(first===second||firstColor===secondColor||firstPath===secondPath)failures.push({step:i,error:'recorded signal did not change',first,second,firstColor,secondColor});
+  const labels=new Set([second]),colors=new Set([secondColor]);
+  for(let n=0;n<5;n++){d.querySelector('#signal-button').click();labels.add(d.querySelector('#signal-label').textContent);colors.add(d.querySelector('#signal-trace').getAttribute('stroke'));}
+  if(labels.size!==6||colors.size!==6)failures.push({step:i,error:'all six recordings or colours not accessible',labels:[...labels],colors:[...colors]});
+ }
  const img=media.querySelector('img');if(img){try{await img.decode();images++}catch{failures.push({step:i,error:'image did not decode',src:img.src})}}
  if(slides[i].media==='model'){for(let t=0;t<100&&!d.querySelector('.model-media.ready')&&!d.querySelector('#model-button').hidden;t++)await pause(50);modelReady=!!d.querySelector('.model-media.ready');if(modelReady){await pause(1600);autoSplit=d.querySelector('#model-button').getAttribute('aria-pressed')==='true';d.querySelector('#model-button').click();if(d.querySelector('#model-button').getAttribute('aria-pressed')!=='false')failures.push({step:i,error:'model close failed'});}else failures.push({step:i,error:'model did not load'});}
  const footer=d.querySelector('.bottom').getBoundingClientRect(),controls=d.querySelector('.controls').getBoundingClientRect(),nav=d.querySelector('.sections').getBoundingClientRect();if(controls.left<nav.right-2||controls.right>footer.right+2)failures.push({step:i,error:'footer overlap'});

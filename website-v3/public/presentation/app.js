@@ -1,4 +1,4 @@
-import {trace} from './trace.js';
+import {signals} from './signals.js';
 
 const story = window.PRESENTATION;
 const $ = selector => document.querySelector(selector);
@@ -11,8 +11,8 @@ let modelFailed = false;
 let modelFrame = 0;
 let splitTimer = 0;
 let userChangedShell = false;
-
-const signalPath = trace.map(([time, acceleration], index) => `${index ? 'L' : 'M'}${((time + .590201) / 1.966398 * 940).toFixed(2)} ${(170 - acceleration / 150 * 150).toFixed(2)}`).join(' ');
+let signalTimer = 0;
+let signalIndex = 0;
 
 function sectionStart(section) {
   return story.slides.findIndex(slide => slide.section === section);
@@ -26,15 +26,18 @@ function stopModelAnimation() {
 
 function renderMedia(slide) {
   const caption = `<span class="media-caption">${escapeHtml(slide.caption || '')}</span>`;
+  if (slide.media === 'problem') {
+    return `<div class="slide-media problem-media"><div class="problem-heading">THE VISIBILITY GAP</div><div class="problem-question">We see the bruise.<br><span>Can we trace the cause?</span></div><div class="problem-chain" aria-label="Supply chain stages"><span>PACKHOUSE</span><b>→</b><span>TRANSPORT</span><b>→</b><span>RETAIL</span></div><div class="problem-note">Handling risk can occur at every stage.</div></div>`;
+  }
   if (slide.media === 'graphic') {
     const items = (slide.items || []).map(([number, label]) => `<div class="graphic-item"><span>${escapeHtml(number)}</span><strong>${escapeHtml(label)}</strong></div>`).join('');
     return `<div class="slide-media graphic graphic-${escapeHtml(slide.graphic)}"><div class="graphic-content">${slide.tag ? `<div class="graphic-tag">${escapeHtml(slide.tag)}</div>` : ''}${slide.metric ? `<div class="graphic-metric">${escapeHtml(slide.metric)}</div><div class="graphic-metric-label">${escapeHtml(slide.metricLabel)}</div>` : ''}${slide.quote ? `<div class="graphic-quote">${escapeHtml(slide.quote).replaceAll('\n','<br>')}</div>` : ''}${items ? `<div class="graphic-items">${items}</div>` : ''}${slide.foot ? `<div class="graphic-foot">${escapeHtml(slide.foot)}</div>` : ''}</div></div>`;
   }
   if (slide.media === 'model') {
-    return `<div class="slide-media model-media" id="model-media"><img class="model-fallback" src="assets/optimized/shell-cad.c2933895e0f8.jpg" alt="Provisional ClevaCado shell CAD view"><span class="model-status" id="model-status">Loading 3D model…</span><button class="model-button" id="model-button" type="button" aria-pressed="false" disabled>Separate shell ↗</button>${caption}</div>`;
+    return `<div class="slide-media model-media" id="model-media"><img class="model-fallback" src="assets/optimized/r4-open.e9066db75b94.jpg" alt="R4 shell and cradle CAD inspection view"><span class="model-status" id="model-status">Loading 3D model…</span><button class="model-button" id="model-button" type="button" aria-pressed="false" disabled>Separate shell ↗</button>${caption}</div>`;
   }
   if (slide.media === 'signal') {
-    return `<div class="slide-media signal-media"><button class="signal-button" id="signal-button" type="button">Replay signal ↻</button><div class="signal-visual" id="signal-visual"><div class="signal-heading">RECORDED ACCELERATION · g</div><svg viewBox="0 0 940 190" preserveAspectRatio="none" role="img" aria-label="Recorded acceleration from one controlled nominal 15 centimetre drop"><path d="M0 20H940 M0 95H940 M0 170H940" stroke="#b8ff5a66" fill="none"/><path class="signal-trace" d="${signalPath}" fill="none" stroke="#b7ff5a" stroke-width="3" vector-effect="non-scaling-stroke" pathLength="1"/></svg><div class="axis"><span>−0.59 s</span><span>0 s</span><span>+1.38 s</span></div><small>One controlled example · not a bruise measurement</small></div>${caption}</div>`;
+    return `<div class="slide-media signal-media"><button class="signal-button" id="signal-button" type="button">Next recording →</button><div class="signal-visual" id="signal-visual"><div class="signal-heading">RECORDED ACCELERATION · <span id="signal-label"></span></div><svg viewBox="0 0 940 190" preserveAspectRatio="none" role="img" id="signal-svg"><defs><clipPath id="signal-clip"><rect class="signal-reveal" width="940" height="190"/></clipPath></defs><path d="M0 20H940 M0 95H940 M0 170H940" stroke="#ffffff40" fill="none"/><path class="signal-trace" id="signal-trace" clip-path="url(#signal-clip)" fill="none" stroke-width="3" vector-effect="non-scaling-stroke"/></svg><div class="axis"><span>0 s</span><span id="signal-scale"></span><span>2 s</span></div><small>Individual controlled recording · auto-scaled · not a bruise measurement</small></div>${caption}</div>`;
   }
   return `<div class="slide-media"><img class="media-image" src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.alt)}" style="--position:${escapeHtml(slide.position || '50% 50%')}" decoding="async">${caption}</div>`;
 }
@@ -57,6 +60,7 @@ function preloadNextImage() {
 function renderSlide(index, updateHash = true) {
   if (index < 0 || index >= story.slides.length) return;
   stopModelAnimation();
+  clearTimeout(signalTimer);
   current = index;
   const slide = story.slides[current];
   const lines = slide.lines?.length ? `<ul class="support-lines">${slide.lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>` : '';
@@ -78,18 +82,26 @@ function renderSlide(index, updateHash = true) {
     mountModel();
   }
   if (slide.media === 'signal') {
-    $('#signal-button').addEventListener('click', replaySignal);
-    requestAnimationFrame(replaySignal);
+    signalIndex = 0;
+    $('#signal-button').addEventListener('click', () => { clearTimeout(signalTimer); signalIndex = (signalIndex + 1) % signals.length; playSignal(); });
+    requestAnimationFrame(playSignal);
   }
   preloadNextImage();
 }
 
-function replaySignal() {
-  const plot = $('#signal-visual');
-  if (!plot) return;
-  plot.classList.remove('playing');
-  void plot.offsetWidth;
-  plot.classList.add('playing');
+function playSignal() {
+  const plot = $('#signal-visual'), path = $('#signal-trace');
+  if (!plot || !path || story.slides[current].media !== 'signal') return;
+  const sample = signals[signalIndex], duration = sample.points.at(-1)[0];
+  const limit = Math.ceil(Math.max(...sample.points.map(([,value]) => value)) / 5) * 5;
+  const geometry = sample.points.map(([time,value], index) => `${index ? 'L' : 'M'}${(time / duration * 940).toFixed(2)} ${(170 - value / limit * 150).toFixed(2)}`).join(' ');
+  path.setAttribute('d', geometry); path.setAttribute('stroke', sample.color);
+  $('#signal-label').textContent = sample.label;
+  $('#signal-label').style.color = sample.color;
+  $('#signal-scale').textContent = `0–${limit} g`;
+  $('#signal-svg').setAttribute('aria-label', `${sample.label}, controlled recording ${sample.trial}, auto-scaled from 0 to ${limit} g`);
+  plot.classList.remove('playing'); void plot.offsetWidth; plot.classList.add('playing');
+  if (!reducedMotion.matches) signalTimer = setTimeout(() => { signalIndex = (signalIndex + 1) % signals.length; playSignal(); }, 3100);
 }
 
 async function initialiseModel() {
@@ -97,7 +109,7 @@ async function initialiseModel() {
   if (modelPromise) return modelPromise;
   modelPromise = (async () => {
     try {
-      const [THREE, {STLLoader}] = await Promise.all([import('three'), import('./vendor/STLLoader.js')]);
+      const [THREE, {STLLoader}, {GLTFLoader}] = await Promise.all([import('three'), import('./vendor/STLLoader.js'), import('./vendor/GLTFLoader.js')]);
       const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
       renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
       renderer.setClearColor(0, 0);
@@ -110,15 +122,25 @@ async function initialiseModel() {
       const light = new THREE.DirectionalLight(0xffffff, 2.1); light.position.set(5, 7, 8); scene.add(light);
       const rim = new THREE.DirectionalLight(0xb7ff5a, 1.2); rim.position.set(-4, 3, -6); scene.add(rim);
       const group = new THREE.Group(); scene.add(group);
-      const loader = new STLLoader();
-      const geometries = await Promise.all(['shell-upper.4e0633dcf571.stl', 'shell-lower.3896e1c3f3c3.stl'].map(name => loader.loadAsync(`./assets/optimized/${name}`)));
-      const material = new THREE.MeshStandardMaterial({color:0x5ed143, roughness:.48, metalness:.07});
-      const meshes = geometries.map(geometry => { geometry.computeVertexNormals(); const mesh = new THREE.Mesh(geometry, material); group.add(mesh); return mesh; });
-      const box = new THREE.Box3().setFromObject(group), size = new THREE.Vector3(), centre = new THREE.Vector3();
-      box.getSize(size); box.getCenter(centre); meshes.forEach(mesh => mesh.position.sub(centre));
-      const homeZ = -centre.z;
-      group.scale.setScalar(3.7 / Math.max(size.x, size.y, size.z)); group.rotation.x = -Math.PI / 2; group.rotation.z = .15;
-      model = {renderer, scene, camera, group, meshes, homeZ, open:false, openAmount:0};
+      const loader = new STLLoader(), gltf = new GLTFLoader();
+      const assets = './assets/optimized/';
+      const [upperGeometry, lowerGeometry, cradleGeometry, boardFile] = await Promise.all([
+        loader.loadAsync(assets + 'r4-upper.a7434ba7522a.stl'),
+        loader.loadAsync(assets + 'r4-lower.a61364729736.stl'),
+        loader.loadAsync(assets + 'r4-cradle.b66db2768d49.stl'),
+        gltf.loadAsync(assets + 'veroboard-reconstruction.c27982d89a60.glb')
+      ]);
+      const shellMaterial = new THREE.MeshStandardMaterial({color:0x699d49, roughness:.72, metalness:.02});
+      const cradleMaterial = new THREE.MeshStandardMaterial({color:0xd39a52, roughness:.65, metalness:.03, side:THREE.DoubleSide});
+      const meshes = [upperGeometry, lowerGeometry, cradleGeometry].map((geometry, index) => {
+        geometry.computeVertexNormals(); const mesh = new THREE.Mesh(geometry, index === 2 ? cradleMaterial : shellMaterial); group.add(mesh); return mesh;
+      });
+      const shellBox = new THREE.Box3().setFromObject(group), size = new THREE.Vector3(), centre = new THREE.Vector3();
+      shellBox.getSize(size); shellBox.getCenter(centre); meshes.forEach(mesh => mesh.position.sub(centre));
+      const board = boardFile.scene, boardBox = new THREE.Box3().setFromObject(board), boardCentre = new THREE.Vector3();
+      boardBox.getCenter(boardCentre); board.position.sub(boardCentre); board.position.z += -7.6; board.position.sub(centre); group.add(board);
+      group.scale.setScalar(2.6 / Math.max(size.x, size.y, size.z)); group.rotation.x = -Math.PI / 2; group.rotation.z = .15;
+      model = {renderer, scene, camera, group, meshes, homeZ:-centre.z, open:false, openAmount:0};
       if (story.slides[current].media === 'model') showReadyModel();
       return model;
     } catch {
@@ -144,8 +166,8 @@ function drawModel() {
   if (!model || story.slides[current].media !== 'model' || !$('#model-media')) { modelFrame = 0; return; }
   const desired = model.open ? 1 : 0;
   model.openAmount = reducedMotion.matches ? desired : model.openAmount + (desired - model.openAmount) * .045;
-  model.meshes[0].position.z = model.homeZ + model.openAmount * 12;
-  model.meshes[1].position.z = model.homeZ - model.openAmount * 12;
+  model.meshes[0].position.z = model.homeZ + model.openAmount * 55;
+  model.meshes[1].position.z = model.homeZ - model.openAmount * 55;
   if (!reducedMotion.matches) model.group.rotation.z += .002;
   model.renderer.render(model.scene, model.camera);
   modelFrame = requestAnimationFrame(drawModel);
@@ -184,12 +206,13 @@ document.addEventListener('keydown', event => {
   if (event.key === 'ArrowLeft') { event.preventDefault(); renderSlide(current - 1); }
 });
 window.addEventListener('resize', resizeModel);
+function legacyHash(hash) { return ({build:'problem', roadmap:'problem', walt:'people', simpson:'people', agriculture:'project', edhe:'journey', afretec:'journey', investigation:'journey', sharing:'journey', origin:'story'})[hash] || hash; }
 window.addEventListener('hashchange', () => {
-  const rawHash = location.hash.slice(1), hash = rawHash === 'build' ? 'problem' : rawHash, exact = story.slides.findIndex(slide => slide.id === hash), section = sectionStart(hash);
+  const rawHash = location.hash.slice(1), hash = legacyHash(rawHash), exact = story.slides.findIndex(slide => slide.id === hash), section = sectionStart(hash);
   if (exact >= 0) renderSlide(exact, false); else if (section >= 0) renderSlide(section, false);
 });
 const rawInitialHash = location.hash.slice(1);
-const initialHash = rawInitialHash === 'build' ? 'problem' : rawInitialHash;
+const initialHash = legacyHash(rawInitialHash);
 const exact = story.slides.findIndex(slide => slide.id === initialHash);
 const section = sectionStart(initialHash);
 renderSlide(exact >= 0 ? exact : section >= 0 ? section : 0, false);
