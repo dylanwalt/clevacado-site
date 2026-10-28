@@ -14,7 +14,8 @@ for(let i=0;i<slides.length;i++){
   for(let n=0;n<5;n++){d.querySelector('#signal-button').click();labels.add(d.querySelector('#signal-label').textContent);colors.add(d.querySelector('#signal-trace').getAttribute('stroke'));}
   if(labels.size!==6||colors.size!==6)failures.push({step:i,error:'all six recordings or colours not accessible',labels:[...labels],colors:[...colors]});
  }
- const img=media.querySelector('img');if(img){try{await img.decode();images++}catch{failures.push({step:i,error:'image did not decode',src:img.src})}}
+ for(const img of slide.querySelectorAll('img')){try{await img.decode();images++}catch{failures.push({step:i,error:'image did not decode',src:img.src})}}
+ if(!slides[i].quote)failures.push({step:i,error:'missing fictional caption'});
  if(slides[i].media==='model'){for(let t=0;t<100&&!d.querySelector('.model-media.ready')&&!d.querySelector('#model-button').hidden;t++)await pause(50);modelReady=!!d.querySelector('.model-media.ready');if(modelReady){await pause(1600);autoSplit=d.querySelector('#model-button').getAttribute('aria-pressed')==='true';d.querySelector('#model-button').click();if(d.querySelector('#model-button').getAttribute('aria-pressed')!=='false')failures.push({step:i,error:'model close failed'});}else failures.push({step:i,error:'model did not load'});}
  const footer=d.querySelector('.bottom').getBoundingClientRect(),controls=d.querySelector('.controls').getBoundingClientRect(),nav=d.querySelector('.sections').getBoundingClientRect();if(controls.left<nav.right-2||controls.right>footer.right+2)failures.push({step:i,error:'footer overlap'});
  if(i<slides.length-1)d.querySelector('#next').click();

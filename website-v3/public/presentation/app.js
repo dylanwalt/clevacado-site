@@ -13,6 +13,8 @@ let splitTimer = 0;
 let userChangedShell = false;
 let signalTimer = 0;
 let signalIndex = 0;
+let activeExhibit = null;
+const modelIsVisible = () => !!$('#model-media') && (activeExhibit === 'model' || story.slides[current]?.media === 'model');
 
 function sectionStart(section) {
   return story.slides.findIndex(slide => slide.section === section);
@@ -26,11 +28,20 @@ function stopModelAnimation() {
 
 function renderMedia(slide) {
   const caption = `<span class="media-caption">${escapeHtml(slide.caption || '')}</span>`;
+  if (slide.media === 'brand') {
+    return `<div class="slide-media brand-media"><img class="feature-logo" src="assets/logo.png" alt="ClevaCado — post-harvest diagnostics"><div class="brand-comic"><span>${escapeHtml(slide.quote)}</span></div></div>`;
+  }
+  if (slide.media === 'cartoon') {
+    return `<div class="slide-media cartoon-media"><img src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.alt)}" decoding="async"><blockquote>${escapeHtml(slide.quote)}</blockquote><span class="cartoon-label">FICTIONAL ILLUSTRATION</span></div>`;
+  }
+  if (slide.media === 'bruise-story') {
+    return `<div class="slide-media bruise-story"><img class="bruise-photo" src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.alt)}"><div class="bruise-comic"><img src="${escapeHtml(slide.jokeImage)}" alt="${escapeHtml(slide.jokeAlt)}"><blockquote>${escapeHtml(slide.quote)}</blockquote></div><span class="cartoon-label">AI-GENERATED ILLUSTRATIONS</span></div>`;
+  }
   if (slide.media === 'logo') {
     return `<div class="slide-media cover-logo"><img src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.alt)}"></div>`;
   }
   if (slide.media === 'problem') {
-    return `<div class="slide-media problem-media"><div class="problem-heading">THE VISIBILITY GAP</div><div class="problem-question">We see the bruise.<br><span>Can we trace the cause?</span></div><div class="problem-chain" aria-label="Supply chain stages"><span>PACKHOUSE</span><b>→</b><span>TRANSPORT</span><b>→</b><span>RETAIL</span></div><div class="problem-note">Handling risk can occur at every stage.</div></div>`;
+    return `<div class="slide-media bruise-media"><img src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.alt)}" decoding="async"><span class="media-caption">ILLUSTRATION · AI-GENERATED</span></div>`;
   }
   if (slide.media === 'graphic') {
     const items = (slide.items || []).map(([number, label]) => `<div class="graphic-item"><span>${escapeHtml(number)}</span><strong>${escapeHtml(label)}</strong></div>`).join('');
@@ -54,21 +65,34 @@ function renderSections() {
 function preloadNextImage() {
   const next = story.slides[current + 1];
   if (next && next.image) { const image = new Image(); image.src = next.image; }
-  if (current < sectionStart('solution')) {
-    const prepareModel = () => { if (current < sectionStart('solution')) initialiseModel(); };
+  if (current <= 1) {
+    const prepareModel = () => { if (current <= 1) initialiseModel(); };
     if (window.requestIdleCallback) window.requestIdleCallback(prepareModel); else setTimeout(prepareModel, 300);
   }
 }
 
 function renderSlide(index, updateHash = true) {
   if (index < 0 || index >= story.slides.length) return;
+  closeExhibit();
   stopModelAnimation();
   clearTimeout(signalTimer);
   current = index;
   const slide = story.slides[current];
   const lines = slide.lines?.length ? `<ul class="support-lines">${slide.lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>` : '';
-  const source = slide.source ? `<a class="source-link" href="${escapeHtml(slide.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(slide.source)} ↗</a>` : '';
-  $('#stage').innerHTML = `<article class="slide layout-${escapeHtml(slide.layout || 'light')}" data-slide="${escapeHtml(slide.id)}"><div class="slide-copy"><div class="eyebrow">${escapeHtml(slide.eyebrow)}</div><h1>${escapeHtml(slide.title)}${slide.accent ? `<em>${escapeHtml(slide.accent)}</em>` : ''}</h1><p class="detail">${escapeHtml(slide.detail)}</p>${lines}${source}</div>${renderMedia(slide)}</article>`;
+  const source = slide.source ? (slide.sourceUrl ? `<a class="source-link" href="${escapeHtml(slide.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(slide.source)} ↗</a>` : `<span class="source-link">${escapeHtml(slide.source)}</span>`) : '';
+  const miniJoke = slide.jokeImage && ['model','signal'].includes(slide.media) ? `<div class="mini-joke"><img src="${escapeHtml(slide.jokeImage)}" alt="${escapeHtml(slide.jokeAlt)}"><span>${escapeHtml(slide.quote)}</span></div>` : '';
+  if (slide.layout === 'brief') {
+    const columns = slide.columns.map((column, index) => {
+      const groups = column.map(group => `<section class="brief-group"><h2>${escapeHtml(group.title)}</h2><ul>${group.items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`).join('');
+      const illustration = slide.image && index === 1 ? `<figure class="brief-illustration"><img src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.imageAlt)}"><figcaption>AI-GENERATED ILLUSTRATION</figcaption></figure>` : '';
+      const actions = slide.actions && index === 1 ? `<div class="exhibit-actions"><button type="button" data-exhibit="model">Explore the prototype ↗</button><button type="button" data-exhibit="signal">View recorded signals ↗</button></div>` : '';
+      return `<div class="brief-column">${groups}${illustration}${actions}</div>`;
+    }).join('');
+    $('#stage').innerHTML = `<article class="slide brief-slide brief-${escapeHtml(slide.id)}" data-slide="${escapeHtml(slide.id)}"><header class="brief-header"><div><div class="eyebrow">${escapeHtml(slide.eyebrow)}</div><h1>${escapeHtml(slide.title)}</h1></div>${slide.logo ? '<img class="brief-logo" src="assets/logo.png" alt="ClevaCado — post-harvest diagnostics">' : ''}</header><div class="brief-columns">${columns}</div>${slide.closing ? `<p class="brief-closing">${escapeHtml(slide.closing)}</p>` : ''}${slide.footnote ? `<p class="brief-footnote">${escapeHtml(slide.footnote)}</p>` : ''}</article>`;
+    document.querySelectorAll('[data-exhibit]').forEach(button => button.addEventListener('click', () => openExhibit(button.dataset.exhibit)));
+  } else {
+    $('#stage').innerHTML = `<article class="slide layout-${escapeHtml(slide.layout || 'light')}" data-slide="${escapeHtml(slide.id)}"><div class="slide-copy"><div class="eyebrow">${escapeHtml(slide.eyebrow)}</div><h1>${escapeHtml(slide.title)}${slide.accent ? `<em>${escapeHtml(slide.accent)}</em>` : ''}</h1><p class="detail">${escapeHtml(slide.detail)}</p>${lines}${source}${miniJoke}</div>${renderMedia(slide)}</article>`;
+  }
   $('#chapter-label').textContent = story.sections.find(section => section.id === slide.section)?.label || 'Start';
   $('#top-counter').textContent = `${String(current + 1).padStart(2, '0')} / ${String(story.slides.length).padStart(2, '0')}`;
   $('#slide-count').textContent = `${String(current + 1).padStart(2, '0')} / ${String(story.slides.length).padStart(2, '0')}`;
@@ -92,9 +116,26 @@ function renderSlide(index, updateHash = true) {
   preloadNextImage();
 }
 
+function closeExhibit() {
+  if (!activeExhibit) return;
+  clearTimeout(signalTimer); stopModelAnimation();
+  document.querySelector('#exhibit')?.remove(); activeExhibit = null;
+}
+
+function openExhibit(type) {
+  closeExhibit(); activeExhibit = type;
+  const isModel = type === 'model';
+  const slide = isModel ? {media:'model',caption:'R4 SHELL + CRADLE · ELECTRONICS PLACEMENT ILLUSTRATIVE'} : {media:'signal',caption:'RECORDED LAB EXAMPLES · NOT LIVE DATA'};
+  document.body.insertAdjacentHTML('beforeend', `<div class="exhibit-backdrop" id="exhibit" role="dialog" aria-modal="true" aria-label="${isModel ? 'Explore the prototype' : 'Recorded signals'}"><div class="exhibit-panel"><header><div><span class="exhibit-kicker">${isModel ? 'THE PROTOTYPE' : 'LAB RECORDINGS'}</span><h2>${isModel ? 'A closer look at ClevaCado' : 'Six handling events'}</h2></div><button type="button" id="exhibit-close">Back to slide ×</button></header><div class="exhibit-body">${renderMedia(slide)}<p>${isModel ? 'R4 shell and cradle CAD with a photo-recreated electronics illustration. Assembly and fit remain to be validated.' : 'Recorded examples of drops and surfaces. Each trace is individually auto-scaled; it is not live telemetry or a direct measurement of bruising.'}</p></div></div></div>`);
+  $('#exhibit-close').addEventListener('click', closeExhibit);
+  if (isModel) { userChangedShell = false; $('#model-button').addEventListener('click', toggleShell); mountModel(); }
+  else { signalIndex = 0; $('#signal-button').addEventListener('click', () => { clearTimeout(signalTimer); signalIndex = (signalIndex + 1) % signals.length; playSignal(); }); requestAnimationFrame(playSignal); }
+  $('#exhibit-close').focus();
+}
+
 function playSignal() {
   const plot = $('#signal-visual'), path = $('#signal-trace');
-  if (!plot || !path || story.slides[current].media !== 'signal') return;
+  if (!plot || !path || (activeExhibit !== 'signal' && story.slides[current]?.media !== 'signal')) return;
   const sample = signals[signalIndex], duration = sample.points.at(-1)[0];
   const limit = Math.ceil(Math.max(...sample.points.map(([,value]) => value)) / 5) * 5;
   const geometry = sample.points.map(([time,value], index) => `${index ? 'L' : 'M'}${(time / duration * 940).toFixed(2)} ${(170 - value / limit * 150).toFixed(2)}`).join(' ');
@@ -154,7 +195,7 @@ async function initialiseModel() {
       boardBox.getCenter(boardCentre); board.position.sub(boardCentre); board.position.z += -7.6; board.position.sub(centre); group.add(board);
       group.scale.setScalar(2.6 / Math.max(size.x, size.y, size.z)); group.rotation.x = -Math.PI / 2; group.rotation.z = .15;
       model = {renderer, scene, camera, group, meshes, homeZ:-centre.z, open:false, openAmount:0};
-      if (story.slides[current].media === 'model') showReadyModel();
+      if (modelIsVisible()) showReadyModel();
       return model;
     } catch {
       modelFailed = true;
@@ -168,7 +209,7 @@ async function initialiseModel() {
 
 function resizeModel() {
   const host = $('#model-media');
-  if (!model || !host || story.slides[current].media !== 'model') return;
+  if (!model || !host || !modelIsVisible()) return;
   const box = host.getBoundingClientRect();
   if (!box.width || !box.height) return;
   model.renderer.setSize(Math.max(1, box.width), Math.max(1, box.height), false);
@@ -176,7 +217,7 @@ function resizeModel() {
 }
 
 function drawModel() {
-  if (!model || story.slides[current].media !== 'model' || !$('#model-media')) { modelFrame = 0; return; }
+  if (!model || !modelIsVisible() || !$('#model-media')) { modelFrame = 0; return; }
   const desired = model.open ? 1 : 0;
   model.openAmount = reducedMotion.matches ? desired : model.openAmount + (desired - model.openAmount) * .045;
   model.meshes[0].position.z = model.homeZ + model.openAmount * 55;
@@ -202,7 +243,7 @@ function showReadyModel() {
   host.classList.add('ready'); button.disabled = false;
   setShell(false); resizeModel();
   if (!modelFrame) drawModel();
-  splitTimer = setTimeout(() => { if (!userChangedShell && story.slides[current].media === 'model') setShell(true); }, reducedMotion.matches ? 0 : 1400);
+  splitTimer = setTimeout(() => { if (!userChangedShell && modelIsVisible()) setShell(true); }, reducedMotion.matches ? 0 : 1400);
 }
 
 function mountModel() {
@@ -215,11 +256,13 @@ $('#next').addEventListener('click', () => renderSlide(current + 1));
 $('.brand').addEventListener('click', event => { event.preventDefault(); renderSlide(0); });
 document.addEventListener('keydown', event => {
   if (event.altKey || event.metaKey || event.ctrlKey || event.target.closest('input,textarea,select,[contenteditable=true]')) return;
+  if (event.key === 'Escape' && activeExhibit) { event.preventDefault(); closeExhibit(); return; }
+  if (activeExhibit) return;
   if (event.key === 'ArrowRight') { event.preventDefault(); renderSlide(current + 1); }
   if (event.key === 'ArrowLeft') { event.preventDefault(); renderSlide(current - 1); }
 });
 window.addEventListener('resize', resizeModel);
-function legacyHash(hash) { return ({build:'problem', roadmap:'problem', walt:'people', simpson:'people', agriculture:'project', edhe:'journey', afretec:'journey', investigation:'journey', sharing:'journey', origin:'story'})[hash] || hash; }
+function legacyHash(hash) { return ({home:'people', opening:'people', roadmap:'people', build:'problem', walt:'people', simpson:'people', agriculture:'project', story:'journey', sharing:'investigation'})[hash] || hash; }
 window.addEventListener('hashchange', () => {
   const rawHash = location.hash.slice(1), hash = legacyHash(rawHash), exact = story.slides.findIndex(slide => slide.id === hash), section = sectionStart(hash);
   if (exact >= 0) renderSlide(exact, false); else if (section >= 0) renderSlide(section, false);
