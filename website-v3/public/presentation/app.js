@@ -26,11 +26,15 @@ function stopModelAnimation() {
 
 function renderMedia(slide) {
   const caption = `<span class="media-caption">${escapeHtml(slide.caption || '')}</span>`;
+  if (slide.media === 'graphic') {
+    const items = (slide.items || []).map(([number, label]) => `<div class="graphic-item"><span>${escapeHtml(number)}</span><strong>${escapeHtml(label)}</strong></div>`).join('');
+    return `<div class="slide-media graphic graphic-${escapeHtml(slide.graphic)}"><div class="graphic-content">${slide.tag ? `<div class="graphic-tag">${escapeHtml(slide.tag)}</div>` : ''}${slide.metric ? `<div class="graphic-metric">${escapeHtml(slide.metric)}</div><div class="graphic-metric-label">${escapeHtml(slide.metricLabel)}</div>` : ''}${slide.quote ? `<div class="graphic-quote">${escapeHtml(slide.quote).replaceAll('\n','<br>')}</div>` : ''}${items ? `<div class="graphic-items">${items}</div>` : ''}${slide.foot ? `<div class="graphic-foot">${escapeHtml(slide.foot)}</div>` : ''}</div></div>`;
+  }
   if (slide.media === 'model') {
     return `<div class="slide-media model-media" id="model-media"><img class="model-fallback" src="assets/optimized/shell-cad.c2933895e0f8.jpg" alt="Provisional ClevaCado shell CAD view"><span class="model-status" id="model-status">Loading 3D model…</span><button class="model-button" id="model-button" type="button" aria-pressed="false" disabled>Separate shell ↗</button>${caption}</div>`;
   }
   if (slide.media === 'signal') {
-    return `<div class="slide-media signal-media"><img class="media-image" src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.alt)}"><button class="signal-button" id="signal-button" type="button">Replay signal ↻</button><div class="signal-visual" id="signal-visual"><div class="signal-heading">RECORDED ACCELERATION · g</div><svg viewBox="0 0 940 190" preserveAspectRatio="none" role="img" aria-label="Recorded acceleration from one controlled nominal 15 centimetre drop"><path d="M0 20H940 M0 95H940 M0 170H940" stroke="#b8ff5a66" fill="none"/><path class="signal-trace" d="${signalPath}" fill="none" stroke="#b7ff5a" stroke-width="3" vector-effect="non-scaling-stroke" pathLength="1"/></svg><div class="axis"><span>−0.59 s</span><span>0 s</span><span>+1.38 s</span></div><small>One controlled example · not a bruise measurement</small></div>${caption}</div>`;
+    return `<div class="slide-media signal-media"><button class="signal-button" id="signal-button" type="button">Replay signal ↻</button><div class="signal-visual" id="signal-visual"><div class="signal-heading">RECORDED ACCELERATION · g</div><svg viewBox="0 0 940 190" preserveAspectRatio="none" role="img" aria-label="Recorded acceleration from one controlled nominal 15 centimetre drop"><path d="M0 20H940 M0 95H940 M0 170H940" stroke="#b8ff5a66" fill="none"/><path class="signal-trace" d="${signalPath}" fill="none" stroke="#b7ff5a" stroke-width="3" vector-effect="non-scaling-stroke" pathLength="1"/></svg><div class="axis"><span>−0.59 s</span><span>0 s</span><span>+1.38 s</span></div><small>One controlled example · not a bruise measurement</small></div>${caption}</div>`;
   }
   return `<div class="slide-media"><img class="media-image" src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.alt)}" style="--position:${escapeHtml(slide.position || '50% 50%')}" decoding="async">${caption}</div>`;
 }
@@ -57,7 +61,8 @@ function renderSlide(index, updateHash = true) {
   const slide = story.slides[current];
   const lines = slide.lines?.length ? `<ul class="support-lines">${slide.lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>` : '';
   const source = slide.source ? `<a class="source-link" href="${escapeHtml(slide.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(slide.source)} ↗</a>` : '';
-  $('#stage').innerHTML = `<article class="slide" data-slide="${escapeHtml(slide.id)}"><div class="slide-copy"><div class="eyebrow">${escapeHtml(slide.eyebrow)}</div><h1>${escapeHtml(slide.title)}${slide.accent ? `<em>${escapeHtml(slide.accent)}</em>` : ''}</h1><p class="detail">${escapeHtml(slide.detail)}</p>${lines}${source}</div>${renderMedia(slide)}</article>`;
+  $('#stage').innerHTML = `<article class="slide layout-${escapeHtml(slide.layout || 'light')}" data-slide="${escapeHtml(slide.id)}"><div class="slide-copy"><div class="eyebrow">${escapeHtml(slide.eyebrow)}</div><h1>${escapeHtml(slide.title)}${slide.accent ? `<em>${escapeHtml(slide.accent)}</em>` : ''}</h1><p class="detail">${escapeHtml(slide.detail)}</p>${lines}${source}</div>${renderMedia(slide)}</article>`;
+  $('#chapter-label').textContent = story.sections.find(section => section.id === slide.section)?.label || 'Start';
   $('#top-counter').textContent = `${String(current + 1).padStart(2, '0')} / ${String(story.slides.length).padStart(2, '0')}`;
   $('#slide-count').textContent = `${String(current + 1).padStart(2, '0')} / ${String(story.slides.length).padStart(2, '0')}`;
   $('#progress').style.width = `${(current + 1) / story.slides.length * 100}%`;
