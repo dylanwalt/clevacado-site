@@ -32,8 +32,8 @@ force = true
 
 [[redirects]]
 from = "/presentation-v2"
-to = "/presentation-v2/"
-status = 301
+to = "/presentation-v2/index.html"
+status = 200
 force = true
 
 [[redirects]]
