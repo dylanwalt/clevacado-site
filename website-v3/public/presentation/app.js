@@ -51,8 +51,8 @@ function renderSections() {
 function preloadNextImage() {
   const next = story.slides[current + 1];
   if (next && next.image) { const image = new Image(); image.src = next.image; }
-  if (next && next.media === 'model') {
-    const prepareModel = () => { if (story.slides[current + 1]?.media === 'model') initialiseModel(); };
+  if (current < sectionStart('solution')) {
+    const prepareModel = () => { if (current < sectionStart('solution')) initialiseModel(); };
     if (window.requestIdleCallback) window.requestIdleCallback(prepareModel); else setTimeout(prepareModel, 300);
   }
 }
@@ -124,10 +124,20 @@ async function initialiseModel() {
       const group = new THREE.Group(); scene.add(group);
       const loader = new STLLoader(), gltf = new GLTFLoader();
       const assets = './assets/optimized/';
+      // Gzip copies decompress to the exact source STLs; older browsers use the originals.
+      const loadGeometry = async (original, compressed) => {
+        if (!('DecompressionStream' in window)) return loader.loadAsync(assets + original);
+        try {
+          const response = await fetch(assets + compressed, {priority:'low'});
+          if (!response.ok || !response.body) throw new Error('Compressed model unavailable');
+          const bytes = await new Response(response.body.pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();
+          return loader.parse(bytes);
+        } catch { return loader.loadAsync(assets + original); }
+      };
       const [upperGeometry, lowerGeometry, cradleGeometry, boardFile] = await Promise.all([
-        loader.loadAsync(assets + 'r4-upper.a7434ba7522a.stl'),
-        loader.loadAsync(assets + 'r4-lower.a61364729736.stl'),
-        loader.loadAsync(assets + 'r4-cradle.b66db2768d49.stl'),
+        loadGeometry('r4-upper.a7434ba7522a.stl', 'r4-upper.a7434ba7522a.a0291c634712.stl.gz'),
+        loadGeometry('r4-lower.a61364729736.stl', 'r4-lower.a61364729736.a9916511c6fe.stl.gz'),
+        loadGeometry('r4-cradle.b66db2768d49.stl', 'r4-cradle.b66db2768d49.6b675815b221.stl.gz'),
         gltf.loadAsync(assets + 'veroboard-reconstruction.c27982d89a60.glb')
       ]);
       const shellMaterial = new THREE.MeshStandardMaterial({color:0x699d49, roughness:.72, metalness:.02});
