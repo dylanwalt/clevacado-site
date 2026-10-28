@@ -1,3 +1,5 @@
 # Presentation checks
 
 After `npm run build` in `website-v3`, copy this directory into the generated `dist/presentation/qa/` directory and run `npm run preview`. Open `/presentation/qa/story.html?w=1366&h=768`, `/presentation/qa/story.html?w=320&h=568`, and `/presentation/qa/fallback.html`. These test Next/Previous, slide fit, local images, the automatic shell reveal and its control, six distinct recorded waveforms and colours, the previous `#build` link, and the no-WebGL fallback. The presentation is intended for desktop screens; phone layout is not a release requirement. The QA files are outside `public/` and are not included in the production deployment.
+
+The visual showcase uses 15 guided beats in five sections. `story.html` checks each image, caption, slide fit and the complete route. The older five-slide layout was superseded.
