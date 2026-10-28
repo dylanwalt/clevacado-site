@@ -19,6 +19,18 @@ The site also includes a small first-party analytics system using Netlify Functi
 
 The standalone customer app demonstration is served at `/mobile-app-walkthrough` for the poster QR code. It is illustrative demo data and runs independently of the main React landing page.
 
+## Founder presentation
+
+The interactive founder briefing is served at `/presentation`. Its source lives
+in `public/presentation/`: edit `content.js` for the founders, origin, problem,
+solution and milestones; `index.html` for section text and future steps; and
+`app.js` or `style.css` for interactions and layout. Images, the provisional
+shell CAD and the locally bundled Three.js library are included alongside it.
+The page is public to anyone with the link and requests that search engines do
+not index it; this is not access control. Merging changes to `main` triggers a
+Netlify production deployment. The sensor data and machine-learning results
+describe controlled proxy motion, not proven fruit-bruising detection.
+
 ## ClevaCado Live simulated preview — 3 October 2026
 
 `/live/` reproduces the six-tab testing dashboard with browser-generated data,
