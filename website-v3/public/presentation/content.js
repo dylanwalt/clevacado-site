@@ -1,48 +1,28 @@
-/* Edit this file to update the founder briefing, origin, journey and prototype story. */
-window.STORY = {
-  founders: [
-    {
-      id:'walt', name:'Dylan Walt', role:'Engineering & entrepreneurship', initials:'DW',
-      intro:'Curiosity, sales and a desire to build useful technology.',
-      strengths:['Critical thinking','Software & AI','Engineering'],
-      background:'From early sales to fintech and ClevaCado, Dylan brings an interest in solving real problems through technology.',
-      ventures:[
-        {title:'CSX', text:'Early sales experience in concussion software.'},
-        {title:'Prevent', text:'Early sales experience with smart mouthguards.'},
-        {title:'SportGate', text:'Early sales experience in sports technology.'},
-        {title:'Velzee', text:'Based at the Roux Institute. An earlier fintech platform sold to Harwood Labs in early third year sparked the idea.', logo:'assets/logos/velzee.png'}
-      ],
-      learning:'Build, test and learn from the people closest to the problem.'
-    },
-    {
-      id:'simpson', name:'Dylan Simpson', role:'People & entrepreneurship', initials:'DS',
-      intro:'A people-first entrepreneur who finds needs through conversations.',
-      strengths:['Customer discovery','Sales & marketing','Networking'],
-      background:'Dylan brings experience in service delivery, direct outreach and building relationships with customers.',
-      ventures:[
-        {title:'Exotic animals', text:'About five years buying, selling, trading and breeding tarantulas, snakes and other exotic pets.'},
-        {title:'1,000+ customers', text:'A customer base across Africa, built through marketing, education and reliable service.'},
-        {title:'People first', text:'Direct conversations, cold calling and networking to understand what customers need.'}
-      ],
-      learning:'Listen closely, understand the need and deliver a useful service.'
-    }
+/* One entry is one screen. Keep the on-screen message short; speaker notes live in website-v3/PRESENTATION-NOTES.md. */
+window.PRESENTATION = {
+  sections: [
+    { id:'home', label:'Start' },
+    { id:'people', label:'People' },
+    { id:'origin', label:'Origin' },
+    { id:'problem', label:'Problem & solution' },
+    { id:'journey', label:'Journey' },
+    { id:'future', label:'Next' }
   ],
-  origins:[
-    {year:'JAN 2026', label:'The project', title:'A project worth continuing.', text:'Choosing our Investigation project, we wanted to think critically, step outside our comfort zones and build something useful beyond graduation.', image:'assets/optimized/photo-10.3cb765c1bccb.jpg', caption:'THE FOUNDERS · PROJECT PHOTO', tag:'THE START'},
-    {year:'THE IDEA', label:'Agriculture', title:'A question in agriculture.', text:'Dylan Walt suggested the sector. Our research led us to avocados, where handling damage and the people who depend on the industry gave the challenge meaning.', image:'assets/optimized/photo-8.0ac39d8a2754.jpg', caption:'PROTOTYPE SHELL · PROJECT PHOTO', tag:'FINDING THE PROBLEM'},
-    {year:'EARLY 2026', label:'The calls', title:'Pick up the phone.', text:'We were not growers or exporters, so we cold-called industry contacts, including Fremax Farms. Their feedback pointed to visibility and accountability; some invited us back with a product.', image:'assets/optimized/photo-2.10d5a3df6512.jpg', caption:'TEAM AND PROJECT · PHOTO DATE UNCONFIRMED', tag:'CUSTOMER DISCOVERY'}
-  ],
-  milestones:[
-    {year:'MID 2026', label:'EDHE', title:'From idea to business case.', text:'Before the Investigation project, we entered EDHE, placed second at Wits and represented Wits at the regional round. Feedback and mentoring helped us refine the idea.', image:'assets/optimized/photo-2.10d5a3df6512.jpg', caption:'TEAM AND PROJECT · PHOTO DATE UNCONFIRMED', tag:'THE COMPETITION'},
-    {year:'AUG–SEP 2026', label:'AfreTec', title:'Skills with a wider purpose.', text:'The Wits–AfreTec Challenge reinforced our belief that engineering and AI can address meaningful problems across Africa.', image:'assets/optimized/photo-10.3cb765c1bccb.jpg', caption:'TEAM PHOTO · DATE / EVENT UNCONFIRMED', tag:'A RELATED EXPERIENCE'},
-    {year:'8 WEEKS', label:'Investigation', title:'From planning to proof of concept.', text:'The earlier research and conversations shaped our eight-week Investigation. We built sensing hardware, collected controlled data and explored machine learning on those recordings.', image:'assets/optimized/crate.eeda1c6a9260.jpg', caption:'CONTROLLED CRATE TRIAL', tag:'THE PROJECT'},
-    {year:'OCT 2026', label:'Sharing', title:'Taking the work further.', text:'We shared our work at Wits EIE Open Day and submitted a SAUPEC paper for review. The next step is to learn from real supply-chain conditions.', image:'assets/optimized/photo-6.cd6bad18d323.jpg', caption:'HAND-BUILT ELECTRONICS · PROJECT PHOTO', tag:'THE RESEARCH'}
-  ],
-  system:[
-    {id:'problem', num:'01', name:'The problem', kicker:'HANDLING RISK', title:'Damage can appear later.', text:'Drops, vibration, compression and rough handling can damage fruit. When bruising appears later, tracing the specific handling event is difficult.', image:'assets/optimized/crate.eeda1c6a9260.jpg', caption:'CONTROLLED CRATE TRIAL'},
-    {id:'impact', num:'02', name:'The impact', kicker:'PEOPLE & QUALITY', title:'A problem that reaches people.', text:'Quality losses affect growers, workers and families. South Africa exports avocados worldwide; retail research also shows why bruising deserves attention.', image:'assets/optimized/photo-10.3cb765c1bccb.jpg', caption:'THE PEOPLE BEHIND THE IDEA'},
-    {id:'shell', num:'03', name:'The proxy', kicker:'THE SOLUTION', title:'A smart avocado in the crate.', text:'Our 3D-printed proxy is designed to travel alongside real fruit and capture the handling conditions it encounters.', image:'assets/optimized/photo-8.0ac39d8a2754.jpg', caption:'PHYSICAL PROTOTYPE SHELL'},
-    {id:'sensing', num:'04', name:'The sensing', kicker:'MEASURING THE JOURNEY', title:'Turning movement into data.', text:'The hardware records motion and impact. Our team assesses this lab-tested proof of concept at TRL 4; supply-chain data is next.', image:'assets/optimized/photo-4.f20c4ce2fdbe.jpg', caption:'PHYSICAL ELECTRONICS'},
-    {id:'data', num:'05', name:'The model', kicker:'LEARNING FROM SIGNALS', title:'From signals to insight.', text:'Our machine learning research classifies controlled motion patterns, including drops and vibration. Connecting those signals to actual bruising still needs fruit and field validation.', image:'assets/optimized/crate.eeda1c6a9260.jpg', caption:'CONTROLLED CRATE TRIAL'}
+  slides: [
+    {id:'opening', section:'home', eyebrow:'CLEVACADO · FOUNDER STORY', title:'Two founders.', accent:'One purpose.', detail:'From curiosity to a smart avocado.', media:'photo', image:'assets/optimized/photo-10.3cb765c1bccb.jpg', alt:'The two ClevaCado founders together', position:'50% 48%', caption:'DYLAN & DYLAN'},
+    {id:'walt', section:'people', eyebrow:'WHO WE ARE', title:'Dylan Walt.', detail:'Sales, fintech and engineering.', lines:['CSX · Prevent · SportGate','Fintech sold to Harwood Labs → Velzee at Roux'], media:'photo', image:'assets/optimized/photo-10.3cb765c1bccb.jpg', alt:'The two ClevaCado founders together', position:'50% 48%', caption:'THE FOUNDERS'},
+    {id:'simpson', section:'people', eyebrow:'WHO WE ARE', title:'Dylan Simpson.', detail:'People-first entrepreneurship.', lines:['5 years · exotic-animal business','1,000+ customers across Africa'], media:'photo', image:'assets/optimized/photo-2.10d5a3df6512.jpg', alt:'The ClevaCado team with their project display', position:'50% 50%', caption:'THE FOUNDERS'},
+    {id:'project', section:'origin', eyebrow:'HOW IT STARTED · JAN 2026', title:'A project worth', accent:'continuing.', detail:'An Investigation project to build on after graduation.', media:'photo', image:'assets/optimized/photo-10.3cb765c1bccb.jpg', alt:'The ClevaCado founders together', position:'50% 48%', caption:'THE BEGINNING'},
+    {id:'agriculture', section:'origin', eyebrow:'HOW IT STARTED', title:'We explored', accent:'agriculture.', detail:'Research led us to avocados.', media:'photo', image:'assets/optimized/crate.eeda1c6a9260.jpg', alt:'Avocados and proxy device in a controlled crate trial', position:'50% 48%', caption:'CONTROLLED TEST PHOTO'},
+    {id:'calls', section:'origin', eyebrow:'CUSTOMER DISCOVERY', title:'We picked up', accent:'the phone.', detail:'Growers shared a need for accountability.', media:'photo', image:'assets/optimized/photo-2.10d5a3df6512.jpg', alt:'The ClevaCado team with their project display', position:'50% 50%', caption:'LISTENING FIRST'},
+    {id:'problem', section:'problem', eyebrow:'THE PROBLEM', title:'Damage can', accent:'appear later.', detail:'Where did the handling risk happen?', lines:['PACKHOUSE → TRANSPORT → RETAIL'], media:'photo', image:'assets/optimized/crate.eeda1c6a9260.jpg', alt:'Avocados in a crate during a controlled trial', position:'50% 47%', caption:'CONTROLLED TEST PHOTO'},
+    {id:'people-impact', section:'problem', eyebrow:'WHY IT MATTERS', title:'15,000 jobs.', detail:'Farm and packhouse workers in South Africa.', source:'South African government · 2023', sourceUrl:'https://www.gov.za/news/media-statements/minister-thoko-didiza-signs-agreement-export-avocado-china-22-aug-2023', media:'photo', image:'assets/optimized/crate.eeda1c6a9260.jpg', alt:'Avocados in a crate during a controlled trial', position:'50% 47%', caption:'CONTROLLED TEST PHOTO'},
+    {id:'solution', section:'problem', eyebrow:'THE SOLUTION', title:'A smart avocado.', detail:'A proxy that travels alongside fruit and records motion.', media:'model', caption:'PROVISIONAL SHELL CAD'},
+    {id:'data', section:'problem', eyebrow:'THE RESEARCH', title:'Motion into', accent:'insight.', detail:'Lab testing classifies handling patterns.', media:'signal', image:'assets/optimized/crate.eeda1c6a9260.jpg', alt:'Avocados in a controlled crate trial', caption:'CONTROLLED 15 cm DROP'},
+    {id:'edhe', section:'journey', eyebrow:'THE JOURNEY · EDHE', title:'2nd at Wits.', detail:'Represented Wits at the EDHE regional round.', media:'photo', image:'assets/optimized/photo-2.10d5a3df6512.jpg', alt:'The ClevaCado team with their project display', position:'50% 50%', caption:'THE CLEVACADO TEAM'},
+    {id:'afretec', section:'journey', eyebrow:'THE JOURNEY · AFRETEC', title:'Learning by doing.', detail:'Mentorship and the Wits–AfreTec Challenge.', media:'photo', image:'assets/optimized/photo-10.3cb765c1bccb.jpg', alt:'The two ClevaCado founders together', position:'50% 48%', caption:'THE FOUNDERS · PROJECT PHOTO'},
+    {id:'investigation', section:'journey', eyebrow:'THE JOURNEY · INVESTIGATION', title:'Eight weeks.', accent:'One prototype.', detail:'Lab-tested proof of concept · TRL 4 team assessment.', media:'photo', image:'assets/optimized/photo-4.f20c4ce2fdbe.jpg', alt:'The ClevaCado prototype electronics in a hand', position:'50% 48%', caption:'THE HAND-BUILT BOARD'},
+    {id:'sharing', section:'journey', eyebrow:'THE JOURNEY · SHARING', title:'Sharing our work.', detail:'Wits EIE Open Day · SAUPEC submission.', media:'photo', image:'assets/optimized/photo-2.10d5a3df6512.jpg', alt:'The ClevaCado team with their project display', position:'50% 50%', caption:'THE CLEVACADO TEAM'},
+    {id:'future', section:'future', eyebrow:'WHAT COMES NEXT', title:'Next: learn', accent:'in the field.', detail:'Real-world data. Better models. An initial pilot.', media:'photo', image:'assets/optimized/photo-8.0ac39d8a2754.jpg', alt:'The provisional ClevaCado shell held in a hand', position:'50% 50%', caption:'THE NEXT CHAPTER'}
   ]
 };

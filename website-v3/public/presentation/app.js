@@ -1,48 +1,190 @@
-import * as THREE from 'three';
-import {STLLoader} from './vendor/STLLoader.js';
 import {trace} from './trace.js';
-const story=window.STORY, $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const views=['home','people','origin','build','journey','future'];let current=0,founderId='walt',founderTab=0,originIndex=0,chapterIndex=0,systemIndex=0,separated=false;
-// A single Next-only route covers every founder card, venture, journey chapter,
-// prototype layer and the shell reveal. Derive it from the editable story data.
-const guide=[{view:'home',title:'Opening'}];
-for(const f of story.founders){
-  guide.push({view:'people',founder:f.id,tab:0,title:`Meet ${f.name}`});
-  guide.push({view:'people',founder:f.id,tab:1,title:`${f.name}: ventures and experience`});
-}
-story.origins.forEach((c,i)=>guide.push({view:'origin',origin:i,title:c.label}));
-story.system.forEach((x,i)=>{guide.push({view:'build',system:i,split:x.id==='shell'?false:undefined,title:x.name});if(x.id==='shell')guide.push({view:'build',system:i,split:true,title:'Separate the shell'});});
-story.milestones.forEach((c,i)=>guide.push({view:'journey',chapter:i,title:c.label}));
-guide.push({view:'future',title:'What comes next'});let guideIndex=0;
-function syncGuide(){let matches=guide.map((x,i)=>({x,i})).filter(({x})=>x.view===views[current]&&(x.founder===undefined||x.founder===founderId)&&(x.tab===undefined||x.tab===founderTab)&&(x.origin===undefined||x.origin===originIndex)&&(x.chapter===undefined||x.chapter===chapterIndex)&&(x.system===undefined||x.system===systemIndex)&&(x.system===undefined||story.system[x.system].id!=='shell'||x.split===separated));if(matches.length)guideIndex=matches[0].i;else {let first=guide.findIndex(x=>x.view===views[current]);if(first>=0)guideIndex=first}updateGuide()}
-function updateGuide(){let next=$('#next-view'),prev=$('#prev-view');let atEnd=guideIndex===guide.length-1;prev.disabled=guideIndex===0;next.disabled=atEnd;next.setAttribute('aria-label',atEnd?'End of story':`Next: ${guide[guideIndex+1].title}`);next.innerHTML=`<span class="next-text">${atEnd?'End':'Next'}</span><span aria-hidden="true">→</span>`}
-function moveGuide(direction){let index=Math.max(0,Math.min(guide.length-1,guideIndex+direction));if(guide[index]?.split&&document.body.classList.contains('cad-unavailable'))index=Math.max(0,Math.min(guide.length-1,index+direction));if(index===guideIndex)return;guideIndex=index;const step=guide[index];if(step.founder){founderId=step.founder;founderTab=step.tab;renderFounder()}if(step.origin!==undefined){originIndex=step.origin;renderOrigin()}if(step.chapter!==undefined){chapterIndex=step.chapter;renderChapter()}if(step.system!==undefined){systemIndex=step.system;separated=!!step.split;groupTarget=separated?.52:.15;renderSystem()}showView(step.view,true,false);updateGuide()}
 
-const reduced=matchMedia('(prefers-reduced-motion: reduce)');
-const signalPath=trace.map(([t,g],i)=>`${i?'L':'M'}${((t+.590201)/1.966398*940).toFixed(2)} ${(170-g/150*150).toFixed(2)}`).join(' ');let signalFrame=0;
-function replaySignal(){const box=$('.signal-plot');if(!box)return;cancelAnimationFrame(signalFrame);box.classList.remove('playing');void box.offsetWidth;box.classList.add('playing');let btn=$('#replay-signal');btn.textContent='Replay 2 s signal ↻';if(reduced.matches)return;const cursor=box.querySelector('.signal-cursor');const start=performance.now(), duration=1966.398;function tick(now){if(!box.isConnected)return;const progress=Math.min(1,(now-start)/duration);cursor.setAttribute('cx',String(progress*940));if(progress<1)signalFrame=requestAnimationFrame(tick)}signalFrame=requestAnimationFrame(tick)}
+const story = window.PRESENTATION;
+const $ = selector => document.querySelector(selector);
+const escapeHtml = value => String(value).replace(/[&<>"']/g, character => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[character]));
+const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+let current = 0;
+let modelPromise = null;
+let model = null;
+let modelFailed = false;
+let modelFrame = 0;
+let splitTimer = 0;
+let userChangedShell = false;
 
-function showView(name,updateHash=true,updateGuidePosition=true){const idx=views.indexOf(name);if(idx<0)return;let changed=idx!==current;current=idx;$$('[data-screen]').forEach(s=>{s.hidden=s.dataset.screen!==name});$$('.navigation [data-view]').forEach(b=>{if(b.dataset.view===name)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});if(updateHash&&location.hash!==`#${name}`){try{history.replaceState(null,'',`#${name}`)}catch{/* Embedded previews may restrict history updates. */}}const sceneTarget=name==='home'?$('#home-cad'):name==='build'&&story.system[systemIndex].id==='shell'?$('#build-cad'):name==='people'?$('#people-cad'):name==='origin'?$('#origin-cad'):name==='journey'?$('#journey-cad'):name==='future'?$('#future-cad'):null;moveCad(sceneTarget);setScene(name);if(!reduced.matches){let stage=$('#stage');stage.classList.remove('scene-change');void stage.offsetWidth;stage.classList.add('scene-change')}if(updateGuidePosition)syncGuide();let section=$(`[data-screen="${name}"]`);section.classList.remove('entering');void section.offsetWidth;section.classList.add('entering')}
-function renderFounder(){
-  const f=story.founders.find(x=>x.id===founderId);
-  $$('[data-founder]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.founder===founderId)));
-  const segments=['The person','Ventures & work'];
-  const details=founderTab===0?`<p class="detail-intro">${esc(f.intro)}</p><p class="detail-background">${esc(f.background)}</p><div class="chips">${f.strengths.map(x=>`<span>${esc(x)}</span>`).join('')}</div>`:founderTab===1?`<div class="venture-page"><div class="detail-label">THE JOURNEY BEFORE &amp; BEYOND CLEVACADO</div><div class="venture-grid">${f.ventures.map((v,i)=>`<article class="venture-card" data-venture-card style="--card-index:${i}">${v.logo?`<img src="${esc(v.logo)}" alt="" class="venture-logo ${v.title==='Roux Institute'?'venture-logo-wide':''}">`:`<span class="venture-number" aria-hidden="true">${String(i+1).padStart(2,'0')}</span>`}<div><h4>${esc(v.title)}</h4><p>${esc(v.text)}</p></div></article>`).join('')}</div></div>`:`<div class="balance"><span>✳</span><h4>How the pieces fit.</h4><p>${esc(f.learning)}</p><small>Role emphasis and balance are editorial interpretations, open to founder review.</small></div>`;
-  $('#founder-detail').innerHTML=`<div class="detail-head"><div><span class="detail-label">${esc(f.role)}</span><h3>${esc(f.name)}<em>.</em></h3></div><div class="team-photo"><img loading="lazy" decoding="async" src="assets/optimized/photo-2.10d5a3df6512.jpg" alt="The ClevaCado team with their project display"><span>TEAM &amp; PROJECT</span></div></div><div class="detail-tabs" role="group" aria-label="Founder story sections">${segments.map((s,i)=>`<button data-founder-tab="${i}" aria-pressed="${i===founderTab}">${s}</button>`).join('')}</div><div class="founder-copy">${details}</div>`;
-  $$('[data-founder-tab]').forEach(b=>b.addEventListener('click',()=>{founderTab=+b.dataset.founderTab;renderFounder();syncGuide();$(`[data-founder-tab="${founderTab}"]`).focus({preventScroll:true})}));
+const signalPath = trace.map(([time, acceleration], index) => `${index ? 'L' : 'M'}${((time + .590201) / 1.966398 * 940).toFixed(2)} ${(170 - acceleration / 150 * 150).toFixed(2)}`).join(' ');
+
+function sectionStart(section) {
+  return story.slides.findIndex(slide => slide.section === section);
 }
-function renderChapter(focus=false){let c=story.milestones[chapterIndex];$('#chapter-list').innerHTML=story.milestones.map((x,i)=>`<button data-chapter="${i}" aria-pressed="${i===chapterIndex}"><span>${esc(x.year)}</span><b>${esc(x.label)}</b><i>↗</i></button>`).join('');$('#chapter-detail').innerHTML=`<div class="chapter-image"><img loading="lazy" decoding="async" src="${esc(c.image)}" alt="${esc(c.caption)}"><span>${esc(c.caption)}</span></div><div class="chapter-copy"><div class="detail-label">${esc(c.tag)} / ${esc(c.year)}</div><h3>${esc(c.title)}</h3><p>${esc(c.text)}</p><div class="mini-controls"><button data-chapter-prev aria-label="Previous chapter" ${chapterIndex===0?'disabled':''}>←</button><span>${String(chapterIndex+1).padStart(2,'0')} / ${String(story.milestones.length).padStart(2,'0')}</span><button data-chapter-next aria-label="Next chapter" ${chapterIndex===story.milestones.length-1?'disabled':''}>→</button></div></div>`;$$('[data-chapter]').forEach(b=>b.addEventListener('click',()=>{chapterIndex=+b.dataset.chapter;renderChapter(true);syncGuide()}));$('[data-chapter-prev]').addEventListener('click',()=>{chapterIndex=Math.max(0,chapterIndex-1);renderChapter(true);syncGuide()});$('[data-chapter-next]').addEventListener('click',()=>{chapterIndex=Math.min(story.milestones.length-1,chapterIndex+1);renderChapter(true);syncGuide()});if(focus)$(`[data-chapter="${chapterIndex}"]`).focus({preventScroll:true})}
-function renderOrigin(focus=false){let c=story.origins[originIndex];$('#origin-list').innerHTML=story.origins.map((x,i)=>`<button data-origin="${i}" aria-pressed="${i===originIndex}"><span>${esc(x.year)}</span><b>${esc(x.label)}</b><i>↗</i></button>`).join('');$('#origin-detail').innerHTML=`<div class="chapter-image"><img loading="lazy" decoding="async" src="${esc(c.image)}" alt="${esc(c.caption)}"><span>${esc(c.caption)}</span></div><div class="chapter-copy"><div class="detail-label">${esc(c.tag)} / ${esc(c.year)}</div><h3>${esc(c.title)}</h3><p>${esc(c.text)}</p><div class="mini-controls"><button data-origin-prev aria-label="Previous origin chapter" ${originIndex===0?'disabled':''}>←</button><span>${String(originIndex+1).padStart(2,'0')} / ${String(story.origins.length).padStart(2,'0')}</span><button data-origin-next aria-label="Next origin chapter" ${originIndex===story.origins.length-1?'disabled':''}>→</button></div></div>`;$$('[data-origin]').forEach(b=>b.addEventListener('click',()=>{originIndex=+b.dataset.origin;renderOrigin(true);syncGuide()}));$('[data-origin-prev]').addEventListener('click',()=>{originIndex=Math.max(0,originIndex-1);renderOrigin(true);syncGuide()});$('[data-origin-next]').addEventListener('click',()=>{originIndex=Math.min(story.origins.length-1,originIndex+1);renderOrigin(true);syncGuide()});if(focus)$(`[data-origin="${originIndex}"]`).focus({preventScroll:true})}
-function renderSystem(focus=false){let x=story.system[systemIndex];$('#build-tabs').innerHTML=story.system.map((v,i)=>`<button data-system="${i}" aria-pressed="${i===systemIndex}"><span>${esc(v.num)}</span><b>${esc(v.name)}</b><i>↗</i></button>`).join('');let problemMedia=`<div class="problem-visual"><div class="problem-top">THE AVOCADO JOURNEY</div><div class="route-stages"><span>PACKHOUSE</span><i>→</i><span>LOADING</span><i>→</i><span>TRANSPORT</span><i>→</i><span>PORT</span><i>→</i><span>DISTRIBUTION</span><i>→</i><span>RETAIL</span></div><div class="route-event"><b>✳</b><div><strong>Where did the handling risk happen?</strong><small>Impact · vibration · compression · rough handling</small></div></div><p>Bruising can become visible later; an Australian study found the most bruising at retail display.</p><div class="route-note">THE QUESTION THAT STARTED CLEVACADO</div></div>`;let impactMedia=`<div class="impact-visual"><div class="problem-top">WHY IT MATTERS</div><div class="impact-stat"><strong>15,000</strong><span>farm &amp; packhouse jobs<br><small>South African government · 2023</small></span></div><div class="impact-stat"><strong>R3.5bn</strong><span>avocado exports to Europe<br><small>NAMC · 2024 export value</small></span></div><div class="impact-stat"><strong>~½</strong><span>of internal retail defects were bruising<br><small>Australian research · 2018</small></span></div><div class="impact-sources"><a href="https://www.gov.za/news/media-statements/minister-thoko-didiza-signs-agreement-export-avocado-china-22-aug-2023" target="_blank" rel="noopener">Jobs source ↗</a><a href="https://www.namc.co.za/wp-content/uploads/2025/04/SA-Fruit-Trade-Flow-Report-Issue-57-March-2025-FINAL.pdf" target="_blank" rel="noopener">Exports source ↗</a><a href="https://era.dpi.qld.gov.au/id/eprint/9394/" target="_blank" rel="noopener">Bruising source ↗</a></div></div>`;let media=x.id==='problem'?problemMedia:x.id==='impact'?impactMedia:x.id==='shell'?`<div id="build-cad" class="build-cad"><div class="cad-static"><img src="assets/optimized/shell-cad.c2933895e0f8.jpg" alt="Provisional project shell CAD view"></div></div><figure class="physical-inset"><img src="assets/optimized/photo-8.0ac39d8a2754.jpg" alt="Actual provisional physical shell held in a hand"><figcaption>REAL SHELL</figcaption></figure><button class="explode" id="explode" aria-pressed="${separated}">${separated?'Close the shell ↙':'Separate the shell ↗'}</button><span class="media-caption">PROVISIONAL SHELL CAD · ELECTRONICS NOT SHOWN</span>`:x.id==='data'?`<img class="signal-photo" src="${esc(x.image)}" alt="${esc(x.caption)}"><button class="signal-button" id="replay-signal">▶ Replay 2 s signal</button><div class="signal-plot"><div class="signal-kicker">RECORDED RESULTANT ACCELERATION · g</div><div class="signal-axis"><span>150 g</span><span>0 g</span></div><svg viewBox="0 0 940 190" preserveAspectRatio="none" role="img" aria-label="One recorded two-second acceleration trace from a controlled nominal 15 centimetre drop"><defs><clipPath id="trace-mask"><rect class="signal-mask" width="0" height="190"/></clipPath></defs><path d="M0 20H940 M0 95H940 M0 170H940" stroke="#b8ff5a50" fill="none"/><path d="${signalPath}" fill="none" stroke="#b7ff5a" stroke-width="2" clip-path="url(#trace-mask)"/><circle class="signal-cursor" cx="0" cy="170" r="5" fill="#f9f8f3"/></svg><div class="signal-scale"><span>−0.59 s</span><span>0 s · annotated</span><span>+1.38 s</span></div><small>ONE CONTROLLED NOMINAL 15 cm DROP · NOT DAMAGE DETECTION</small></div><span class="media-caption">${esc(x.caption)}</span>`:`<img src="${esc(x.image)}" alt="${esc(x.caption)}"><span class="media-caption">${esc(x.caption)}</span>`;$('#build-detail').innerHTML=`<div class="build-media">${media}</div><div class="build-copy"><div class="detail-label">${esc(x.kicker)}</div><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p><div class="build-number">${esc(x.num)} <span>/ ${String(story.system.length).padStart(2,'0')}</span></div></div>`;$$('[data-system]').forEach(b=>b.addEventListener('click',()=>{systemIndex=+b.dataset.system;renderSystem(true);syncGuide()}));let replay=$('#replay-signal');if(replay)replay.addEventListener('click',replaySignal);let ex=$('#explode');if(ex){ex.disabled=!cadReady;ex.addEventListener('click',()=>{separated=!separated;groupTarget=separated?0.52:0.15;ex.setAttribute('aria-pressed',String(separated));ex.textContent=separated?'Close the shell ↙':'Separate the shell ↗';syncGuide()})}if(views[current]==='build')moveCad(x.id==='shell'?$('#build-cad'):null);if(x.id==='data')requestAnimationFrame(replaySignal);if(focus)$(`[data-system="${systemIndex}"]`).focus({preventScroll:true})}
-$$('[data-view]').forEach(b=>b.addEventListener('click',e=>{if(b.tagName==='A')e.preventDefault();showView(b.dataset.view)}));$$('[data-founder]').forEach(b=>b.addEventListener('click',()=>{founderId=b.dataset.founder;founderTab=0;renderFounder();syncGuide()}));$('#prev-view').addEventListener('click',()=>moveGuide(-1));$('#next-view').addEventListener('click',()=>moveGuide(1));$('.brand').addEventListener('click',e=>{e.preventDefault();showView('home')});window.addEventListener('hashchange',()=>showView(location.hash.slice(1),false));document.addEventListener('keydown',e=>{if(e.altKey||e.metaKey||e.ctrlKey||e.target.closest('input,textarea,select,[contenteditable=true]'))return;if(e.key==='ArrowRight'){e.preventDefault();moveGuide(1)}if(e.key==='ArrowLeft'){e.preventDefault();moveGuide(-1)}});
-let renderer, group, photoGroup, orbitGroup, meshes=[], homeZ=0, openAmount=0, frame=0, cadReady=false,sceneMode='home',sceneTurn=0,groupTarget=.15;const cad=$('#cad'), holder=$('#cad-source');let target=null;
-function setScene(name){sceneMode=name;sceneTurn=0;if(group)group.visible=name==='home'||name==='build';if(photoGroup)photoGroup.visible=name==='home';if(orbitGroup)orbitGroup.visible=name!=='build';}
-function moveCad(el){target=el;if(!renderer)return;if(el){el.append(holder);holder.hidden=false;resizeCad()}else{document.body.append(holder);holder.hidden=true}}
-function resizeCad(){if(!renderer||!target)return;let rect=target.getBoundingClientRect();if(!rect.width||!rect.height)return;renderer.setSize(Math.max(1,rect.width),Math.max(1,rect.height),false);camera.aspect=rect.width/rect.height;camera.updateProjectionMatrix()}
-let camera;
-try{renderer=new THREE.WebGLRenderer({canvas:cad,antialias:true,alpha:true});renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));renderer.setClearColor(0,0);renderer.outputColorSpace=THREE.SRGBColorSpace;let scene=new THREE.Scene();camera=new THREE.PerspectiveCamera(34,1,.1,100);camera.position.set(4.5,3.1,6.5);camera.lookAt(0,0,0);scene.add(new THREE.HemisphereLight(0xffffff,0x335b2a,2.1));const light=new THREE.DirectionalLight(0xffffff,2.1);light.position.set(5,7,8);scene.add(light);const rim=new THREE.DirectionalLight(0xb7ff5a,1.2);rim.position.set(-4,3,-6);scene.add(rim);group=new THREE.Group();scene.add(group);
-photoGroup=new THREE.Group();photoGroup.quaternion.copy(camera.quaternion);scene.add(photoGroup);const textureLoader=new THREE.TextureLoader();
-[['./assets/optimized/photo-8.0ac39d8a2754.jpg',-1.95,0.55,0.55],['./assets/optimized/photo-5.e3ec64f653c3.jpg',1.95,0.55,0.55]].forEach(([path,x,y,z],i)=>{textureLoader.load(path,texture=>{texture.colorSpace=THREE.SRGBColorSpace;const card=new THREE.Group();const backing=new THREE.Mesh(new THREE.PlaneGeometry(1.08,1.43),new THREE.MeshBasicMaterial({color:0xeaf2df,side:THREE.DoubleSide}));const pic=new THREE.Mesh(new THREE.PlaneGeometry(.98,1.3),new THREE.MeshBasicMaterial({map:texture,side:THREE.DoubleSide}));pic.position.z=.01;card.add(backing,pic);card.position.set(x,y,z);card.userData={x,y,z,index:i};photoGroup.add(card)})});
-orbitGroup=new THREE.Group();scene.add(orbitGroup);const ringMaterial=new THREE.MeshBasicMaterial({color:0xb8e986,transparent:true,opacity:.42,side:THREE.DoubleSide});for(let i=0;i<3;i++){const ring=new THREE.Mesh(new THREE.TorusGeometry(2.0+i*.36,.007,5,96),ringMaterial);ring.rotation.x=.75+i*.35;ring.rotation.y=i*.6;orbitGroup.add(ring)}const nodeMaterial=new THREE.MeshBasicMaterial({color:0xd4f6a1});for(let i=0;i<16;i++){let a=i*Math.PI*2/16;let node=new THREE.Mesh(new THREE.SphereGeometry(.025+(i%3)*.01,8,6),nodeMaterial);node.position.set(Math.cos(a)*2.3,Math.sin(a)*1.6,Math.sin(a*2)*.65);orbitGroup.add(node)}setScene(views[current]);const loader=new STLLoader();Promise.all(['optimized/shell-upper.4e0633dcf571.stl','optimized/shell-lower.3896e1c3f3c3.stl'].map(n=>loader.loadAsync('./assets/'+n))).then(geos=>{const material=new THREE.MeshStandardMaterial({color:0x5ed143,roughness:.48,metalness:.07});meshes=geos.map(g=>{g.computeVertexNormals();let m=new THREE.Mesh(g,material);group.add(m);return m});const box=new THREE.Box3().setFromObject(group),size=new THREE.Vector3(),centre=new THREE.Vector3();box.getSize(size);box.getCenter(centre);meshes.forEach(m=>m.position.sub(centre));homeZ=-centre.z;group.scale.setScalar(3.7/Math.max(size.x,size.y,size.z));group.rotation.x=-Math.PI/2;group.rotation.z=.15;cadReady=true;document.body.classList.add('cad-ready');let button=$('#explode');if(button)button.disabled=false;resizeCad()}).catch(()=>{document.body.classList.add('cad-unavailable')});function draw(){if(target){openAmount=reduced.matches?(sceneMode==='build'&&separated?1:0):openAmount+((sceneMode==='build'&&separated?1:0)-openAmount)*.045;if(meshes.length===2){meshes[0].position.z=homeZ+openAmount*12;meshes[1].position.z=homeZ-openAmount*12}if(!reduced.matches){if(sceneMode==='build'){group.rotation.z+=(groupTarget-group.rotation.z)*.045}else{group.rotation.z+=.002}sceneTurn+=.013;orbitGroup.rotation.y+=.0025;orbitGroup.rotation.z+=.0015;photoGroup.children.forEach(card=>{const d=card.userData;card.position.y=d.y+Math.sin(sceneTurn+d.index*2)*.12;card.rotation.z=Math.sin(sceneTurn*.6+d.index)*.035})}renderer.render(scene,camera)}frame=requestAnimationFrame(draw)}draw();window.addEventListener('resize',resizeCad);document.addEventListener('visibilitychange',()=>{if(!document.hidden)resizeCad()});}catch{renderer=null;document.body.classList.add('cad-unavailable')}
-renderFounder();renderOrigin();renderChapter();renderSystem();showView(views.includes(location.hash.slice(1))?location.hash.slice(1):'home',false);updateGuide();
+
+function stopModelAnimation() {
+  cancelAnimationFrame(modelFrame);
+  modelFrame = 0;
+  clearTimeout(splitTimer);
+}
+
+function renderMedia(slide) {
+  const caption = `<span class="media-caption">${escapeHtml(slide.caption || '')}</span>`;
+  if (slide.media === 'model') {
+    return `<div class="slide-media model-media" id="model-media"><img class="model-fallback" src="assets/optimized/shell-cad.c2933895e0f8.jpg" alt="Provisional ClevaCado shell CAD view"><span class="model-status" id="model-status">Loading 3D model…</span><button class="model-button" id="model-button" type="button" aria-pressed="false" disabled>Separate shell ↗</button>${caption}</div>`;
+  }
+  if (slide.media === 'signal') {
+    return `<div class="slide-media signal-media"><img class="media-image" src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.alt)}"><button class="signal-button" id="signal-button" type="button">Replay signal ↻</button><div class="signal-visual" id="signal-visual"><div class="signal-heading">RECORDED ACCELERATION · g</div><svg viewBox="0 0 940 190" preserveAspectRatio="none" role="img" aria-label="Recorded acceleration from one controlled nominal 15 centimetre drop"><path d="M0 20H940 M0 95H940 M0 170H940" stroke="#b8ff5a66" fill="none"/><path class="signal-trace" d="${signalPath}" fill="none" stroke="#b7ff5a" stroke-width="3" vector-effect="non-scaling-stroke" pathLength="1"/></svg><div class="axis"><span>−0.59 s</span><span>0 s</span><span>+1.38 s</span></div><small>One controlled example · not a bruise measurement</small></div>${caption}</div>`;
+  }
+  return `<div class="slide-media"><img class="media-image" src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.alt)}" style="--position:${escapeHtml(slide.position || '50% 50%')}" decoding="async">${caption}</div>`;
+}
+
+function renderSections() {
+  const currentSection = story.slides[current].section;
+  $('#sections').innerHTML = story.sections.map(section => `<button type="button" data-section="${escapeHtml(section.id)}" ${section.id === currentSection ? 'aria-current="step"' : ''}>${escapeHtml(section.label)}</button>`).join('');
+  document.querySelectorAll('[data-section]').forEach(button => button.addEventListener('click', () => renderSlide(sectionStart(button.dataset.section))));
+}
+
+function preloadNextImage() {
+  const next = story.slides[current + 1];
+  if (next && next.image) { const image = new Image(); image.src = next.image; }
+  if (next && next.media === 'model') {
+    const prepareModel = () => { if (story.slides[current + 1]?.media === 'model') initialiseModel(); };
+    if (window.requestIdleCallback) window.requestIdleCallback(prepareModel); else setTimeout(prepareModel, 300);
+  }
+}
+
+function renderSlide(index, updateHash = true) {
+  if (index < 0 || index >= story.slides.length) return;
+  stopModelAnimation();
+  current = index;
+  const slide = story.slides[current];
+  const lines = slide.lines?.length ? `<ul class="support-lines">${slide.lines.map(line => `<li>${escapeHtml(line)}</li>`).join('')}</ul>` : '';
+  const source = slide.source ? `<a class="source-link" href="${escapeHtml(slide.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(slide.source)} ↗</a>` : '';
+  $('#stage').innerHTML = `<article class="slide" data-slide="${escapeHtml(slide.id)}"><div class="slide-copy"><div class="eyebrow">${escapeHtml(slide.eyebrow)}</div><h1>${escapeHtml(slide.title)}${slide.accent ? `<em>${escapeHtml(slide.accent)}</em>` : ''}</h1><p class="detail">${escapeHtml(slide.detail)}</p>${lines}${source}</div>${renderMedia(slide)}</article>`;
+  $('#top-counter').textContent = `${String(current + 1).padStart(2, '0')} / ${String(story.slides.length).padStart(2, '0')}`;
+  $('#slide-count').textContent = `${String(current + 1).padStart(2, '0')} / ${String(story.slides.length).padStart(2, '0')}`;
+  $('#progress').style.width = `${(current + 1) / story.slides.length * 100}%`;
+  $('#previous').disabled = current === 0;
+  $('#next').disabled = current === story.slides.length - 1;
+  $('#next').setAttribute('aria-label', current === story.slides.length - 1 ? 'End of presentation' : `Next: ${story.slides[current + 1].title}`);
+  $('#next').innerHTML = `<span>${current === story.slides.length - 1 ? 'End' : 'Next'}</span><b aria-hidden="true">→</b>`;
+  renderSections();
+  if (updateHash) { try { history.replaceState(null, '', `#${slide.id}`); } catch {} }
+  if (slide.media === 'model') {
+    userChangedShell = false;
+    $('#model-button').addEventListener('click', toggleShell);
+    mountModel();
+  }
+  if (slide.media === 'signal') {
+    $('#signal-button').addEventListener('click', replaySignal);
+    requestAnimationFrame(replaySignal);
+  }
+  preloadNextImage();
+}
+
+function replaySignal() {
+  const plot = $('#signal-visual');
+  if (!plot) return;
+  plot.classList.remove('playing');
+  void plot.offsetWidth;
+  plot.classList.add('playing');
+}
+
+async function initialiseModel() {
+  if (model || modelFailed) return model;
+  if (modelPromise) return modelPromise;
+  modelPromise = (async () => {
+    try {
+      const [THREE, {STLLoader}] = await Promise.all([import('three'), import('./vendor/STLLoader.js')]);
+      const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+      renderer.setClearColor(0, 0);
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.domElement.className = 'model-canvas';
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(34, 1, .1, 100);
+      camera.position.set(4.5, 3.1, 6.5); camera.lookAt(0, 0, 0);
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x335b2a, 2.1));
+      const light = new THREE.DirectionalLight(0xffffff, 2.1); light.position.set(5, 7, 8); scene.add(light);
+      const rim = new THREE.DirectionalLight(0xb7ff5a, 1.2); rim.position.set(-4, 3, -6); scene.add(rim);
+      const group = new THREE.Group(); scene.add(group);
+      const loader = new STLLoader();
+      const geometries = await Promise.all(['shell-upper.4e0633dcf571.stl', 'shell-lower.3896e1c3f3c3.stl'].map(name => loader.loadAsync(`./assets/optimized/${name}`)));
+      const material = new THREE.MeshStandardMaterial({color:0x5ed143, roughness:.48, metalness:.07});
+      const meshes = geometries.map(geometry => { geometry.computeVertexNormals(); const mesh = new THREE.Mesh(geometry, material); group.add(mesh); return mesh; });
+      const box = new THREE.Box3().setFromObject(group), size = new THREE.Vector3(), centre = new THREE.Vector3();
+      box.getSize(size); box.getCenter(centre); meshes.forEach(mesh => mesh.position.sub(centre));
+      const homeZ = -centre.z;
+      group.scale.setScalar(3.7 / Math.max(size.x, size.y, size.z)); group.rotation.x = -Math.PI / 2; group.rotation.z = .15;
+      model = {renderer, scene, camera, group, meshes, homeZ, open:false, openAmount:0};
+      if (story.slides[current].media === 'model') showReadyModel();
+      return model;
+    } catch {
+      modelFailed = true;
+      const status = $('#model-status'); if (status) status.textContent = 'Static CAD preview';
+      const button = $('#model-button'); if (button) button.hidden = true;
+      return null;
+    }
+  })();
+  return modelPromise;
+}
+
+function resizeModel() {
+  const host = $('#model-media');
+  if (!model || !host || story.slides[current].media !== 'model') return;
+  const box = host.getBoundingClientRect();
+  if (!box.width || !box.height) return;
+  model.renderer.setSize(Math.max(1, box.width), Math.max(1, box.height), false);
+  model.camera.aspect = box.width / box.height; model.camera.updateProjectionMatrix();
+}
+
+function drawModel() {
+  if (!model || story.slides[current].media !== 'model' || !$('#model-media')) { modelFrame = 0; return; }
+  const desired = model.open ? 1 : 0;
+  model.openAmount = reducedMotion.matches ? desired : model.openAmount + (desired - model.openAmount) * .045;
+  model.meshes[0].position.z = model.homeZ + model.openAmount * 12;
+  model.meshes[1].position.z = model.homeZ - model.openAmount * 12;
+  if (!reducedMotion.matches) model.group.rotation.z += .002;
+  model.renderer.render(model.scene, model.camera);
+  modelFrame = requestAnimationFrame(drawModel);
+}
+
+function setShell(open) {
+  if (!model) return;
+  model.open = open;
+  const button = $('#model-button');
+  if (button) { button.setAttribute('aria-pressed', String(open)); button.textContent = open ? 'Close shell ↙' : 'Separate shell ↗'; }
+}
+
+function toggleShell() { userChangedShell = true; if (model) setShell(!model.open); }
+
+function showReadyModel() {
+  const host = $('#model-media'), button = $('#model-button');
+  if (!host || !button || !model) return;
+  host.append(model.renderer.domElement);
+  host.classList.add('ready'); button.disabled = false;
+  setShell(false); resizeModel();
+  if (!modelFrame) drawModel();
+  splitTimer = setTimeout(() => { if (!userChangedShell && story.slides[current].media === 'model') setShell(true); }, reducedMotion.matches ? 0 : 1400);
+}
+
+function mountModel() {
+  if (modelFailed) { $('#model-status').textContent = 'Static CAD preview'; $('#model-button').hidden = true; return; }
+  if (model) showReadyModel(); else initialiseModel();
+}
+
+$('#previous').addEventListener('click', () => renderSlide(current - 1));
+$('#next').addEventListener('click', () => renderSlide(current + 1));
+$('.brand').addEventListener('click', event => { event.preventDefault(); renderSlide(0); });
+document.addEventListener('keydown', event => {
+  if (event.altKey || event.metaKey || event.ctrlKey || event.target.closest('input,textarea,select,[contenteditable=true]')) return;
+  if (event.key === 'ArrowRight') { event.preventDefault(); renderSlide(current + 1); }
+  if (event.key === 'ArrowLeft') { event.preventDefault(); renderSlide(current - 1); }
+});
+window.addEventListener('resize', resizeModel);
+window.addEventListener('hashchange', () => {
+  const rawHash = location.hash.slice(1), hash = rawHash === 'build' ? 'problem' : rawHash, exact = story.slides.findIndex(slide => slide.id === hash), section = sectionStart(hash);
+  if (exact >= 0) renderSlide(exact, false); else if (section >= 0) renderSlide(section, false);
+});
+const rawInitialHash = location.hash.slice(1);
+const initialHash = rawInitialHash === 'build' ? 'problem' : rawInitialHash;
+const exact = story.slides.findIndex(slide => slide.id === initialHash);
+const section = sectionStart(initialHash);
+renderSlide(exact >= 0 ? exact : section >= 0 ? section : 0, false);
