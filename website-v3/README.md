@@ -25,8 +25,7 @@ The interactive founder briefing is served at `/presentation`. Its source lives
 in `public/presentation/`: each entry in `content.js` is one slide; edit
 `app.js` or `style.css` for interactions and layout. The separate
 [`PRESENTATION-NOTES.md`](./PRESENTATION-NOTES.md) has the detailed speaker
-notes, evidence context and suggested seven-minute timing. Images, the provisional
-shell CAD and the locally bundled Three.js library are included alongside it.
+notes, evidence context and suggested seven-minute timing. Images, the R4 shell and cradle CAD, the photo-recreated electronics GLB, and the locally bundled Three.js library are included alongside it. The electronics placement is illustrative, and the R4 design is a first-print candidate. Six individual controlled recordings cycle on the signal slide; see the presenter notes for provenance and limitations.
 The page is public to anyone with the link and requests that search engines do
 not index it; this is not access control. Merging changes to `main` triggers a
 Netlify production deployment. The sensor data and machine-learning results
@@ -55,3 +54,5 @@ To refresh shared display code after a prototype UI change, run
 `python3 tools/sync_live_demo.py` from this site folder, then the established
 `npm run build` and `npm run lint`. Prototype submodule must be initialized.
 This change is prepared in source/Git; production Netlify deployment is separate.
+
+To regenerate the six presentation waveforms from the documented CSV, run `python3 tools/build_presentation_signals.py /absolute/path/to/six_event_signal_rows.csv`; the script verifies the source SHA-256 before writing.
