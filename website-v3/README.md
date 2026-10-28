@@ -31,6 +31,14 @@ not index it; this is not access control. Merging changes to `main` triggers a
 Netlify production deployment. The sensor data and machine-learning results
 describe controlled proxy motion, not proven fruit-bruising detection.
 
+The presentation uses display-sized progressive JPEG copies of its photos and exact copies
+of the shell models under `public/presentation/assets/optimized/`. Their file
+names contain a SHA-256 prefix and can be cached by browsers for a year. Keep
+the original photos and models, and use a new content-hashed filename whenever
+an optimized asset changes; never overwrite a file at the same hashed URL.
+The HTML, content and application code continue to revalidate so text and
+interaction updates can appear after each deployment.
+
 ## ClevaCado Live simulated preview — 3 October 2026
 
 `/live/` reproduces the six-tab testing dashboard with browser-generated data,
