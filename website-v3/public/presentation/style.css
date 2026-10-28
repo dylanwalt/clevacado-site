@@ -48,3 +48,11 @@
 /* Reveal by time on the horizontal axis, rather than by path length. */
 .signal-trace{stroke-dasharray:none;stroke-dashoffset:0}.signal-reveal{transform:scaleX(0);transform-origin:0 0}.signal-visual.playing .signal-trace{animation:none}.signal-visual.playing .signal-reveal{animation:signal-reveal 1.966s linear forwards}@keyframes signal-reveal{to{transform:scaleX(1)}}
 @media(prefers-reduced-motion:reduce){.signal-visual.playing .signal-reveal{transform:scaleX(1);animation:none}}
+
+/* The opening screen gives the company identity the centre of the stage. */
+.layout-cover{display:flex;flex-direction:column-reverse;justify-content:center;align-items:center;gap:clamp(24px,4vh,42px)}
+.layout-cover .cover-logo{width:min(76vw,860px);flex:0 0 auto;background:none;border-radius:0}
+.layout-cover .cover-logo img{width:100%;height:auto}
+.layout-cover .slide-copy{flex:0 0 auto;align-items:center;text-align:center}
+.layout-cover .eyebrow{display:none}.layout-cover h1{font-size:clamp(30px,3.2vw,48px);letter-spacing:-.045em;line-height:1.1}.layout-cover h1 em{display:inline}.layout-cover h1 em:before{content:' '}.layout-cover .detail{font-size:clamp(16px,1.45vw,21px);margin-top:12px;max-width:40rem}
+@media(max-width:680px){.layout-cover .cover-logo{width:min(86vw,620px)}.layout-cover h1{font-size:clamp(27px,7vw,40px)}.layout-cover .detail{font-size:15px}.layout-cover{gap:22px}}
