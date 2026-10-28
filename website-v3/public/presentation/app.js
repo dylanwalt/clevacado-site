@@ -26,6 +26,9 @@ function stopModelAnimation() {
 
 function renderMedia(slide) {
   const caption = `<span class="media-caption">${escapeHtml(slide.caption || '')}</span>`;
+  if (slide.media === 'logo') {
+    return `<div class="slide-media cover-logo"><img src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.alt)}"></div>`;
+  }
   if (slide.media === 'problem') {
     return `<div class="slide-media problem-media"><div class="problem-heading">THE VISIBILITY GAP</div><div class="problem-question">We see the bruise.<br><span>Can we trace the cause?</span></div><div class="problem-chain" aria-label="Supply chain stages"><span>PACKHOUSE</span><b>→</b><span>TRANSPORT</span><b>→</b><span>RETAIL</span></div><div class="problem-note">Handling risk can occur at every stage.</div></div>`;
   }
