@@ -14,7 +14,7 @@ const phase=(time,start,end)=>ease((time-start)/(end-start));
 function draw(time=performance.now()){
   if(!model||!isModelSlide()){frame=0;lastModelTime=0;return}
   const dt=lastModelTime?Math.min(.05,(time-lastModelTime)/1000):0;lastModelTime=time;
-  if(!reduced.matches)model.time=(model.time+dt)%34;
+  if(!reduced.matches)model.time=(model.time+dt*1.4)%34;
   const t=reduced.matches?0:model.time;
   // Unfasten, open, and lift the electronics out; reassemble in the opposite order.
   const unscrew=phase(t,2,3.8)*(1-phase(t,29,31));
