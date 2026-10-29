@@ -172,4 +172,4 @@ replay.addEventListener('click',()=>{if(frame)cancelAnimationFrame(frame);frame=
 new MutationObserver(()=>{if(slide.classList.contains('active')){if(resize)resize();reset()}else{if(frame)cancelAnimationFrame(frame);frame=0;start=null}}).observe(slide,{attributes:true,attributeFilter:['class']});
 reduced.addEventListener('change',()=>{reset();updateMotionPreference()});
 updateMotionPreference();
-init();
+if(embedMode!=='prototype')init();

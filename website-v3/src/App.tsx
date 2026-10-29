@@ -44,6 +44,25 @@ function JourneyFilm() {
   );
 }
 
+type AnimationKind = 'prototype' | 'village';
+
+function PresentationAnimation({ kind, className = '' }: { kind: AnimationKind; className?: string }) {
+  const container = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const node = container.current;
+    if (!node) return;
+    if (!('IntersectionObserver' in window)) { setVisible(true); return; }
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { rootMargin: '200px 0px' });
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+  const title = kind === 'prototype' ? 'Illustrative 3D prototype assembly animation' : 'Illustrative future supply-chain island animation';
+  return <div className={`presentation-animation ${className}`} ref={container}>
+    {visible ? <iframe title={title} src={`/presentation-v2/index.html?embed=${kind}#${kind === 'village' ? 'future' : 'hello'}`} loading="lazy" /> : <div className="presentation-animation-placeholder" aria-label={title} />}
+  </div>;
+}
+
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
@@ -152,6 +171,7 @@ export default function App() {
             <a href="#product" onClick={navTo('product')}>The device</a>
             <a href="#journey" onClick={navTo('journey')}>The journey</a>
             <a href="#about" onClick={navTo('about')}>About us</a>
+            <a className="nav-presentation" href="/presentation">Presentation <ArrowUpRight size={14} /></a>
             <button className="nav-cta" type="button" onClick={openPilot}>Discuss a pilot <ArrowUpRight size={15} /></button>
           </nav>
         </div>
@@ -169,8 +189,12 @@ export default function App() {
             </div>
             <p className="hero-note"><Check size={15} /> Prototype development and controlled testing underway</p>
           </div>
-          <div className="hero-visual" aria-label="ClevaCado journey video">
+          <div className="hero-visual" aria-label="ClevaCado journey film and prototype animation">
             <JourneyFilm />
+            <div className="hero-prototype">
+              <div className="hero-prototype-heading"><span>MEET THE PROTOTYPE</span><small>Illustrative assembly</small></div>
+              <PresentationAnimation kind="prototype" className="hero-prototype-animation" />
+            </div>
           </div>
           <a className="hero-scroll" href="#problem" onClick={navTo('problem')} aria-label="Scroll to the problem"><span>01 / 06</span><ArrowDown size={15} /></a>
         </section>
@@ -204,7 +228,7 @@ export default function App() {
           </div>
           <div className="product-grid">
             <figure className="product-detail-image">
-              <img src="/images/clevacado-prototype-illustration.jpg" alt="Current concept illustration showing a textured two-part shell, internal cradle, sensor boards, controller and battery" loading="lazy" />
+              <PresentationAnimation kind="prototype" className="product-prototype-animation" />
               <figcaption><span>Inside the prototype</span><span>Illustrative assembly • component layout may change</span></figcaption>
             </figure>
             <div className="how-steps">
@@ -221,6 +245,10 @@ export default function App() {
             <div><p className="section-kicker">One connected route</p><h2 id="journey-heading">Follow the fruit. <em>Review the motion.</em></h2></div>
             <p>Each transfer is part of the story. A trial can help us ask where motion events occurred and what was happening at the time.</p>
           </div>
+          <figure className="journey-island">
+            <PresentationAnimation kind="village" className="journey-island-animation" />
+            <figcaption>Illustrative future concept · signals are not live telemetry</figcaption>
+          </figure>
           <ol className="journey-stages">
             {journeyStages.map(({ number, title, detail, Icon }) => <li key={number}><span className="stage-icon"><Icon size={19} strokeWidth={1.8} /></span><span className="stage-number">{number}</span><strong>{title}</strong><small>{detail}</small></li>)}
           </ol>
