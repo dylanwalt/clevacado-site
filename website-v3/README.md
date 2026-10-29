@@ -21,23 +21,9 @@ The standalone customer app demonstration is served at `/mobile-app-walkthrough`
 
 ## Founder presentation
 
-The interactive founder briefing is served at `/presentation`. Its source lives
-in `public/presentation/`: each entry in `content.js` is one slide; edit
-`app.js` or `style.css` for interactions and layout. The separate
-[`PRESENTATION-NOTES.md`](./PRESENTATION-NOTES.md) has the detailed speaker
-notes, evidence context and suggested seven-minute timing. Images, the R4 shell and cradle CAD, the photo-recreated electronics GLB, and the locally bundled Three.js library are included alongside it. The electronics placement is illustrative, and the R4 design is a first-print candidate. Six individual controlled recordings cycle on the signal slide; see the presenter notes for provenance and limitations.
-The page is public to anyone with the link and requests that search engines do
-not index it; this is not access control. Merging changes to `main` triggers a
-Netlify production deployment. The sensor data and machine-learning results
-describe controlled proxy motion, not proven fruit-bruising detection.
+The interactive founder briefing is served at `/presentation`. The current six-slide presentation source lives in `public/presentation-v2/`; the previous `/presentation-v2` page URL forwards to the canonical presentation URL, while its assets remain under that path. The legacy presentation files remain in `public/presentation/` as an archive.
 
-The presentation uses display-sized progressive JPEG copies of its photos and exact copies
-of the shell models under `public/presentation/assets/optimized/`. Their file
-names contain a SHA-256 prefix and can be cached by browsers for a year. Keep
-the original photos and models, and use a new content-hashed filename whenever
-an optimized asset changes; never overwrite a file at the same hashed URL.
-The HTML, content and application code continue to revalidate so text and
-interaction updates can appear after each deployment.
+The main site reuses the current prototype and future-island animations in lightweight embedded presentation views. The R4 shell and reconstructed electronics are illustrative, the island and connectivity are future concepts, and controlled proxy motion is not proven bruising detection. Reduced-motion and static visual fallbacks are provided. The full presentation is public to anyone with the link; a link is not access control.
 
 ## ClevaCado Live simulated preview — 3 October 2026
 

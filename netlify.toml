@@ -19,27 +19,33 @@ status = 200
 force = true
 
 [[redirects]]
+from = "/presentation/index.html"
+to = "/presentation-v2/index.html"
+status = 200
+force = true
+
+[[redirects]]
 from = "/presentation"
-to = "/presentation/index.html"
+to = "/presentation-v2/index.html"
 status = 200
 force = true
 
 [[redirects]]
 from = "/presentation/"
-to = "/presentation/index.html"
+to = "/presentation-v2/index.html"
 status = 200
 force = true
 
 [[redirects]]
 from = "/presentation-v2"
-to = "/presentation-v2/index.html"
-status = 200
+to = "/presentation"
+status = 301
 force = true
 
 [[redirects]]
 from = "/presentation-v2/"
-to = "/presentation-v2/index.html"
-status = 200
+to = "/presentation"
+status = 301
 force = true
 
 [[redirects]]

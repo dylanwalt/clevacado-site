@@ -75,3 +75,19 @@
 .contact-actions a:first-child{background:#174d2a;border-color:#174d2a;color:#fff}
 .contact-actions a:hover{background:#2f8f46;border-color:#2f8f46;color:#fff}
 @media(max-width:760px){.contact-grid{grid-template-columns:1fr;gap:12px;margin-top:14px}.contact-card{padding:19px 20px}.about-evidence .progress-next{margin:8px -8px 0;padding:17px 10px}}
+
+/* Reusable presentation animations, mounted only while near the viewport. */
+.nav-presentation{display:inline-flex;align-items:center;gap:4px;color:#315f38}
+.presentation-animation{position:relative;width:100%;overflow:hidden;background:#e6f1de}
+.presentation-animation iframe{display:block;width:100%;height:100%;border:0}
+.presentation-animation-placeholder{position:absolute;inset:0;background:radial-gradient(circle at 50% 48%,#d4ebc7,#eef5e9)}
+.hero-prototype{margin-top:20px;background:#f7faf3;border:1px solid #d6e3d1;box-shadow:10px 12px 0 #e5ebdf}
+.hero-prototype-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 15px;color:#315f38;font-size:10px;font-weight:800;letter-spacing:.1em}
+.hero-prototype-heading small{font-size:10px;letter-spacing:0;font-weight:500;color:#708771}
+.hero-prototype-animation{height:225px}
+.product-prototype-animation{height:420px}
+.journey-island{margin:0;border:1px solid #cedcc8;background:#f2f7ec}
+.journey-island-animation{height:clamp(240px,30vw,380px)}
+.journey-island figcaption{padding:11px 15px;color:#627a65;font-size:11px;line-height:1.4}
+@media(max-width:760px){.hero-prototype{box-shadow:7px 8px 0 #e5ebdf}.hero-prototype-animation{height:200px}.product-prototype-animation{height:340px}.journey-island-animation{height:210px}.journey-island{margin:0 -5px}}
+@media(max-width:420px){.product-prototype-animation{height:295px}.journey-island-animation{height:170px}}
