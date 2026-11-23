@@ -340,7 +340,7 @@ export default function App() {
 
       <footer className="site-footer">
         <Brand />
-        <p>Measuring motion. Investigating handling.</p>
+        <p>Measuring motion. Investigating handling. <a href="/demos" style={{ textDecoration: 'underline', textUnderlineOffset: '3px', fontWeight: 700 }}>Demos &amp; showcases</a></p>
         <button className="footer-analytics" type="button" onClick={() => setAnalyticsOpen(true)}>Private analytics <LockKeyhole size={13} /></button>
       </footer>
       <AnalyticsDashboard isOpen={analyticsOpen} onClose={() => setAnalyticsOpen(false)} />

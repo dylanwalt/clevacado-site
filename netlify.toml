@@ -61,6 +61,18 @@ status = 200
 force = true
 
 [[redirects]]
+from = "/demos"
+to = "/demos/index.html"
+status = 200
+force = true
+
+[[redirects]]
+from = "/demos/"
+to = "/demos/index.html"
+status = 200
+force = true
+
+[[redirects]]
 from = "/*"
 to = "/index.html"
 status = 200
