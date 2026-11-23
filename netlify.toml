@@ -49,6 +49,18 @@ status = 301
 force = true
 
 [[redirects]]
+from = "/health"
+to = "/health/index.html"
+status = 200
+force = true
+
+[[redirects]]
+from = "/health/"
+to = "/health/index.html"
+status = 200
+force = true
+
+[[redirects]]
 from = "/*"
 to = "/index.html"
 status = 200
