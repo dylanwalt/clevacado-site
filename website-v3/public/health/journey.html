@@ -1,304 +1,98 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#173c27">
-<meta name="robots" content="noindex">
-<meta name="description" content="Explore three simulated ClevaCado handling reviews for the Health Sciences Innovation Fair.">
-<title>Your journeys | ClevaCado demo</title>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#173c27"><meta name="robots" content="noindex">
+<meta name="description" content="Explore fictional ClevaCado handling journeys for the Health Sciences Innovation Fair."><title>ClevaCado • Journey dashboard</title>
 <style>
-:root{color-scheme:light;--forest:#173c27;--deep:#102b1d;--ink:#213f2c;--mute:#53675a;--lime:#b6ff5a;--sage:#ebf2e6;--cream:#f6f7f0;--paper:#fffefa;--warm:#faf6ec;--line:#dce5d8;--oxide:#9a452c;--peach:#faeadd;--sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--display:Georgia,"Times New Roman",serif}
-*{box-sizing:border-box}
-html,body{margin:0}
-html{background:var(--cream);color:var(--ink);font:16px/1.45 var(--sans)}
-body{min-height:100vh}
-a{color:inherit}
-button{font:inherit;color:inherit}
-a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:3px solid #507d3f;outline-offset:3px}
-[hidden]{display:none!important}
-.skip{position:fixed;left:12px;top:-60px;padding:10px 14px;background:var(--paper);z-index:3}
-.skip:focus{top:12px}
-header{background:var(--paper);border-bottom:1px solid var(--line)}
-.top{min-height:62px;display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:920px;padding:8px 22px;margin:auto}
-.brand{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:790;letter-spacing:-.06em;font-size:23px;line-height:1;min-height:44px}
-.brand svg{width:31px;height:33px;flex:none}
-.brand strong{font-weight:790;color:#4e893c}
-.top-nav{display:flex;gap:8px;align-items:center}
-.nav-link,.back{display:inline-flex;align-items:center;gap:7px;text-decoration:none;font-size:13px;font-weight:750;min-height:44px}
-.nav-link{border-radius:999px;padding:0 13px}
-.nav-link[aria-current="page"]{background:var(--sage)}
-.nav-link svg,.back svg{width:17px;height:17px}
-main{max-width:920px;margin:auto;padding:19px 22px 24px}
-.hero{background:var(--forest);color:var(--paper);border-radius:23px;padding:22px 24px 20px;position:relative;isolation:isolate;overflow:hidden}
-.hero:after{content:"";pointer-events:none;position:absolute;z-index:-1;right:-82px;bottom:-174px;width:380px;height:300px;border-radius:50%;border:1px solid #83bd5c36;box-shadow:0 0 0 16px #83bd5c14,0 0 0 34px #83bd5c14,0 0 0 54px #83bd5c14,0 0 0 77px #83bd5c14,0 0 0 104px #83bd5c14}
-.eyebrow{font-size:10px;letter-spacing:.105em;font-weight:800;text-transform:uppercase}
-.hero .eyebrow{color:#d1edb5}
-h1,h2,h3,p,figure{margin:0}
-h1,h2{font-family:var(--display);line-height:1.04;letter-spacing:-.035em}
-h1{font-size:clamp(40px,8.8vw,60px);margin:8px 0 5px}
-h2{font-size:clamp(25px,5.5vw,32px)}
-.hero p{color:#ecf3e9;font-size:14px;max-width:510px}
-.hero-meta{display:flex;gap:0;align-items:center;border-top:1px solid #ffffff36;margin-top:17px;padding-top:13px}
-.hero-meta span{font-size:13px;color:#deebda;padding-right:16px}
-.hero-meta span+span{border-left:1px solid #ffffff36;padding-left:16px}
-.hero-meta b{color:var(--lime);font-size:20px;line-height:1;font-weight:750;margin-right:4px}
-.list-wrap{display:grid;gap:20px;padding-top:16px}
-.priority{display:block;text-decoration:none;border-radius:20px;background:var(--lime);padding:17px 19px;position:relative}
-.priority .eyebrow{color:#294923;display:flex;align-items:center;gap:7px}
-.priority .eyebrow svg{width:16px;height:16px}
-.priority h2{margin-top:7px}
-.priority p{font-size:13px;margin-top:7px;color:#274825;max-width:430px}
-.priority-link{margin-top:12px;font-size:13px;font-weight:800;display:inline-flex;align-items:center;gap:7px}
-.arrow{width:17px;height:17px;flex:none}
-.priority:hover{background:#aff04e}
-.list-heading{display:flex;align-items:end;justify-content:space-between;gap:8px;margin:1px 0 9px}
-.list-heading h2{font-size:26px}
-.list-heading span{color:var(--mute);font-size:12px}
-.journeys{list-style:none;display:grid;padding:0;margin:0;gap:7px}
-.row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:11px;align-items:center;min-height:65px;padding:10px 12px;text-decoration:none;background:var(--paper);border:1px solid var(--line);border-radius:15px}
-.row:hover{border-color:#8ca88a;background:var(--warm)}
-.row-icon{display:grid;place-items:center;width:39px;height:39px;border-radius:11px;background:var(--sage);color:var(--forest);font-size:11px;font-weight:800;letter-spacing:.03em}
-.row strong,.row small{display:block;overflow-wrap:break-word}
-.row strong{font-size:14px;line-height:1.25}
-.row small{font-size:12px;color:var(--mute);margin-top:4px}
-.row>.arrow{color:#41634c}
-.back{margin:-7px 0 8px;padding-right:11px}
-.detail-hero{padding-top:17px;padding-bottom:17px}
-.detail-hero h1{font-size:clamp(36px,8vw,52px)}
-.event-badge{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;border-radius:999px;background:var(--lime);padding:5px 9px;color:var(--deep);margin-top:11px}
-.event-badge svg{width:13px;height:13px}
-.detail-grid{display:grid;gap:12px;margin-top:13px}
-.panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:14px}
-.panel-top{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:8px}
-.panel-top h2,.review h2{font-size:24px}
-.tag{color:var(--mute);font-size:10px;background:var(--sage);padding:4px 7px;border-radius:999px;white-space:nowrap;font-weight:700}
-.route-map{display:block;width:100%;height:auto;border-radius:11px;background:#ecf2e5}
-.step-track{list-style:none;display:grid;gap:4px;margin:9px 0 0;padding:0;font-size:11px;color:var(--mute);line-height:1.18}
-.step-track li{min-width:0;display:flex;align-items:flex-start;gap:4px}
-.step-track li.selected{font-weight:770;color:var(--oxide)}
-.stage-number{width:16px;height:16px;display:inline-grid;place-items:center;flex:none;border:1px solid #97ad92;border-radius:50%;font-size:9px;font-weight:700;background:var(--paper)}
-.step-track li.selected .stage-number{background:var(--oxide);color:white;border-color:var(--oxide)}
-.map-note{margin-top:8px;font-size:11px;color:var(--mute)}
-.review{background:var(--warm)}
-.review .eyebrow{color:var(--oxide)}
-.review h2{margin:5px 0 6px}
-.review p{font-size:13px}
-.event-meta{color:var(--oxide);font-weight:740;margin:0 0 10px}
-.review h3{font-size:13px;margin:10px 0 4px}
-.review-action{border-top:1px solid #e3dcca;margin-top:12px;padding-top:1px}
-.review .context{margin-top:10px;color:var(--mute);font-size:12px}
-.next{display:inline-flex;margin-top:10px}
-footer{display:flex;justify-content:space-between;align-items:flex-start;gap:9px 18px;flex-wrap:wrap;margin-top:19px;padding-top:13px;border-top:1px solid var(--line);color:var(--mute);font-size:11px}
-footer p{max-width:620px}
-footer a{min-height:34px;display:inline-flex;align-items:center;text-underline-offset:2px;font-weight:700;color:var(--forest)}
-@media(min-width:700px){
- .list-wrap{grid-template-columns:.9fr 1.1fr;align-items:start;gap:14px}
- .priority{min-height:175px}
- .detail-grid{grid-template-columns:1.15fr .85fr;align-items:start}
- .panel{padding:16px}
-}
-@media(max-width:430px){
- .top{padding-left:15px;padding-right:15px;min-height:57px}
- main{padding:13px 13px 18px}
- .hero{padding:18px 17px 16px;border-radius:19px}
- .hero p{font-size:13px}
- .list-wrap{gap:14px;padding-top:13px}
- .priority{padding:14px 16px}
- .priority p{margin-top:5px}
- .priority-link{margin-top:8px}
- .row{min-height:61px;padding:8px 10px}
- .detail-hero{padding-top:14px;padding-bottom:13px}
- .detail-grid{gap:10px;margin-top:11px}
- .panel{padding:12px}
- .step-track{font-size:10px}
-}
-</style>
-</head>
-<body>
-<a id="skip-link" class="skip" href="#main">Skip to content</a>
-<header>
-  <div class="top">
-    <a class="brand" href="#all" aria-label="ClevaCado, all journeys"><svg viewBox="0 0 40 42" aria-hidden="true"><path d="M20 2C13 2 12 10 7 16 3 21 2 25 2 29c0 8 8 11 18 11 11 0 18-4 18-12 0-6-2-10-6-15C27 7 26 2 20 2Z" fill="#2e7045"/><path d="M20 7c-4 0-5 6-9 11-3 4-5 8-5 11 0 5 6 7 14 7s14-2 14-8c0-4-2-7-5-11-4-5-5-10-9-10Z" fill="#b6ff5a"/><circle cx="20" cy="27" r="7" fill="#a76137"/></svg><span>Cleva<strong>Cado</strong></span></a>
-    <nav class="top-nav" aria-label="Main navigation"><a id="journey-nav" href="#all" class="nav-link" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h16"/></svg>All journeys</a></nav>
-  </div>
-</header>
-<main id="main" tabindex="-1">
-  <div id="overview">
-    <section class="hero" aria-labelledby="overview-title">
-      <div class="eyebrow">Health sciences · Sample data</div>
-      <h1 id="overview-title" tabindex="-1">Your journeys.</h1>
-      <p>See what was flagged, where it happened and what to check next.</p>
-      <div class="hero-meta"><span><b>3</b> sample journeys</span><span><b>3</b> events to review</span></div>
-    </section>
-    <div class="list-wrap">
-      <a id="priority-link" href="#pharma" class="priority" data-key="pharma">
-        <div class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 21V4m0 1c5-5 10 4 15-1v11c-5 5-10-4-15 1"/></svg>Start here</div>
-        <h2>A jolt at unloading.</h2>
-        <p>A simulated jolt was flagged on test shipper PH-04 at 10:42. See where it happened.</p>
-        <span class="priority-link">View flagged journey <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m-5-5 5 5-5 5"/></svg></span>
-      </a>
-      <section aria-labelledby="journeys-title">
-        <div class="list-heading"><h2 id="journeys-title">Sample journeys</h2><span>3 examples</span></div>
-        <ul class="journeys">
-          <li><a class="row" href="#pharma" data-key="pharma"><span class="row-icon" aria-hidden="true">PH</span><span><strong>Vaccine cooler</strong><small>PH-04 · Unloading · 10:42</small></span><span class="arrow" aria-hidden="true"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m-5-5 5 5-5 5"/></svg></span></a></li>
-          <li><a class="row" href="#specimen" data-key="specimen"><span class="row-icon" aria-hidden="true">SP</span><span><strong>Blood sample carrier</strong><small>SP-12 · Handover · 11:08</small></span><span class="arrow" aria-hidden="true"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m-5-5 5 5-5 5"/></svg></span></a></li>
-          <li><a class="row" href="#neonatal" data-key="neonatal"><span class="row-icon" aria-hidden="true">NT</span><span><strong>Newborn training trolley</strong><small>NT-07 · Rough road · 11:32</small></span><span class="arrow" aria-hidden="true"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m-5-5 5 5-5 5"/></svg></span></a></li>
-        </ul>
-      </section>
-    </div>
-  </div>
-  <article id="detail" hidden aria-labelledby="detail-title">
-    <a class="back" href="#all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m12 5-7 7 7 7M5 12h14"/></svg>Back to all journeys</a>
-    <section class="hero detail-hero">
-      <div class="eyebrow" id="detail-kicker">Simulated journey</div>
-      <h1 id="detail-title" tabindex="-1"></h1>
-      <p id="detail-trip"></p>
-      <div class="event-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 21V4m0 1c5-5 10 4 15-1v11c-5 5-10-4-15 1"/></svg><span id="detail-priority">Flagged for review</span></div>
-    </section>
-    <div class="detail-grid">
-      <figure class="panel">
-        <div class="panel-top"><h2>Route overview</h2><span class="tag">Simulated route</span></div>
-        <svg id="route-map" class="route-map" viewBox="0 0 340 132" aria-hidden="true">
-          <rect width="340" height="132" fill="#e9f1e4"/>
-          <path d="M0 103C56 65 97 84 139 69S193 38 230 41c39 4 69 35 110 6v85H0Z" fill="#dce9d7"/>
-          <path d="M-8 17c43-9 59 40 96 37s46-39 86-40 50 29 80 28 62-24 93-20M-3 116c54-15 54-39 94-32s66 36 101 30 36-32 64-34 60 19 89 5M76-5c-20 40 31 59 22 86s-22 31-25 59M274-6c-15 21-29 46-12 67s38 25 39 78" fill="none" stroke="#f9fbf6" stroke-width="5"/>
-          <path d="M16 10h16v15H16zM108 101h22v12h-22zM184 12h26v18h-26zM281 47h20v14h-20zM314 100h15v14h-15z" fill="#cbdcc8"/>
-          <path id="route-shadow" fill="none" stroke="#f9fbf6" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
-          <path id="route-line" fill="none" stroke="#639659" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-          <path id="route-highlight" fill="none" stroke="#a44e31" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-          <g id="route-markers"></g>
-        </svg>
-        <ol id="steps" class="step-track" aria-label="Journey stages"></ol>
-        <figcaption class="map-note">Schematic only. No GPS or live tracking.</figcaption>
-      </figure>
-      <section class="panel review" aria-labelledby="event-title">
-        <div class="eyebrow">Flagged event</div>
-        <h2 id="event-title"></h2>
-        <p class="event-meta"><span id="event-stage"></span> · <time id="event-time"></time> simulated</p>
-        <p id="event-summary"></p>
-        <div class="review-action"><h3>What to check next</h3><p id="review-action"></p></div>
-        <p class="context" id="review-context"></p>
-      </section>
-    </div>
-  </article>
-  <noscript><p style="margin-top:14px">JavaScript is required to open the individual sample reviews. No data is sent.</p></noscript>
-  <footer><p><strong>Concept demo only.</strong> No real shipments, specimens, patients or live sensors. Not for clinical or product decisions.</p><a href="/health/">Back to the fair display</a></footer>
-</main>
+:root{color-scheme:light;--forest:#173c27;--deep:#102b1d;--ink:#243b2e;--mute:#52665a;--cream:#f6f7f0;--paper:#fffefa;--line:#dce5d8;--lime:#d9f47c;--review:#813720;--review-bg:#f9e8da;--steady:#35584d;--steady-bg:#e8f0ed;--sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--display:Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.45 var(--sans);min-height:100vh;--accent:#00635f;--accent-bg:#e3f3ef;--hero:#153f37;--ring:#94d6bb}
+body[data-product=specimen]{--accent:#4d45a0;--accent-bg:#eeebf9;--hero:#312b5d;--ring:#b2a6ef}body[data-product=neonatal]{--accent:#8a4b26;--accent-bg:#f9eddf;--hero:#55301f;--ring:#f3b58a}
+a{color:inherit}button{font:inherit}a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+[hidden]{display:none!important}.skip{position:fixed;left:10px;top:-60px;background:white;border-radius:7px;padding:9px;z-index:5}.skip:focus{top:6px}
+header{background:var(--paper);border-bottom:1px solid var(--line)}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:auto;max-width:940px;padding:7px 20px;min-height:57px}
+.brand{display:inline-flex;align-items:center;gap:7px;text-decoration:none;font-size:22px;font-weight:800;letter-spacing:-.055em;min-height:44px;color:var(--forest)}.brand svg{width:29px;height:33px;flex:none}.brand strong{color:#4d813e}.demo{font-size:10px;font-weight:850;letter-spacing:.075em;text-transform:uppercase;padding:5px 8px;border-radius:6px;background:var(--accent-bg);color:var(--accent)}
+main{max-width:940px;margin:auto;padding:16px 20px 22px}.hero{position:relative;isolation:isolate;overflow:hidden;background:var(--hero);color:var(--paper);border-radius:20px;padding:17px 17px 18px}.hero::after{content:"";pointer-events:none;position:absolute;right:-86px;bottom:-165px;width:315px;height:267px;border-radius:50%;border:1px solid color-mix(in srgb,var(--ring),transparent 65%);box-shadow:0 0 0 18px #ffffff13,0 0 0 34px #ffffff11,0 0 0 55px #ffffff0c,0 0 0 75px #ffffff09;z-index:-1}
+.eyebrow{font-size:11px;letter-spacing:.1em;font-weight:850;text-transform:uppercase}.hero .eyebrow{color:#f1f5dc}.hero p:last-child{color:#f2f5ed}.hero p{font-size:14px}h1,h2,h3,p,figure{margin:0}h1,h2{font-family:var(--display);line-height:1.05;letter-spacing:-.035em}h1{font-size:clamp(36px,8.8vw,58px);margin:5px 0 7px}h2{font-size:clamp(24px,5.4vw,32px)}
+.chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:10px 0 14px}.filter{display:flex;min-width:0;flex-direction:column;justify-content:center;text-decoration:none;min-height:64px;padding:7px 8px;border:1px solid var(--line);border-radius:11px;background:var(--paper);font-size:11px;font-weight:750}.filter strong{font-size:23px;line-height:1.05;color:var(--accent);font-variant-numeric:tabular-nums}.filter[aria-current=page]{border-color:var(--accent);box-shadow:inset 0 -3px 0 var(--accent);background:var(--accent-bg)}
+.list-title{display:flex;align-items:end;justify-content:space-between;gap:9px;margin:0 0 8px}.list-title p{font-size:12px;color:var(--mute)}.journeys{list-style:none;margin:0;padding:0;display:grid;gap:8px}.journey-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px 8px;text-decoration:none;min-height:73px;padding:9px 10px;background:var(--paper);border:1px solid var(--line);border-radius:13px;border-left:4px solid var(--ring)}.journey-card:hover{border-color:var(--accent)}.journey-card strong{display:block;font-size:15px;line-height:1.18}.journey-card small{display:block;color:var(--mute);font-size:12px;line-height:1.3;margin-top:4px}.card-tail{display:flex;align-items:center;gap:5px}.arrow{width:15px;height:15px;color:var(--accent);flex:none}.tag{display:inline-flex;align-items:center;gap:4px;border-radius:6px;padding:4px 5px;font-weight:850;font-size:10px;line-height:1.2;white-space:nowrap}.tag svg{width:13px;height:13px;flex:none}.review{color:var(--review);background:var(--review-bg)}.no-flags{color:var(--steady);background:var(--steady-bg)}
+.back{min-height:44px;text-decoration:none;font-size:14px;color:var(--accent);font-weight:800;display:inline-flex;align-items:center;gap:6px;margin:-5px 0 7px}.back .arrow{transform:rotate(180deg)}.hero .tag{margin:0 0 7px}.detail-hero h1{font-size:clamp(36px,8vw,53px);margin-top:5px}.detail-hero .sub{color:#e7ece6}
+.detail-grid{display:grid;gap:9px;margin-top:10px}.panel{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:12px}.panel h2{margin-bottom:6px}.event{border-left:4px solid var(--accent)}.event p,.panel li{font-size:13px}.event .eyebrow{color:var(--accent);margin-bottom:4px}.event-info{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}.event-info p{background:var(--accent-bg);padding:5px 6px;border-radius:6px;min-width:0}.event-info b,.event-info span{display:block;font-size:12px}.event-info span{color:var(--mute);overflow-wrap:anywhere}.action{margin-top:8px;border-top:1px solid var(--line);padding-top:8px}.action strong{color:var(--accent)}.fine{font-size:11px!important;color:var(--mute);margin-top:5px}.map{display:block;width:100%;height:auto;background:#eaf0e5;border-radius:8px}.stages{list-style:none;padding:0;margin:8px 0 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.stages li{font-size:11px;line-height:1.2;min-width:0;overflow-wrap:anywhere}.stages b{display:grid;place-items:center;width:19px;height:19px;border-radius:50%;background:var(--accent-bg);color:var(--accent);margin-bottom:3px}.stages .hot b{background:var(--review);color:#fff}.stages .hot{font-weight:850;color:var(--review)}.context{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}.context b{font-size:13px;color:var(--accent)}.sensor{background:var(--accent-bg);color:var(--accent);padding:3px 6px;border-radius:5px;font-size:11px;font-weight:750}
+.notice{background:var(--accent-bg);padding:9px;margin:9px 0;border-radius:8px;font-size:13px;color:var(--accent)}footer{display:flex;flex-wrap:wrap;gap:6px 15px;justify-content:space-between;margin-top:15px;padding-top:10px;border-top:1px solid var(--line);font-size:11px;color:var(--mute)}footer a{color:var(--forest);font-weight:780;min-height:44px;display:inline-flex;align-items:center}
+@media(max-width:420px){main,.top{padding-left:13px;padding-right:13px}.card-tail .arrow{display:none}}@media(min-width:680px){.journeys{grid-template-columns:1fr 1fr}.detail-grid{grid-template-columns:1fr 1fr}.context{grid-column:1/-1}.hero{padding:21px}.journey-card{padding:10px 12px}.filter{padding:9px 13px}.tag{font-size:11px}}
+</style></head><body data-product="pharma">
+<a class="skip" href="#main" id="skip-link">Skip to content</a><header><div class="top"><a class="brand" id="brand-home" href="#pharma" aria-label="ClevaCado, this product’s journeys"><svg viewBox="0 0 40 42" aria-hidden="true"><path d="M20 2C13 2 12 10 7 16 3 21 2 25 2 29c0 8 8 11 18 11 11 0 18-4 18-12 0-6-2-10-6-15C27 7 26 2 20 2Z" fill="#2e7045"/><path d="M20 7c-4 0-5 6-9 11-3 4-5 8-5 11 0 5 6 7 14 7s14-2 14-8c0-4-2-7-5-11-4-5-5-10-9-10Z" fill="#b6ff5a"/><circle cx="20" cy="27" r="7" fill="#a76137"/></svg><span>Cleva<strong>Cado</strong></span></a><span class="demo">Fictional data</span></div></header>
+<main id="main" tabindex="-1"><div id="app"><p class="notice">Loading the sample journey dashboard…</p></div><noscript><p class="notice">JavaScript is needed to open the sample journeys.</p></noscript>
+<footer><p><strong>Concept demo only.</strong> No real shipments, specimens, patients, live readings or GPS. Not for clinical or product release decisions.</p><a href="/health">Back to the fair display</a></footer></main>
 <script>
 "use strict";
-const journeys=Object.freeze({
-  pharma:{
-    kind:"Vaccine cooler sensor",title:"Test shipper PH-04",trip:"Mock dispatch to receiving bench",
-    event:"Jolt during unloading",stamp:"10:42",priority:"Flagged for review",
-    stages:["Dispatch","Vehicle trip","Unloading","Receiving"],flag:2,
-    points:[[37,96],[115,65],[224,48],[302,84]],
-    pre:"M37 96 C69 97 75 65 115 65 C162 65 168 48 224 48",
-    marked:"M194 49 Q209 48 224 48 Q252 48 264 62",
-    post:"C264 48 267 83 302 84",
-    summary:"The simulated trace flags a brief jolt as the test shipper is moved off the vehicle.",
-    action:"Compare 10:42 with the handover record and the separate calibrated temperature logger.",
-    context:"A dummy vial sensor accompanies the cargo. This does not determine product quality or release."
-  },
-  specimen:{
-    kind:"Blood sample carrier sensor",title:"Test carrier SP-12",trip:"Mock collection bench to receiving lab",
-    event:"Sharp impact at handover",stamp:"11:08",priority:"Flagged for review",
-    stages:["Collection","Courier trip","Handover","Lab receipt"],flag:2,
-    points:[[36,91],[107,52],[225,76],[303,45]],
-    pre:"M36 91 C70 91 69 52 107 52 C155 52 174 76 225 76",
-    marked:"M193 72 Q209 76 225 76 Q244 76 258 68",
-    post:"C254 76 274 45 303 45",
-    summary:"The simulated trace flags a sharp impact while the test carrier changes hands.",
-    action:"Ask receiving staff to compare 11:08 with the trip and handover log.",
-    context:"A dummy tube sensor rides inside the test carrier. This does not establish sample integrity."
-  },
-  neonatal:{
-    kind:"Newborn trolley sensor",title:"Training trolley NT-07",trip:"Empty rig on a simulated training route",
-    event:"Rough-road segment",stamp:"11:32",priority:"Flagged for post-run review",
-    stages:["Start","Training route","Rough road","Arrival"],flag:2,
-    points:[[35,92],[103,66],[205,44],[302,84]],
-    pre:"M35 92 C67 93 70 66 103 66 C143 66 160 44 205 44",
-    marked:"M155 59 Q180 44 205 44 Q233 44 253 58",
-    post:"C248 44 263 84 302 84",
-    summary:"The simulated trace flags sustained shaking along one part of the training route.",
-    action:"After the run, compare the 11:32 segment with the route log and nearby stretches.",
-    context:"A sensor is secured to an empty training trolley. There is no patient or patient monitoring."
-  }
-});
-const svgNS="http://www.w3.org/2000/svg";
-const $=id=>document.getElementById(id);
-const set=(id,value)=>{$(id).textContent=value;};
-const owns=val=>Object.prototype.hasOwnProperty.call(journeys,val);
-let rendered;
-function getKey(){
-  const hash=location.hash.slice(1);
-  if(hash==="all")return null;
-  if(owns(hash))return hash;
-  const query=new URLSearchParams(location.search).get("journey");
-  return owns(query)?query:null;
+const icons={arrow:'<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h13m-5-5 5 5-5 5"/></svg>',review:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 2 18 16H2zM10 7v4m0 2v1"/></svg>',clear:'<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="M6.5 10h7"/></svg>'};
+const products={
+ pharma:{name:"Vaccine cooler sensor",short:"Vaccine cooler",prefix:"PH",hero:"Cold-chain delivery test",team:"Cold-chain desk",signals:["Motion / shock","Separate temperature log","Lid sensor option"],place:["Dispatch store","Vehicle bay","Receiving ramp","Receiving bench"],stage:["Pack","Vehicle trip","Unload","Receive"],rows:[
+ [4,"Dispatch A to Receiving","10:42",2,"Jolt during unloading","Compare the jolt time with the separate calibrated temperature logger and receiving record."],
+ [8,"Dispatch B to Receiving","09:17",1,"Heavy movement during transport","Check the vehicle notes and compare times with the separate calibrated logger."],
+ [9,"Dispatch C to North Bench","11:06",2,"Unexpected lid-open signal","Check the handling record for a planned opening. Lid state alone does not indicate a problem."],
+ [12,"Dispatch A to West Bench","12:24",3,"Hard set-down at receiving","Check the receiving entry and separate temperature log."],
+ [1,"Dispatch A to Receiving","08:12"],[2,"Dispatch B to West Bench","08:31"],[3,"Dispatch C to North Bench","08:59"],[5,"Dispatch B to Receiving","10:48"],[6,"Dispatch A to West Bench","10:53"],[7,"Dispatch C to North Bench","11:02"],[10,"Dispatch A to Receiving","11:14"],[11,"Dispatch B to West Bench","11:58"]]},
+ specimen:{name:"Blood sample carrier sensor",short:"Blood sample carrier",prefix:"SP",hero:"Receiving lab test",team:"Receiving lab desk",signals:["Impact / shock","Carrier tilt","Lid sensor option"],place:["Collection bench","Courier bay","Handover desk","Receiving lab"],stage:["Collect","Courier trip","Handover","Receive"],rows:[
+ [12,"Collection Bench A to Lab","11:08",2,"Impact at handover","Compare 11:08 with the trip log and handover record. This does not establish sample integrity."],
+ [2,"Collection Bench B to Lab","08:29",1,"Extended carrier tilt","Check the courier trip record for a matching handling step."],
+ [4,"Collection Bench A to North Lab","09:40",2,"Impact at transfer","Check the handover time and notes from the receiving team."],
+ [7,"Collection Bench C to Lab","10:34",3,"Unexpected lid-open signal","Check whether the lid was opened as part of the recorded receiving process."],
+ [9,"Collection Bench B to North Lab","11:12",1,"Repeated bumps in transit","Compare the timestamp with the courier trip record."],
+ [1,"Collection Bench A to Lab","08:09"],[3,"Bench C to North Lab","09:06"],[5,"Collection Bench B to Lab","10:02"],[6,"Collection Bench A to North Lab","10:18"],[8,"Collection Bench C to Lab","10:58"],[10,"Collection Bench B to Lab","11:27"],[11,"Collection Bench A to North Lab","11:42"]]},
+ neonatal:{name:"Newborn trolley sensor",short:"Newborn training trolley",prefix:"NT",hero:"Empty ambulance training test",team:"Training operations team",signals:["Trolley vibration","Frame tilt","Cabin sound level option"],place:["Training base","Outbound lane","Practice road","Training bay"],stage:["Secure","Depart","Drive","Review"],rows:[
+ [7,"Training Base A to Practice Bay","11:32",2,"Rough stretch on training route","Compare the marked stretch with the route log and check nearby segments. No patient was carried."],
+ [3,"Training Base B to Practice Bay","09:16",1,"Tilt during training departure","Check the training run notes and the time of the tilt."],
+ [10,"Training Base A to Return Bay","12:05",2,"Repeated vibration on practice road","Use the route log to identify the stretch for a repeat training run."],
+ [1,"Training Base A to Practice Bay","08:15"],[2,"Training Base B to Return Bay","08:57"],[4,"Training Base A to Return Bay","09:45"],[5,"Training Base B to Practice Bay","10:12"],[6,"Training Base A to Practice Bay","10:48"],[8,"Training Base B to Return Bay","11:36"],[9,"Training Base A to Practice Bay","11:58"],[11,"Training Base B to Practice Bay","12:22"],[12,"Training Base A to Return Bay","12:46"]]}
+};
+const keyOf=(p,n)=>p.prefix+"-"+String(n).padStart(2,"0");
+const esc=(x)=>String(x).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const simpleFilters=["all","review","clear"];
+function route(){
+ const raw=location.hash.slice(1), q=raw.indexOf("?"), token=q>=0?raw.slice(0,q):raw;
+ const legacy=new URLSearchParams(location.search).get("journey");
+ let key=Object.hasOwn(products,token)?token:Object.hasOwn(products,legacy)?legacy:"pharma";
+ const search=new URLSearchParams(q>=0?raw.slice(q+1):"");
+ const filter=simpleFilters.includes(search.get("status"))?search.get("status"):"all";
+ return {key,filter,requested:search.get("trip")};
 }
-function node(tag,attrs,text){
-  const el=document.createElementNS(svgNS,tag);
-  Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
-  if(text)el.textContent=text;
-  return el;
+function url(key,filter="all",trip=null){
+ const p=new URLSearchParams();if(filter!=="all")p.set("status",filter);if(trip)p.set("trip",trip);
+ return "#"+key+(p.size?"?"+p.toString():"");
 }
-function map(j){
-  const route=j.pre+" "+j.post;
-  $("route-shadow").setAttribute("d",route);
-  $("route-line").setAttribute("d",route);
-  $("route-highlight").setAttribute("d",j.marked);
-  const points=$("route-markers"), steps=$("steps");
-  points.replaceChildren();
-  steps.replaceChildren();
-  steps.style.gridTemplateColumns="repeat("+j.stages.length+",minmax(0,1fr))";
-  j.stages.forEach((name,i)=>{
-    const active=i===j.flag,[x,y]=j.points[i],ink=active?"#9a452c":"#386647";
-    if(active){
-      points.append(node("path",{d:"M"+x+" "+(y+1)+"c-3-5-13-10-13-19a13 13 0 1 1 26 0c0 9-10 14-13 19Z",fill:ink,stroke:"#fffefa","stroke-width":2}));
-      points.append(node("text",{x,y:y-14,"text-anchor":"middle",fill:"white","font-size":11,"font-weight":800,"font-family":"system-ui"},String(i+1)));
-    }else{
-      points.append(node("circle",{cx:x,cy:y,r:9,fill:"#fffefa",stroke:ink,"stroke-width":2}));
-      points.append(node("text",{x,y:y+3.3,"text-anchor":"middle",fill:ink,"font-size":9,"font-weight":800,"font-family":"system-ui"},String(i+1)));
-    }
-    const li=document.createElement("li"), nr=document.createElement("span"), label=document.createElement("span");
-    nr.className="stage-number";nr.textContent=String(i+1);nr.setAttribute("aria-hidden","true");
-    label.textContent=name+(active?" · flag":"");
-    if(active){li.className="selected";li.setAttribute("aria-current","step");}
-    li.append(nr,label);steps.append(li);
-  });
+function status(flag){return '<span class="tag '+(flag?'review':'no-flags')+'">'+(flag?icons.review+"Needs review":icons.clear+"No flags")+'</span>';}
+const mapPoints=[[29,80],[112,57],[209,64],[313,32]];
+function map(row,p){
+ const active=row[3];
+ const segs=["M29 80Q73 79 112 57","M29 80Q73 79 112 57","M112 57Q156 50 209 64","M209 64Q258 75 313 32"];
+ const id="route-map";
+ return '<figure class="panel"><h2>Route overview</h2><svg id="'+id+'" class="map" viewBox="0 0 340 112" role="img" aria-label="'+(active==null?"Schematic route, no event flagged":'Schematic route with event at '+esc(p.place[active]))+'"><rect width="340" height="112" fill="#eaf0e5"/><path d="M0 96C50 94 61 58 123 77s111-36 217-7v42H0z" fill="#dbe7d2"/><path d="M0 38c44 11 65-13 106-11s74 33 125 20 79-25 109-17M65 0c10 46-2 64-36 112m127-112c-16 42 22 82 12 112m98-111c-26 41-16 76-42 109" fill="none" stroke="#fbfcf8" stroke-width="5"/><path d="M29 80Q73 79 112 57Q156 50 209 64Q258 75 313 32" fill="none" stroke="white" stroke-width="10" stroke-linecap="round"/><path d="M29 80Q73 79 112 57Q156 50 209 64Q258 75 313 32" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>'+(active==null?"":'<path d="'+segs[active]+'" fill="none" stroke="var(--review)" stroke-width="5" stroke-linecap="round"/>')+mapPoints.map(([x,y],i)=>'<g><circle cx="'+x+'" cy="'+y+'" r="'+(i===active?13:10)+'" fill="'+(i===active?'var(--review)':'white')+'" stroke="'+(i===active?'var(--review)':'var(--accent)')+'" stroke-width="2"/><text x="'+x+'" y="'+(y+4)+'" fill="'+(i===active?'white':'var(--accent)')+'" text-anchor="middle" font-size="11" font-weight="800">'+(i+1)+'</text></g>').join("")+'</svg><ol class="stages">'+p.stage.map((s,i)=>'<li class="'+(i===active?"hot":"")+'"><b>'+(i+1)+'</b>'+esc(s)+(i===active?' • Flag':'')+'</li>').join("")+'</ol><p class="fine">Schematic route only. No GPS or live tracking.</p></figure>';
 }
+function overview(key,p,filter,invalid){
+ const n=p.rows.filter(x=>x[3]!=null).length,total=p.rows.length;
+ const shown=p.rows.filter(x=>filter==="all"||(filter==="review")=== (x[3]!=null));
+ const label=filter==="review"?"Needs review":filter==="clear"?"No flags":"Journeys";
+ return '<section class="hero" aria-labelledby="overview-title"><p class="eyebrow">'+esc(p.hero)+'</p><h1 id="overview-title" tabindex="-1">'+esc(p.name)+'</h1><p>Sample journeys and the handling events a team can review.</p></section>'
+ +(invalid?'<p class="notice">That journey is not in this product dashboard.</p>':'')
+ +'<nav class="chips" aria-label="Filter journeys">'+[["all","Total",total],["review","Needs review",n],["clear","No flags",total-n]].map(([key2,name,value])=>'<a class="filter" href="'+esc(url(key,key2))+'" '+(filter===key2?' aria-current="page"':'')+'><strong>'+value+'</strong>'+name+'</a>').join("")+'</nav>'
+ +'<section aria-labelledby="list-title"><div class="list-title"><h2 id="list-title">'+label+'</h2><p>Showing '+shown.length+' of '+total+'</p></div><ul class="journeys">'+shown.map(x=>'<li><a class="journey-card" data-trip="'+keyOf(p,x[0])+'" href="'+esc(url(key,filter,keyOf(p,x[0])))+'"><span><strong>'+keyOf(p,x[0])+' · '+esc(x[4]||"No event flagged")+'</strong><small>'+esc(x[1])+' · '+esc(x[2])+'</small></span><span class="card-tail">'+status(x[3]!=null)+icons.arrow+'</span></a></li>').join("")+'</ul></section>';
+}
+function detail(key,p,filter,r){
+ const flag=r[3]!=null, id=keyOf(p,r[0]);
+ return '<a class="back" href="'+esc(url(key,filter))+'" data-back>'+icons.arrow+'Back to journeys</a><section class="hero detail-hero"><p class="eyebrow">'+esc(p.short)+' · Fictional journey</p><h1 id="detail-title" tabindex="-1">'+id+'</h1>'+status(flag)+'<p class="sub">'+esc(r[1])+'</p></section><div class="detail-grid">'
+ +'<section class="panel event"><p class="eyebrow">'+(flag?"Flagged event":"Journey summary")+'</p><h2>'+esc(r[4]||"No event flagged")+'</h2><div class="event-info"><p><b>Where</b><span>'+esc(flag?p.place[r[3]]:"Illustrative route")+'</span></p><p><b>'+ (flag?'Event time':'Journey time')+'</b><span>'+esc(r[2])+' · simulated</span></p></div><p>'+esc(flag?r[5]:"No event was flagged in this simulated example. That does not confirm that the load was safe or suitable for use.")+'</p><p class="action"><strong>Follow-up team:</strong> '+esc(p.team)+' <span class="fine">(fictional)</span></p><p class="fine">This is the team that would review the record, not a finding of fault.</p></section>'
+ +map(r,p)+'<section class="panel context" aria-label="Illustrative sensor context"><b>Sensor context</b>'+p.signals.map(s=>'<span class="sensor">'+esc(s)+'</span>').join("")+'</section></div>';
+}
+let prior=null;
 function render(focus){
-  const key=getKey();
-  if(rendered===key)return;
-  const navigating=rendered!==undefined;
-  rendered=key;
-  $("overview").hidden=key!==null;
-  $("detail").hidden=key===null;
-  if(key===null){
-    $("journey-nav").setAttribute("aria-current","page");
-    document.title="Your journeys | ClevaCado demo";
-  }else{
-    const j=journeys[key];
-    $("journey-nav").removeAttribute("aria-current");
-    set("detail-kicker",j.kind+" · Simulated journey");
-    set("detail-title",j.title);set("detail-trip",j.trip);set("detail-priority",j.priority);
-    set("event-title",j.event);set("event-stage",j.stages[j.flag]);set("event-time",j.stamp);
-    $("event-time").dateTime=j.stamp;
-    set("event-summary",j.summary);set("review-action",j.action);set("review-context",j.context);
-    map(j);
-    document.title=j.title+" | ClevaCado demo";
-  }
-  document.body.dataset.activeJourney=key||"all";
-  if(focus&&navigating){
-    window.scrollTo(0,0);
-    $(key===null?"overview-title":"detail-title").focus({preventScroll:true});
-  }
+ const {key,filter,requested}=route(),p=products[key],row=requested?p.rows.find(x=>keyOf(p,x[0])===requested):null;
+ document.body.dataset.product=key;
+ const home=document.getElementById("brand-home");home.href=url(key,filter);
+ document.getElementById("app").innerHTML=row?detail(key,p,filter,row):overview(key,p,filter,Boolean(requested));
+ document.title=(row?keyOf(p,row[0])+" · "+p.short:p.name+" dashboard")+" | ClevaCado";
+ if(focus){window.scrollTo(0,0);const resume=!row&&prior?.key===key&&prior?.filter===filter&&prior?.requested?Array.from(document.querySelectorAll('[data-trip]')).find(a=>a.dataset.trip===prior.requested):null;
+  if(resume)resume.focus();else document.getElementById(row?"detail-title":"overview-title")?.focus({preventScroll:true});}
+ prior={key,filter,requested:row?requested:null};
 }
-$("skip-link").addEventListener("click",e=>{e.preventDefault();$("main").focus();});
-window.addEventListener("hashchange",()=>render(true));
-window.addEventListener("popstate",()=>render(true));
-render(false);
-</script>
-</body>
-</html>
+document.getElementById("skip-link").addEventListener("click",e=>{e.preventDefault();document.getElementById("main").focus()});
+addEventListener("hashchange",()=>render(true));render(false);
+</script></body></html>
