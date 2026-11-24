@@ -4,7 +4,7 @@ import {GLTFLoader} from '/presentation-v2/vendor/GLTFLoader.js';
 const stage=document.querySelector('#stage'), switcher=document.querySelector('#motion-control'), status=document.querySelector('#render-status');
 const roots=[...document.querySelectorAll('.model-view')], pref=matchMedia('(prefers-reduced-motion: reduce)');
 const panels=roots.map(root=>root.parentElement);
-const SETUP_SEC=6.4, JOURNEY_END=12, CYCLE_SEC=20;
+const SETUP_SEC=6.4, JOURNEY_END=12, EVENT_END=20, CYCLE_SEC=28;
 let activeBeat=-1;
 const MODEL='/health/models/';
 const TAU=Math.PI*2;
@@ -55,7 +55,7 @@ function room(scene,caseId,type) {
    const shade=caseId==='pharma'?mats.green:mats.bench;
    for(const x of [-2.0,-.76,.48,1.72]){box(scene,mats.white,x,.29,-1.73,1.11,.88,.14);box(scene,shade,x,.36,-1.62,.21,.035,.029);}
    box(scene,mats.steel,0,.76,-1.75,5.22,.052,.27);
-   if(type!=='setup'&&caseId==='pharma') rollerBed(scene);else bench(scene,caseId==='pharma'?mats.dark:mats.bench);
+   if((type==='transit'||type==='event')&&caseId==='pharma') rollerBed(scene);else bench(scene,caseId==='pharma'?mats.dark:mats.bench);
  }
  const amb=new T.HemisphereLight(0xf1fbff,0x687a6a,2.15);scene.add(amb);
  const key=new T.DirectionalLight(0xfff5e2,2.75);key.position.set(3,5,5);scene.add(key);
@@ -82,7 +82,7 @@ function rack(scene,caseId){
  return assembly;
 }
 function makeView(root,template,vial,pod){
- const [id,type]=root.dataset.scene.split(':'), scene=new T.Scene(), setup=type==='setup', transit=type==='transit';
+ const [id,type]=root.dataset.scene.split(':'), scene=new T.Scene(), setup=type==='setup', transit=type==='transit', review=type==='review';
  room(scene,id,type);
  const actor=frameProduct(template,id==='neonatal'?1.25:1.22);scene.add(actor);
  let prop=null,lid=null,inset=null,mount=null;
@@ -97,11 +97,38 @@ function makeView(root,template,vial,pod){
      cylinder(prop,mats.green,0,y+.064,0,.03,.025);scene.add(prop);
    } else {prop=frameProduct(vial,.079);scene.add(prop);}
  }
+ const reviewGroup=new T.Group();
+ let reviewMarker=null;
+ if(review){
+   scene.add(reviewGroup);
+   if(id==='pharma'){
+     reviewGroup.position.set(.67,0,.36);
+     box(reviewGroup,mats.dark,0,.10,0,.34,.20,.23);
+     box(reviewGroup,mats.steel,0,.21,.014,.37,.03,.24);
+     box(reviewGroup,mats.strip,0,.16,.117,.20,.058,.008);
+     reviewMarker=box(reviewGroup,mats.accent,.105,.161,.128,.033,.022,.012);
+   }else if(spec){
+     reviewGroup.position.set(.67,0,.27);
+     box(reviewGroup,mats.rubber,0,.035,0,.29,.07,.27);
+     box(reviewGroup,mats.steel,0,.20,0,.048,.34,.052);
+     box(reviewGroup,mats.dark,0,.37,.00,.23,.10,.14);
+     reviewMarker=box(reviewGroup,mats.accent,0,.37,.078,.115,.026,.01);
+   }else{
+     reviewGroup.position.set(.91,.08,.19);
+     box(reviewGroup,mats.dark,0,.27,0,.42,.51,.085);
+     box(reviewGroup,mats.white,0,.28,.049,.38,.45,.019);
+     box(reviewGroup,mats.strip,0,.11,.064,.28,.014,.018);
+     box(reviewGroup,mats.strip,0,.41,.064,.28,.014,.018);
+     box(reviewGroup,mats.strip,-.134,.254,.064,.014,.30,.018);
+     box(reviewGroup,mats.strip,.134,.254,.064,.014,.30,.018);
+     reviewMarker=box(reviewGroup,mats.accent,-.115,.23,.079,.046,.040,.016);
+   }
+ }
  const shadow=contact(scene,0,id==='pharma'&&!setup?-.004:.004,0,neon?1.64:1.68,neon?.78:1.14,.51);
  if(lid)lid.rotation.x=spec?-.19:-.13;
  const camera=new T.PerspectiveCamera(neon?35:setup?30:27,1,.06,28);
- const aim=new T.Vector3(0,neon?(transit?.79:.75):id==='pharma'&&!setup?.23:setup?.39:transit?.53:.46,setup&& !neon?.13:0);
- const cam0=transit?(neon?[2.18,1.5,2.64]:id==='pharma'?[1.35,1.43,3.18]:[1.38,1.55,3.05]):setup?(neon?[2.0,1.42,2.55]:[1.71,1.42,2.56]):(neon?[-1.38,1.55,2.86]:[1.61,1.25,2.69]);
+ const aim=new T.Vector3(review?.17:0,review?(neon?.74:.42):neon?(transit?.79:.75):id==='pharma'&&!setup?.23:setup?.39:transit?.53:.46,setup&& !neon?.13:0);
+ const cam0=review?(neon?[2.34,1.75,2.97]:[-1.66,1.62,2.98]):transit?(neon?[2.18,1.5,2.64]:id==='pharma'?[1.35,1.43,3.18]:[1.38,1.55,3.05]):setup?(neon?[2.0,1.42,2.55]:[1.71,1.42,2.56]):(neon?[-1.38,1.55,2.86]:[1.61,1.25,2.69]);
  function step(t) {
    const dur=id==='neonatal'?8.6:id==='pharma'?8:7.8,p=Math.min(dur-.001,t+(id==='specimen'?.22:id==='neonatal'?.48:0));
    const smooth=(a,b,x=p)=>T.MathUtils.smoothstep(x,a,b);
@@ -119,6 +146,15 @@ function makeView(root,template,vial,pod){
        if(lid)lid.rotation.x=-(spec?.86:.48)*smooth(.1,1.6)*(1-smooth(4.65,6.5));
      }
      shadow.position.x=neon?0:-.33;shadow.position.z=neon?0:-.055;
+   }else if(review){
+     actor.position.set(neon?-.31:-.42,0,0);actor.rotation.set(0,neon?-.26:.16,0);
+     shadow.position.set(actor.position.x,shadow.position.y,0);
+     if(reviewMarker){
+       const scan=smooth(.4,4.7,p);
+       reviewMarker.scale.setScalar(.94+.14*Math.sin(p*TAU*.7));
+       if(neon){reviewMarker.position.x=-.115+.23*scan;reviewMarker.position.y=.23+.12*Math.sin(scan*Math.PI);}
+       else reviewMarker.position.y=(spec?.37:.161)+.009*Math.sin(p*TAU*.7);
+     }
    }else if(transit){
      const depart=smooth(.15,5.4,t);
      if(id==='pharma'){fx=-1.95+.92*depart;fy=.025;}
@@ -159,21 +195,21 @@ function dimensions(){
 }
 function draw(){
  renderer.setScissorTest(false);renderer.setClearColor(0,0);renderer.clear(true,true,true);renderer.setScissorTest(true);
- const elapsed=time%CYCLE_SEC, beat=elapsed<SETUP_SEC?0:elapsed<JOURNEY_END?1:2;
+ const elapsed=time%CYCLE_SEC, beat=elapsed<SETUP_SEC?0:elapsed<JOURNEY_END?1:elapsed<EVENT_END?2:3;
  if(beat!==activeBeat){
    activeBeat=beat;
-   stage.dataset.beat=['setup','transit','event'][beat];
+   stage.dataset.beat=['setup','transit','event','review'][beat];
    panels.forEach((p,i)=>{
-     const active=i%3===beat;
+     const active=i%4===beat;
      p.classList.toggle('active',active);
      p.setAttribute('aria-hidden',String(!active));
      if(!active)p.classList.remove('flagging');
    });
  }
- for(let i=beat;i<views.length;i+=3){
+ for(let i=beat;i<views.length;i+=4){
    const v=views[i];
    renderer.setViewport(...v.viewport);renderer.setScissor(...v.viewport);
-   v.step(elapsed-[0,SETUP_SEC,JOURNEY_END][beat]);renderer.render(v.scene,v.camera);
+   v.step(elapsed-[0,SETUP_SEC,JOURNEY_END,EVENT_END][beat]);renderer.render(v.scene,v.camera);
  }
  stage.dataset.frames=String(++frameCount);
 }
@@ -194,12 +230,12 @@ function fallback(){
  stage.dataset.render='stills';switcher.hidden=true;status.textContent='Static views';cancel();
  stage.dataset.beat='setup';
  panels.forEach((p,i)=>{
-   p.classList.toggle('active',i%3===0);p.classList.remove('flagging');
-   p.setAttribute('aria-hidden',String(i%3!==0));
+   p.classList.toggle('active',i%4===0);p.classList.remove('flagging');
+   p.setAttribute('aria-hidden',String(i%4!==0));
  });
 }
 async function start(){
- if(roots.length!==9)throw Error('Missing a viewport');
+ if(roots.length!==12)throw Error('Missing a viewport');
  renderer=new T.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'});
  renderer.setSize(1920,1080,true);
  renderer.domElement.setAttribute('aria-hidden','true');renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();fallback()});
@@ -224,7 +260,7 @@ async function start(){
  const models=Object.fromEntries(await Promise.all(files.map(async id=>[id,(await model(id)).scene])));
  if(Object.values(models).some(model=>!model.getObjectByProperty('isMesh',true)))throw Error('An asset contains no renderable mesh');
  views=roots.map(root=>makeView(root,models[root.dataset.scene.split(':')[0]],models.vial,models.sensor));
- stage.append(renderer.domElement);stage.dataset.draws=String(views.length/3);
+ stage.append(renderer.domElement);stage.dataset.draws=String(views.length/4);
  if(!motion)time=3.08;
  dimensions();draw();stage.dataset.render='live';switcher.hidden=false;status.textContent='';
  switcher.addEventListener('click',()=>{motion=!motion;update()});
