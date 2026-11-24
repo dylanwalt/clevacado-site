@@ -3,6 +3,9 @@ import {GLTFLoader} from '/presentation-v2/vendor/GLTFLoader.js';
 
 const stage=document.querySelector('#stage'), switcher=document.querySelector('#motion-control'), status=document.querySelector('#render-status');
 const roots=[...document.querySelectorAll('.model-view')], pref=matchMedia('(prefers-reduced-motion: reduce)');
+const panels=roots.map(root=>root.parentElement);
+const SETUP_SEC=5.9, CYCLE_SEC=13.7;
+let activeBeat=-1;
 const MODEL='/health/models/';
 const TAU=Math.PI*2;
 let renderer, views, motion=!pref.matches, time=0, last=0, raf=0, runningScale=1, frameCount=0;
@@ -149,8 +152,21 @@ function dimensions(){
 }
 function draw(){
  renderer.setScissorTest(false);renderer.setClearColor(0,0);renderer.clear(true,true,true);renderer.setScissorTest(true);
- for(const v of views){
-   renderer.setViewport(...v.viewport);renderer.setScissor(...v.viewport);v.step(time);renderer.render(v.scene,v.camera);
+ const elapsed=time%CYCLE_SEC, beat=elapsed<SETUP_SEC?0:1;
+ if(beat!==activeBeat){
+   activeBeat=beat;
+   stage.dataset.beat=beat===0?'setup':'event';
+   panels.forEach((p,i)=>{
+     const active=i%2===beat;
+     p.classList.toggle('active',active);
+     p.setAttribute('aria-hidden',String(!active));
+     if(!active)p.classList.remove('flagging');
+   });
+ }
+ for(let i=beat;i<views.length;i+=2){
+   const v=views[i];
+   renderer.setViewport(...v.viewport);renderer.setScissor(...v.viewport);
+   v.step(beat===0?elapsed:elapsed-SETUP_SEC);renderer.render(v.scene,v.camera);
  }
  stage.dataset.frames=String(++frameCount);
 }
@@ -169,6 +185,11 @@ function update(){
 }
 function fallback(){
  stage.dataset.render='stills';switcher.hidden=true;status.textContent='Static views';cancel();
+ stage.dataset.beat='setup';
+ panels.forEach((p,i)=>{
+   p.classList.toggle('active',i%2===0);p.classList.remove('flagging');
+   p.setAttribute('aria-hidden',String(i%2!==0));
+ });
 }
 async function start(){
  if(roots.length!==6)throw Error('Missing a viewport');
@@ -196,7 +217,7 @@ async function start(){
  const models=Object.fromEntries(await Promise.all(files.map(async id=>[id,(await model(id)).scene])));
  if(Object.values(models).some(model=>!model.getObjectByProperty('isMesh',true)))throw Error('An asset contains no renderable mesh');
  views=roots.map(root=>makeView(root,models[root.dataset.scene.split(':')[0]],models.vial,models.sensor));
- stage.append(renderer.domElement);stage.dataset.draws=String(views.length);
+ stage.append(renderer.domElement);stage.dataset.draws=String(views.length/2);
  if(!motion)time=3.08;
  dimensions();draw();stage.dataset.render='live';switcher.hidden=false;status.textContent='';
  switcher.addEventListener('click',()=>{motion=!motion;update()});
@@ -206,4 +227,5 @@ async function start(){
  update();
 }
 start().catch(err=>{console.warn('ClevaCado live 3D not available',err);fallback()});
+
 
