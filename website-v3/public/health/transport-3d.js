@@ -4,7 +4,7 @@ import {GLTFLoader} from '/presentation-v2/vendor/GLTFLoader.js';
 const stage=document.querySelector('#stage'), switcher=document.querySelector('#motion-control'), status=document.querySelector('#render-status');
 const roots=[...document.querySelectorAll('.model-view')], pref=matchMedia('(prefers-reduced-motion: reduce)');
 const panels=roots.map(root=>root.parentElement);
-const SETUP_SEC=5.9, CYCLE_SEC=13.7;
+const SETUP_SEC=6.4, JOURNEY_END=12, CYCLE_SEC=20;
 let activeBeat=-1;
 const MODEL='/health/models/';
 const TAU=Math.PI*2;
@@ -55,7 +55,7 @@ function room(scene,caseId,type) {
    const shade=caseId==='pharma'?mats.green:mats.bench;
    for(const x of [-2.0,-.76,.48,1.72]){box(scene,mats.white,x,.29,-1.73,1.11,.88,.14);box(scene,shade,x,.36,-1.62,.21,.035,.029);}
    box(scene,mats.steel,0,.76,-1.75,5.22,.052,.27);
-   if(type==='event'&&caseId==='pharma') rollerBed(scene);else bench(scene,caseId==='pharma'?mats.dark:mats.bench);
+   if(type!=='setup'&&caseId==='pharma') rollerBed(scene);else bench(scene,caseId==='pharma'?mats.dark:mats.bench);
  }
  const amb=new T.HemisphereLight(0xf1fbff,0x687a6a,2.15);scene.add(amb);
  const key=new T.DirectionalLight(0xfff5e2,2.75);key.position.set(3,5,5);scene.add(key);
@@ -82,7 +82,7 @@ function rack(scene,caseId){
  return assembly;
 }
 function makeView(root,template,vial,pod){
- const [id,type]=root.dataset.scene.split(':'), scene=new T.Scene(), setup=type==='setup';
+ const [id,type]=root.dataset.scene.split(':'), scene=new T.Scene(), setup=type==='setup', transit=type==='transit';
  room(scene,id,type);
  const actor=frameProduct(template,id==='neonatal'?1.25:1.22);scene.add(actor);
  let prop=null,lid=null,inset=null,mount=null;
@@ -97,13 +97,13 @@ function makeView(root,template,vial,pod){
      cylinder(prop,mats.green,0,y+.064,0,.03,.025);scene.add(prop);
    } else {prop=frameProduct(vial,.079);scene.add(prop);}
  }
- const shadow=contact(scene,0,id==='pharma'&&type==='event'?-.004:.004,0,neon?1.64:1.68,neon?.78:1.14,.51);
+ const shadow=contact(scene,0,id==='pharma'&&!setup?-.004:.004,0,neon?1.64:1.68,neon?.78:1.14,.51);
  if(lid)lid.rotation.x=spec?-.19:-.13;
  const camera=new T.PerspectiveCamera(neon?35:setup?30:27,1,.06,28);
- const aim=new T.Vector3(0,neon?.655:id==='pharma'&&type==='event'?.21:setup?.37:.28,setup&& !neon?.13:0);
- const cam0=setup?(neon?[2.0,1.42,2.55]:[1.71,1.42,2.56]):(neon?[-1.38,1.55,2.86]:[1.61,1.25,2.69]);
+ const aim=new T.Vector3(0,neon?(transit?.79:.75):id==='pharma'&&!setup?.23:setup?.39:transit?.53:.46,setup&& !neon?.13:0);
+ const cam0=transit?(neon?[2.18,1.5,2.64]:id==='pharma'?[1.35,1.43,3.18]:[1.38,1.55,3.05]):setup?(neon?[2.0,1.42,2.55]:[1.71,1.42,2.56]):(neon?[-1.38,1.55,2.86]:[1.61,1.25,2.69]);
  function step(t) {
-   const dur=id==='neonatal'?8.6:id==='pharma'?8:7.8,p=(t+(id==='specimen'?.22:id==='neonatal'?.48:0))%dur;
+   const dur=id==='neonatal'?8.6:id==='pharma'?8:7.8,p=Math.min(dur-.001,t+(id==='specimen'?.22:id==='neonatal'?.48:0));
    const smooth=(a,b,x=p)=>T.MathUtils.smoothstep(x,a,b);
    const set=(x,y,z)=>prop.position.set(x,y,z);
    const eventAt=id==='pharma'?3.5:spec?3.38:4.0;
@@ -119,6 +119,13 @@ function makeView(root,template,vial,pod){
        if(lid)lid.rotation.x=-(spec?.86:.48)*smooth(.1,1.6)*(1-smooth(4.65,6.5));
      }
      shadow.position.x=neon?0:-.33;shadow.position.z=neon?0:-.055;
+   }else if(transit){
+     const depart=smooth(.15,5.4,t);
+     if(id==='pharma'){fx=-1.95+.92*depart;fy=.025;}
+     else if(spec){fx=-1.02+.77*depart;fy=.38+.012*Math.sin(depart*Math.PI);fz=-.02;}
+     else{fx=-.98+.56*depart;fy=.017;}
+     actor.position.set(fx,fy,fz);actor.rotation.set(0,id==='pharma'?.06:spec?-.14:.04,spec?-.14:0);
+     shadow.position.set(fx,shadow.position.y,fz);shadow.material.uniforms.o.value=.52-fy*.36;
    }else{
      const a=Math.max(0,p-eventAt), impact=a<1.05?Math.sin(a*23)*Math.exp(-4.9*a):0;
      if(id==='pharma'){
@@ -131,7 +138,7 @@ function makeView(root,template,vial,pod){
      }
      actor.position.set(fx,fy,fz);actor.rotation.set(rx,id==='pharma'?.06:spec?-.14:.04,rz);
      shadow.position.set(fx,shadow.position.y,fz);shadow.material.uniforms.o.value=.52-fy*.36;
-     root.parentElement.classList.toggle('flagging',motion&&p>=eventAt&&p<eventAt+1.43);
+     root.parentElement.classList.toggle('flagging',motion&&p>=eventAt&&p<eventAt+2.3);
    }
    const drift=motion?.07*Math.sin(p/dur*TAU):0;
    camera.position.set(cam0[0]+drift,cam0[1],cam0[2]-drift);camera.lookAt(aim);
@@ -152,21 +159,21 @@ function dimensions(){
 }
 function draw(){
  renderer.setScissorTest(false);renderer.setClearColor(0,0);renderer.clear(true,true,true);renderer.setScissorTest(true);
- const elapsed=time%CYCLE_SEC, beat=elapsed<SETUP_SEC?0:1;
+ const elapsed=time%CYCLE_SEC, beat=elapsed<SETUP_SEC?0:elapsed<JOURNEY_END?1:2;
  if(beat!==activeBeat){
    activeBeat=beat;
-   stage.dataset.beat=beat===0?'setup':'event';
+   stage.dataset.beat=['setup','transit','event'][beat];
    panels.forEach((p,i)=>{
-     const active=i%2===beat;
+     const active=i%3===beat;
      p.classList.toggle('active',active);
      p.setAttribute('aria-hidden',String(!active));
      if(!active)p.classList.remove('flagging');
    });
  }
- for(let i=beat;i<views.length;i+=2){
+ for(let i=beat;i<views.length;i+=3){
    const v=views[i];
    renderer.setViewport(...v.viewport);renderer.setScissor(...v.viewport);
-   v.step(beat===0?elapsed:elapsed-SETUP_SEC);renderer.render(v.scene,v.camera);
+   v.step(elapsed-[0,SETUP_SEC,JOURNEY_END][beat]);renderer.render(v.scene,v.camera);
  }
  stage.dataset.frames=String(++frameCount);
 }
@@ -187,12 +194,12 @@ function fallback(){
  stage.dataset.render='stills';switcher.hidden=true;status.textContent='Static views';cancel();
  stage.dataset.beat='setup';
  panels.forEach((p,i)=>{
-   p.classList.toggle('active',i%2===0);p.classList.remove('flagging');
-   p.setAttribute('aria-hidden',String(i%2!==0));
+   p.classList.toggle('active',i%3===0);p.classList.remove('flagging');
+   p.setAttribute('aria-hidden',String(i%3!==0));
  });
 }
 async function start(){
- if(roots.length!==6)throw Error('Missing a viewport');
+ if(roots.length!==9)throw Error('Missing a viewport');
  renderer=new T.WebGLRenderer({alpha:true,antialias:true,powerPreference:'high-performance'});
  renderer.setSize(1920,1080,true);
  renderer.domElement.setAttribute('aria-hidden','true');renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();fallback()});
@@ -217,7 +224,7 @@ async function start(){
  const models=Object.fromEntries(await Promise.all(files.map(async id=>[id,(await model(id)).scene])));
  if(Object.values(models).some(model=>!model.getObjectByProperty('isMesh',true)))throw Error('An asset contains no renderable mesh');
  views=roots.map(root=>makeView(root,models[root.dataset.scene.split(':')[0]],models.vial,models.sensor));
- stage.append(renderer.domElement);stage.dataset.draws=String(views.length/2);
+ stage.append(renderer.domElement);stage.dataset.draws=String(views.length/3);
  if(!motion)time=3.08;
  dimensions();draw();stage.dataset.render='live';switcher.hidden=false;status.textContent='';
  switcher.addEventListener('click',()=>{motion=!motion;update()});
