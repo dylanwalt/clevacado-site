@@ -96,9 +96,9 @@ function makeView(root,template,vial,pod){
  }
  const shadow=contact(scene,0,id==='pharma'&&type==='event'?-.004:.004,0,neon?1.64:1.68,neon?.78:1.14,.51);
  if(lid)lid.rotation.x=spec?-.19:-.13;
- const camera=new T.PerspectiveCamera(neon?31:27,1,.06,28);
- const aim=new T.Vector3(0,neon?.47:id==='pharma'&&type==='event'?.21:.28,setup&& !neon?.13:0);
- const cam0=setup?(neon?[2.0,1.42,2.55]:[1.71,1.42,2.56]):(neon?[1.76,1.45,2.66]:[1.61,1.25,2.69]);
+ const camera=new T.PerspectiveCamera(neon?35:setup?30:27,1,.06,28);
+ const aim=new T.Vector3(0,neon?.655:id==='pharma'&&type==='event'?.21:setup?.37:.28,setup&& !neon?.13:0);
+ const cam0=setup?(neon?[2.0,1.42,2.55]:[1.71,1.42,2.56]):(neon?[-1.38,1.55,2.86]:[1.61,1.25,2.69]);
  function step(t) {
    const dur=id==='neonatal'?8.6:id==='pharma'?8:7.8,p=(t+(id==='specimen'?.22:id==='neonatal'?.48:0))%dur;
    const smooth=(a,b,x=p)=>T.MathUtils.smoothstep(x,a,b);
